@@ -44,11 +44,31 @@ interface RunOptions {
   limit?: number;
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+};
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) =>
+      String.fromCodePoint(parseInt(hex, 16))
+    )
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+    .replace(/&([a-z]+);/gi, (m, name) => NAMED_ENTITIES[name.toLowerCase()] ?? m);
+}
+
 /**
- * Truncate HTML by stripping tags then slicing.
+ * HTML → plain-text excerpt: strip tags, decode entities, collapse whitespace, truncate.
  */
 function shortText(html: string, maxLen: number): string {
-  const stripped = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const stripped = decodeEntities(html.replace(/<[^>]*>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
   return stripped.length <= maxLen
     ? stripped
     : stripped.slice(0, maxLen - 1).trimEnd() + "…";

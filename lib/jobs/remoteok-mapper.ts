@@ -25,6 +25,21 @@ interface RemoteOKJob {
 
 const REMOTEOK_BASE = "https://remoteok.com";
 
+// RemoteOK serves UTF-8 content that was already encoded as UTF-8 then
+// re-interpreted as Latin-1 server-side, so e.g. "é" arrives as "Ã©".
+// Reverse it by reading the chars back as Latin-1 bytes and decoding UTF-8.
+function fixMojibake(s: string): string {
+  if (!s || !/Ã[-¿]|Â[-¿]/.test(s)) return s;
+  const bytes = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) {
+    const code = s.charCodeAt(i);
+    if (code > 0xff) return s;
+    bytes[i] = code;
+  }
+  const decoded = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+  return decoded.includes("�") ? s : decoded;
+}
+
 export async function fetchRemoteOK(): Promise<RemoteOKJob[]> {
   const userAgent =
     "islam-24.com Job Aggregator (https://islam-24.com/jobs - islam@islam-24.com)";
@@ -72,9 +87,9 @@ export function mapRemoteOK(raw: RemoteOKJob): JobDraft {
 
   return {
     externalId: String(raw.id),
-    title: String(raw.position || "").trim(),
-    description: String(raw.description || "").trim(),
-    companyName: String(raw.company || "Unknown").trim(),
+    title: fixMojibake(String(raw.position || "").trim()),
+    description: fixMojibake(String(raw.description || "").trim()),
+    companyName: fixMojibake(String(raw.company || "Unknown").trim()),
     sourceUrl,
     applyUrl,
     datePosted: datePosted.toISOString(),
