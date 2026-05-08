@@ -4,10 +4,27 @@ interface Props {
   currentPage: number;
   pageCount: number;
   basePath: string;
+  extraParams?: URLSearchParams;
 }
 
-export default function Pagination({ currentPage, pageCount, basePath }: Props) {
+export default function Pagination({
+  currentPage,
+  pageCount,
+  basePath,
+  extraParams,
+}: Props) {
   if (pageCount <= 1) return null;
+
+  const buildHref = (page: number) => {
+    const params = new URLSearchParams();
+    if (extraParams) {
+      extraParams.forEach((v, k) => {
+        if (k !== "page") params.set(k, v);
+      });
+    }
+    params.set("page", String(page));
+    return `${basePath}?${params.toString()}`;
+  };
 
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
@@ -27,7 +44,7 @@ export default function Pagination({ currentPage, pageCount, basePath }: Props) 
       {/* Previous */}
       {currentPage > 1 && (
         <Link
-          href={`${basePath}?page=${currentPage - 1}`}
+          href={buildHref(currentPage - 1)}
           className="inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -51,7 +68,7 @@ export default function Pagination({ currentPage, pageCount, basePath }: Props) 
         return (
           <Link
             key={page}
-            href={`${basePath}?page=${page}`}
+            href={buildHref(page)}
             className={`inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
               isActive
                 ? "bg-gray-900 text-white"
@@ -66,7 +83,7 @@ export default function Pagination({ currentPage, pageCount, basePath }: Props) 
       {/* Next */}
       {currentPage < pageCount && (
         <Link
-          href={`${basePath}?page=${currentPage + 1}`}
+          href={buildHref(currentPage + 1)}
           className="inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
         >
           Next
