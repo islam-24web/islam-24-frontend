@@ -95,14 +95,29 @@ function buildJobPostingJsonLd(
     },
   };
 
-  const requirements = job.applicantLocationRequirements.filter(
-    (r) => r && r.toLowerCase() !== "worldwide",
-  );
-  if (requirements.length > 0) {
-    ld.applicantLocationRequirements = requirements.map((r) => ({
+  // Google's Rich Results validator errors when a TELECOMMUTE job omits
+  // applicantLocationRequirements (even though the spec calls it optional).
+  // Always emit at least ["Worldwide"] for remote jobs; for ONSITE/HYBRID,
+  // strip "Worldwide" since jobLocation carries the real geographic info.
+  if (job.jobLocationType === "TELECOMMUTE") {
+    const reqs =
+      job.applicantLocationRequirements.length > 0
+        ? job.applicantLocationRequirements
+        : ["Worldwide"];
+    ld.applicantLocationRequirements = reqs.map((r) => ({
       "@type": "Country",
       name: r,
     }));
+  } else {
+    const reqs = job.applicantLocationRequirements.filter(
+      (r) => r && r.toLowerCase() !== "worldwide",
+    );
+    if (reqs.length > 0) {
+      ld.applicantLocationRequirements = reqs.map((r) => ({
+        "@type": "Country",
+        name: r,
+      }));
+    }
   }
 
   if (job.physicalLocation) {
