@@ -87,8 +87,6 @@ export async function getDivineNameBySlug(slug: string): Promise<DivineName | nu
       path: "/divine-names",
       params: {
         "filters[slug][$eq]": slug,
-        "populate[featuredImage]": "*",
-        "populate[audio]": "*",
         "populate[faqs]": "*",
         "populate[sources]": "*",
         "populate[seo][populate]": "*",
