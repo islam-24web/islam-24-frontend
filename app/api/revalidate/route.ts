@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -25,6 +25,15 @@ const modelToTags: Record<string, string[]> = {
   "divine-name": ["divine-names"],
 };
 
+function revalidateModelPaths(model: string, entry?: { slug?: string }) {
+  if (model === "divine-name") {
+    revalidatePath("/asma-allah");
+    revalidatePath("/asma-allah/[slug]", "page");
+    revalidatePath("/sitemap.xml");
+    if (entry?.slug) revalidatePath(`/asma-allah/${entry.slug}`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   // Verify secret
   const secret = request.headers.get("x-revalidation-secret");
@@ -44,6 +53,7 @@ export async function POST(request: NextRequest) {
       for (const tag of tags) {
         revalidateTag(tag);
       }
+      revalidateModelPaths(model, body.entry);
       return NextResponse.json({
         revalidated: true,
         tags,
