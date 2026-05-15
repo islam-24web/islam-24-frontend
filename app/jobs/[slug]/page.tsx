@@ -40,11 +40,20 @@ export async function generateMetadata({
 
   const canonical = buildJobUrl(job, locale);
   const description = job.metaDescription || job.descriptionShort || undefined;
+  const enUrl = buildJobUrl(job, "en");
+  const arUrl = buildJobUrl(job, "ar");
 
   return {
     title: job.title,
     description,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: enUrl,
+        ar: arUrl,
+        "x-default": enUrl,
+      },
+    },
     openGraph: {
       type: "article",
       title: job.title,
@@ -100,7 +109,7 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
   const employmentLabel = job.employmentType.replace("_", " ").toLowerCase();
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10" dir={dir}>
+    <main className="mx-auto max-w-4xl px-4 py-10" dir={dir} lang={locale}>
       <Link
         href={locale === "en" ? "/jobs" : `/jobs?lang=${locale}`}
         className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"

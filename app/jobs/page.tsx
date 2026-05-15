@@ -18,18 +18,35 @@ interface Props {
   };
 }
 
+const SITE_URL = getSiteUrl();
+
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const locale = parseLocale(searchParams.lang);
   const messages = getMessages(locale);
+  const canonical =
+    locale === "en" ? `${SITE_URL}/jobs` : `${SITE_URL}/jobs?lang=${locale}`;
   return {
     title: messages.pageTitle,
     description: messages.pageSubtitle,
+    alternates: {
+      canonical,
+      languages: {
+        en: `${SITE_URL}/jobs`,
+        ar: `${SITE_URL}/jobs?lang=ar`,
+        "x-default": `${SITE_URL}/jobs`,
+      },
+    },
+    openGraph: {
+      title: messages.pageTitle,
+      description: messages.pageSubtitle,
+      url: canonical,
+      locale: locale === "ar" ? "ar_EG" : "en_US",
+      type: "website",
+    },
   };
 }
-
-const SITE_URL = getSiteUrl();
 
 export default async function JobsPage({ searchParams }: Props) {
   const locale = parseLocale(searchParams.lang);
@@ -55,7 +72,7 @@ export default async function JobsPage({ searchParams }: Props) {
   const isAREmpty = locale === "ar" && pagination.total === 0 && !search && !categorySlug;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10" dir={dir}>
+    <main className="mx-auto max-w-6xl px-4 py-10" dir={dir} lang={locale}>
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
           {messages.pageTitle}
