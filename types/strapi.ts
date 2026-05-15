@@ -280,7 +280,18 @@ export interface DailyTilesBlock {
   items: DailyTileItem[];
 }
 
-export type HomeBlock = DailyTilesBlock;
+export interface CategoryStripBlock {
+  id: number;
+  __component: "blocks.category-strip";
+  category: { id: number; name: string; slug: string } | null;
+  headline_ar?: string | null;
+  headline_en?: string | null;
+  layout: "hero-grid" | "horizontal-scroll" | "three-up";
+  limit: number;
+  see_more_label?: string | null;
+}
+
+export type HomeBlock = DailyTilesBlock | CategoryStripBlock;
 
 export interface Homepage {
   id: number;

@@ -186,6 +186,7 @@ export default async function HomePage() {
   const cmsBlocks = useCms
     ? (homepage?.sections?.length ? homepage.sections : [FALLBACK_DAILY_TILES])
     : [];
+  const cmsHasCategoryStrips = cmsBlocks.some((b) => b.__component === "blocks.category-strip");
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
@@ -297,8 +298,8 @@ export default async function HomePage() {
               </div>
             </section>
 
-            {/* Category Sections */}
-            {sections.map(({ name, slug, articles }) => {
+            {/* Category Sections — hardcoded loop runs unless CMS has supplied category-strip blocks */}
+            {!cmsHasCategoryStrips && sections.map(({ name, slug, articles }) => {
               const main = articles[0];
               const subs = articles.slice(1, 7);
               if (!main) return null;

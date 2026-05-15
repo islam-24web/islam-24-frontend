@@ -36,6 +36,11 @@ function revalidateModelPaths(model: string, entry?: { slug?: string }) {
   if (model === "navigation" || model === "footer" || model === "homepage") {
     revalidatePath("/");
   }
+  // Category-strip blocks render the latest articles in a category — when an
+  // article publishes, the strip on / needs to refresh.
+  if (model === "article" || model === "category") {
+    revalidatePath("/");
+  }
 }
 
 export async function POST(request: NextRequest) {

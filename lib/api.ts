@@ -273,6 +273,7 @@ export async function getHomepage(): Promise<Homepage | null> {
       path: "/homepage",
       params: {
         "populate[sections][on][blocks.daily-tiles][populate][items]": "true",
+        "populate[sections][on][blocks.category-strip][populate][category]": "true",
         "populate[seo][populate]": "*",
       },
       tags: ["homepage"],

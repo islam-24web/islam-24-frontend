@@ -1,5 +1,6 @@
 import type { HomeBlock } from "@/types/strapi";
 import DailyTiles from "./DailyTiles";
+import CategoryStrip from "./CategoryStrip";
 
 interface Props {
   blocks: HomeBlock[];
@@ -13,9 +14,13 @@ export default function HomeBlockRenderer({ blocks }: Props) {
         switch (block.__component) {
           case "blocks.daily-tiles":
             return <DailyTiles key={block.id} block={block} />;
-          default:
-            console.warn(`Unknown home block: ${(block as HomeBlock).__component}`);
+          case "blocks.category-strip":
+            return <CategoryStrip key={block.id} block={block} />;
+          default: {
+            const exhaustive: never = block;
+            console.warn(`Unknown home block: ${(exhaustive as HomeBlock).__component}`);
             return null;
+          }
         }
       })}
     </>
