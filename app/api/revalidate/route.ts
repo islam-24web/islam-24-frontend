@@ -22,6 +22,7 @@ const modelToTags: Record<string, string[]> = {
   footer: ["footer"],
   job: ["jobs"],
   "job-category": ["jobs", "job-categories"],
+  "divine-name": ["divine-names"],
 };
 
 export async function POST(request: NextRequest) {

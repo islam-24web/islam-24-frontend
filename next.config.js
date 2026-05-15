@@ -69,6 +69,13 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      // Asma Allah: old /article/name-NN-X → new /asma-allah/name-NN-X
+      // Slug preserved (Phase C2 decision 6) so the path swap is mechanical.
+      {
+        source: "/article/:slug(name-\\d+-.+)",
+        destination: "/asma-allah/:slug",
+        permanent: true,
+      },
     ];
   },
 };
