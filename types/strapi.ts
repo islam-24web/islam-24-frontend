@@ -342,13 +342,45 @@ export interface NewsletterCtaBlock {
   consent_label?: string | null;
 }
 
+export interface EditorPickBlock {
+  id: number;
+  __component: "blocks.editor-pick";
+  headline_ar?: string | null;
+  headline_en?: string | null;
+  subhead?: string | null;
+  articles?: Article[];
+  layout: "two-up" | "three-up" | "magazine";
+}
+
+export interface YouTubeEmbedBlock {
+  id: number;
+  __component: "blocks.youtube-embed";
+  url: string;
+  title?: string | null;
+  caption?: string | null;
+  aspect_ratio: "16:9" | "9:16" | "1:1" | "4:3";
+}
+
+export interface AudioEmbedBlock {
+  id: number;
+  __component: "blocks.audio-embed";
+  file?: StrapiMedia | null;
+  url?: string | null;
+  title?: string | null;
+  caption?: string | null;
+  transcript_url?: string | null;
+}
+
 export type HomeBlock =
   | DailyTilesBlock
   | CategoryStripBlock
   | HomeHeroBlock
   | DivineNamesFeatureBlock
   | AppsFeatureBlock
-  | NewsletterCtaBlock;
+  | NewsletterCtaBlock
+  | EditorPickBlock
+  | YouTubeEmbedBlock
+  | AudioEmbedBlock;
 
 export interface Homepage {
   id: number;
