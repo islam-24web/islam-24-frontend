@@ -13,6 +13,7 @@ import QuickAnswer from "@/components/article/QuickAnswer";
 import FAQList from "@/components/article/FAQList";
 import Sources from "@/components/article/Sources";
 import { addHeadingAnchors } from "@/lib/article/headings";
+import { worldForCategory, worldLabel, worldHref } from "@/lib/editorial/worlds";
 
 const SITE_URL = getSiteUrl();
 
@@ -90,10 +91,18 @@ export default async function ArticlePage({ params }: Props) {
     relatedArticles = await getRelatedArticles(category.slug, params.slug, 3);
   }
 
-  const breadcrumbs = [
+  const world = worldForCategory(category?.slug);
+  const breadcrumbs: { name: string; url: string }[] = [
     { name: "Home", url: SITE_URL },
-    { name: "Blog", url: `${SITE_URL}/blog` },
   ];
+  if (world) {
+    breadcrumbs.push({
+      name: worldLabel(world, "en"),
+      url: `${SITE_URL}${worldHref(world)}`,
+    });
+  } else {
+    breadcrumbs.push({ name: "Blog", url: `${SITE_URL}/blog` });
+  }
   if (category) {
     breadcrumbs.push({ name: category.name, url: `${SITE_URL}/category/${category.slug}` });
   }
@@ -119,7 +128,13 @@ export default async function ArticlePage({ params }: Props) {
             <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500">
               <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
               <span>/</span>
-              <Link href="/blog" className="hover:text-gray-700 transition-colors">Blog</Link>
+              {world ? (
+                <Link href={worldHref(world)} className="hover:text-gray-700 transition-colors">
+                  {worldLabel(world, "en")}
+                </Link>
+              ) : (
+                <Link href="/blog" className="hover:text-gray-700 transition-colors">Blog</Link>
+              )}
               {category && (
                 <>
                   <span>/</span>
