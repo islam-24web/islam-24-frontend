@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { getStrapiMediaUrl } from "@/lib/api";
 import type { Article } from "@/types/strapi";
@@ -94,11 +95,14 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
         {/* Background image */}
         <div className="absolute inset-0">
           {imgUrl && imgUrl !== "/placeholder.jpg" ? (
-            <img
+            <Image
               key={current.slug}
               src={imgUrl}
               alt={current.title}
-              className="w-full h-full object-cover transition-opacity duration-700"
+              fill
+              priority={currentIndex === 0}
+              sizes="(min-width: 1024px) 66vw, 100vw"
+              className="object-cover transition-opacity duration-700"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-emerald-800 to-emerald-950" />

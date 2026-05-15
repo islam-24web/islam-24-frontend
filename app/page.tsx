@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getArticles, getCategories, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import type { Article, Category } from "@/types/strapi";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "إسلام 24 — قرآن، سنة، أدعية، أذكار، أسماء الله الحسنى",
@@ -82,7 +83,13 @@ function FeaturedCard({ article }: { article: Article }) {
   return (
     <Link href={`/article/${article.slug}`} className="group relative rounded-xl overflow-hidden block" style={{ height: 200 }}>
       {hasImg ? (
-        <img src={img} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <Image
+          src={img}
+          alt={article.title}
+          fill
+          sizes="(min-width: 1024px) 66vw, 100vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
       ) : (
         <div className="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900" />
       )}
@@ -142,22 +149,22 @@ function DropdownNavItem({ name, items }: { name: string; items: { name: string;
 }
 
 export default async function HomePage() {
-  const categories = await getCategories();
+  const [categories, featuredRes, mostReadRes, ...sectionResults] = await Promise.all([
+    getCategories(),
+    getArticles({ featured: true, pageSize: 5 }),
+    getArticles({ pageSize: 20 }),
+    ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7 })),
+  ]);
+  void categories;
 
-  const featuredRes = await getArticles({ featured: true, pageSize: 5 });
   const featured = featuredRes.data || [];
-
-  const heroArticles = featured.length >= 3 ? featured : (await getArticles({ pageSize: 5 })).data || [];
-
-  const mostReadRes = await getArticles({ pageSize: 20 });
   const mostRead = mostReadRes.data || [];
+  // Fallback: if we don't have ≥3 featured, reuse the top of mostRead (same sort order, no extra fetch)
+  const heroArticles = featured.length >= 3 ? featured : mostRead.slice(0, 5);
 
-  // Fetch articles per display section
-  const sectionPromises = displaySections.map(async (sec) => {
-    const res = await getArticles({ categorySlug: sec.slug, pageSize: 7 });
-    return { ...sec, articles: res.data || [] };
-  });
-  const sections = (await Promise.all(sectionPromises)).filter(s => s.articles.length > 0);
+  const sections = displaySections
+    .map((sec, i) => ({ ...sec, articles: sectionResults[i].data || [] }))
+    .filter((s) => s.articles.length > 0);
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-50">
