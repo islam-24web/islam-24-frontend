@@ -311,11 +311,31 @@ export interface DivineNamesFeatureBlock {
   strip_count: number;
 }
 
+export interface AppCard {
+  id: number;
+  title: string;
+  description?: string | null;
+  icon?: string | null;
+  href: string;
+  open_in_new_tab: boolean;
+  tone: "emerald" | "amber" | "neutral";
+  cta_label?: string | null;
+}
+
+export interface AppsFeatureBlock {
+  id: number;
+  __component: "blocks.apps-feature";
+  headline_ar?: string | null;
+  headline_en?: string | null;
+  items: AppCard[];
+}
+
 export type HomeBlock =
   | DailyTilesBlock
   | CategoryStripBlock
   | HomeHeroBlock
-  | DivineNamesFeatureBlock;
+  | DivineNamesFeatureBlock
+  | AppsFeatureBlock;
 
 export interface Homepage {
   id: number;

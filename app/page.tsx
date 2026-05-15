@@ -189,6 +189,7 @@ export default async function HomePage() {
   const cmsHasCategoryStrips = cmsBlocks.some((b) => b.__component === "blocks.category-strip");
   const cmsHasHomeHero = cmsBlocks.some((b) => b.__component === "blocks.home-hero");
   const cmsHasDivineNames = cmsBlocks.some((b) => b.__component === "blocks.divine-names-feature");
+  const cmsHasApps = cmsBlocks.some((b) => b.__component === "blocks.apps-feature");
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
@@ -282,23 +283,25 @@ export default async function HomePage() {
               </div>
             )}
 
-            {/* Apps Section */}
-            <section>
-              <SectionHeader name="تطبيقاتنا الإسلامية" slug="apps" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {FEATURED_APPS.map(app => (
-                  <Link key={app.slug} href={`/apps/${app.slug}`} target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all">
-                    <span className="text-5xl shrink-0">{app.icon}</span>
-                    <div>
-                      <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">{app.title}</h3>
-                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{app.description}</p>
-                      <span className="inline-block mt-2 text-xs font-medium text-emerald-600">افتح التطبيق ←</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
+            {/* Apps Section — hardcoded only when CMS hasn't supplied an apps-feature block */}
+            {!cmsHasApps && (
+              <section>
+                <SectionHeader name="تطبيقاتنا الإسلامية" slug="apps" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {FEATURED_APPS.map(app => (
+                    <Link key={app.slug} href={`/apps/${app.slug}`} target="_blank" rel="noopener noreferrer"
+                      className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all">
+                      <span className="text-5xl shrink-0">{app.icon}</span>
+                      <div>
+                        <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">{app.title}</h3>
+                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">{app.description}</p>
+                        <span className="inline-block mt-2 text-xs font-medium text-emerald-600">افتح التطبيق ←</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Category Sections — hardcoded loop runs unless CMS has supplied category-strip blocks */}
             {!cmsHasCategoryStrips && sections.map(({ name, slug, articles }) => {
