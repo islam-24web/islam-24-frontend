@@ -257,3 +257,37 @@ export interface Page {
   updatedAt: string;
   publishedAt: string;
 }
+
+// ─── Homepage dynamic-zone blocks ───────────────────────────────────
+// Distinct from the page builder's DynamicZoneBlock — homepage uses
+// its own block library (editor-curated tiles, category strips, etc.).
+
+export interface DailyTileItem {
+  id: number;
+  icon?: string | null;
+  label: string;
+  text: string;
+  reference?: string | null;
+  tone: "emerald" | "amber";
+  href?: string | null;
+}
+
+export interface DailyTilesBlock {
+  id: number;
+  __component: "blocks.daily-tiles";
+  headline_ar?: string | null;
+  headline_en?: string | null;
+  items: DailyTileItem[];
+}
+
+export type HomeBlock = DailyTilesBlock;
+
+export interface Homepage {
+  id: number;
+  documentId: string;
+  sections: HomeBlock[];
+  seo?: SEOComponent | null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}

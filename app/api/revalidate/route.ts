@@ -20,6 +20,7 @@ const modelToTags: Record<string, string[]> = {
   page: ["pages"],
   navigation: ["navigation"],
   footer: ["footer"],
+  homepage: ["homepage"],
   job: ["jobs"],
   "job-category": ["jobs", "job-categories"],
   "divine-name": ["divine-names"],
@@ -32,7 +33,7 @@ function revalidateModelPaths(model: string, entry?: { slug?: string }) {
     revalidatePath("/sitemap.xml");
     if (entry?.slug) revalidatePath(`/asma-allah/${entry.slug}`);
   }
-  if (model === "navigation" || model === "footer") {
+  if (model === "navigation" || model === "footer" || model === "homepage") {
     revalidatePath("/");
   }
 }

@@ -5,6 +5,7 @@ import type {
   Page,
   Navigation,
   Footer,
+  Homepage,
 } from "@/types/strapi";
 
 // ─── Config ─────────────────────────────────────────────────────────
@@ -258,6 +259,23 @@ export async function getNavigation(): Promise<Navigation | null> {
         "populate[nav_items][populate][sub_items]": "*",
       },
       tags: ["navigation"],
+      revalidate: 300,
+    });
+    return res.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getHomepage(): Promise<Homepage | null> {
+  try {
+    const res = await strapiFetch<StrapiResponse<Homepage>>({
+      path: "/homepage",
+      params: {
+        "populate[sections][on][blocks.daily-tiles][populate][items]": "true",
+        "populate[seo][populate]": "*",
+      },
+      tags: ["homepage"],
       revalidate: 300,
     });
     return res.data ?? null;

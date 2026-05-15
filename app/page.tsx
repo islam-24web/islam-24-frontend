@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getArticles, getCategories, getFooter, getNavigation, getStrapiMediaUrl } from "@/lib/api";
+import { getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
+import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
 import { isCmsHomepage } from "@/lib/feature-flags";
-import type { Article, Category } from "@/types/strapi";
+import type { Article, Category, DailyTilesBlock } from "@/types/strapi";
 
 export const revalidate = 300;
 
@@ -56,6 +57,21 @@ const displaySections = [
 const FEATURED_APPS = [
   { slug: "sibaq", title: "سباق الفردوس الأعلى", description: "تتبع عباداتك اليومية وأعمال القلوب والأذكار ومدارج السالكين", icon: "🕌" },
 ];
+
+// Tiny safe fallback when the CMS path is enabled but no daily-tiles block
+// has been published yet. Keeps the row populated and on-brand during rollout.
+const FALLBACK_DAILY_TILES: DailyTilesBlock = {
+  id: 0,
+  __component: "blocks.daily-tiles",
+  headline_ar: null,
+  headline_en: null,
+  items: [
+    { id: 1, icon: "📖", label: "آية اليوم", text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", reference: "سورة الطلاق: ٢-٣", tone: "emerald", href: null },
+    { id: 2, icon: "☪", label: "حديث اليوم", text: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى", reference: "متفق عليه", tone: "amber", href: null },
+    { id: 3, icon: "💡", label: "حكمة اليوم", text: "من عرف الله أحبه، ومن أحبه أطاعه، ومن أطاعه سعد", reference: "— ابن القيم", tone: "emerald", href: null },
+    { id: 4, icon: "🤲", label: "دعاء اليوم", text: "اللهم إني أسألك الهدى والتقى والعفاف والغنى", reference: "رواه مسلم", tone: "amber", href: null },
+  ],
+};
 
 function formatDate(dateString?: string) {
   if (!dateString) return "";
@@ -154,15 +170,22 @@ function DropdownNavItem({ name, items }: { name: string; items: { name: string;
 export default async function HomePage() {
   const useCms = isCmsHomepage();
 
-  const [categories, featuredRes, mostReadRes, navigation, footer, ...sectionResults] = await Promise.all([
+  const [categories, featuredRes, mostReadRes, navigation, footer, homepage, ...sectionResults] = await Promise.all([
     getCategories(),
     getArticles({ featured: true, pageSize: 5 }),
     getArticles({ pageSize: 20 }),
     useCms ? getNavigation() : Promise.resolve(null),
     useCms ? getFooter() : Promise.resolve(null),
+    useCms ? getHomepage() : Promise.resolve(null),
     ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7 })),
   ]);
   void categories;
+
+  // When the CMS path is on, prefer editor-published blocks. Fall back to a
+  // safe hardcoded daily-tiles block if the editor hasn't published yet.
+  const cmsBlocks = useCms
+    ? (homepage?.sections?.length ? homepage.sections : [FALLBACK_DAILY_TILES])
+    : [];
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
@@ -232,25 +255,29 @@ export default async function HomePage() {
             <HeroSwiper articles={heroArticles} />
 
             {/* Daily Content Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {[
-                { icon: "📖", title: "آية اليوم", text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", ref: "سورة الطلاق: ٢-٣", color: "emerald" },
-                { icon: "☪", title: "حديث اليوم", text: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى", ref: "متفق عليه", color: "amber" },
-                { icon: "💡", title: "حكمة اليوم", text: "من عرف الله أحبه، ومن أحبه أطاعه، ومن أطاعه سعد", ref: "— ابن القيم", color: "emerald" },
-                { icon: "🤲", title: "دعاء اليوم", text: "اللهم إني أسألك الهدى والتقى والعفاف والغنى", ref: "رواه مسلم", color: "amber" },
-              ].map((card, i) => (
-                <div key={i} className={`rounded-xl p-4 border hover:shadow-md transition-shadow ${
-                  card.color === "emerald" ? "bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200" : "bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200"
-                }`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-2xl">{card.icon}</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${card.color === "emerald" ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>{card.title}</span>
+            {useCms ? (
+              <HomeBlockRenderer blocks={cmsBlocks} />
+            ) : (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {[
+                  { icon: "📖", title: "آية اليوم", text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", ref: "سورة الطلاق: ٢-٣", color: "emerald" },
+                  { icon: "☪", title: "حديث اليوم", text: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى", ref: "متفق عليه", color: "amber" },
+                  { icon: "💡", title: "حكمة اليوم", text: "من عرف الله أحبه، ومن أحبه أطاعه، ومن أطاعه سعد", ref: "— ابن القيم", color: "emerald" },
+                  { icon: "🤲", title: "دعاء اليوم", text: "اللهم إني أسألك الهدى والتقى والعفاف والغنى", ref: "رواه مسلم", color: "amber" },
+                ].map((card, i) => (
+                  <div key={i} className={`rounded-xl p-4 border hover:shadow-md transition-shadow ${
+                    card.color === "emerald" ? "bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200" : "bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200"
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-2xl">{card.icon}</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${card.color === "emerald" ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>{card.title}</span>
+                    </div>
+                    <p className={`text-sm font-semibold leading-relaxed line-clamp-3 ${card.color === "emerald" ? "text-emerald-900" : "text-amber-900"}`}>{card.text}</p>
+                    <p className={`text-xs mt-2 ${card.color === "emerald" ? "text-emerald-600" : "text-amber-600"}`}>{card.ref}</p>
                   </div>
-                  <p className={`text-sm font-semibold leading-relaxed line-clamp-3 ${card.color === "emerald" ? "text-emerald-900" : "text-amber-900"}`}>{card.text}</p>
-                  <p className={`text-xs mt-2 ${card.color === "emerald" ? "text-emerald-600" : "text-amber-600"}`}>{card.ref}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Apps Section */}
             <section>
