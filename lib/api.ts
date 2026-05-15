@@ -171,6 +171,8 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
         "populate[author_image]": "*",
         "populate[category][populate][parent]": "*",
         "populate[seo][populate]": "*",
+        "populate[faqs]": "*",
+        "populate[sources]": "*",
       },
       tags: ["articles"],
       revalidate: 60,

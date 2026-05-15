@@ -79,6 +79,31 @@ export interface Footer {
   description?: string;
 }
 
+// ─── Article semantic components (Phase B) ──────────────────────────
+
+export interface FAQItem {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+export type SourceKind =
+  | "quran"
+  | "hadith"
+  | "scholarly"
+  | "medical"
+  | "research"
+  | "book"
+  | "other";
+
+export interface SourceCitation {
+  id: number;
+  label: string;
+  url?: string | null;
+  kind: SourceKind;
+  reference?: string | null;
+}
+
 // ─── Article ────────────────────────────────────────────────────────
 
 export interface Article {
@@ -87,6 +112,7 @@ export interface Article {
   title: string;
   slug: string;
   excerpt: string;
+  quickAnswer?: string | null;
   content: string;
   featured_image: StrapiMedia | null;
   category: Category | null;
@@ -96,6 +122,9 @@ export interface Article {
   published_date: string;
   reading_time: number;
   seo?: SEOComponent | null;
+  lastReviewedAt?: string | null;
+  faqs?: FAQItem[];
+  sources?: SourceCitation[];
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
