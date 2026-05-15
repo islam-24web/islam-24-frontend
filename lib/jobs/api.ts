@@ -114,7 +114,7 @@ function buildQuery(
 
 async function strapi<T>(
   path: string,
-  init: RequestInit & { next?: { revalidate?: number } } = {},
+  init: RequestInit & { next?: { revalidate?: number; tags?: string[] } } = {},
 ): Promise<T | null> {
   const url = `${getStrapiBaseUrl()}${path}`;
   const res = await fetch(url, {
@@ -168,7 +168,9 @@ export async function fetchJobs(
   const json = await strapi<{
     data: Job[];
     meta: { pagination: PaginationMeta };
-  }>(`/api/jobs?${buildQuery(entries)}`, { next: { revalidate: 60 } });
+  }>(`/api/jobs?${buildQuery(entries)}`, {
+    next: { revalidate: 60, tags: ["jobs"] },
+  });
 
   if (!json) {
     return {
@@ -201,7 +203,7 @@ export async function fetchJobBySlug(
     ["pagination[limit]", 1],
   ]);
   const json = await strapi<{ data: Job[] }>(`/api/jobs?${qs}`, {
-    next: { revalidate: 300 },
+    next: { revalidate: 300, tags: ["jobs"] },
   });
   if (!json?.data?.length) return null;
   return json.data[0];
@@ -217,9 +219,31 @@ export async function fetchJobCategories(
   ]);
   const json = await strapi<{ data: JobCategory[] }>(
     `/api/job-categories?${qs}`,
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 3600, tags: ["job-categories"] } },
   );
   return json?.data ?? [];
+}
+
+export async function getAllJobSlugs(): Promise<
+  Array<{ slug: string; updatedAt: string }>
+> {
+  const today = new Date().toISOString().slice(0, 10);
+  const qs = buildQuery([
+    ["locale", "en"],
+    ["fields[0]", "slug"],
+    ["fields[1]", "updatedAt"],
+    ["filters[status][$eq]", "active"],
+    ["filters[validThrough][$gte]", today],
+    ["pagination[pageSize]", 1000],
+  ]);
+  try {
+    const json = await strapi<{
+      data: Array<{ slug: string; updatedAt: string }>;
+    }>(`/api/jobs?${qs}`, { next: { revalidate: 3600, tags: ["jobs"] } });
+    return json?.data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 export function buildJobUrl(
