@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPageBySlug, getPages, getStrapiMediaUrl } from "@/lib/api";
 import BlockRenderer from "@/components/blocks/BlockRenderer";
-import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getSiteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = getSiteUrl();
 
 interface Props {
   params: { slug: string };
@@ -49,10 +51,12 @@ export default async function DynamicPage({ params }: Props) {
 
   return (
     <>
-      <BreadcrumbJsonLd
-        items={[
-          { name: "Home", url: SITE_URL },
-          { name: page.title, url: `${SITE_URL}/${params.slug}` },
+      <JsonLd
+        graph={[
+          buildBreadcrumb([
+            { name: "Home", url: SITE_URL },
+            { name: page.title, url: `${SITE_URL}/${params.slug}` },
+          ]),
         ]}
       />
       {page.content && page.content.length > 0 ? (

@@ -4,9 +4,11 @@ import Link from "next/link";
 import { getCategoryBySlug, getCategories, getArticles, getStrapiMediaUrl } from "@/lib/api";
 import ArticleCard from "@/components/blog/ArticleCard";
 import Pagination from "@/components/ui/Pagination";
-import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getSiteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = getSiteUrl();
 
 interface Props {
   params: { slug: string };
@@ -69,7 +71,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <BreadcrumbJsonLd items={breadcrumbs} />
+      <JsonLd graph={[buildBreadcrumb(breadcrumbs)]} />
 
       <div className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
