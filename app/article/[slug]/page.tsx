@@ -4,10 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { getArticleBySlug, getArticles, getRelatedArticles, getStrapiMediaUrl } from "@/lib/api";
 import { getSiteUrl } from "@/lib/seo/site";
-import { JsonLd } from "@/lib/seo/schema/core";
+import { JsonLd, type SchemaNode } from "@/lib/seo/schema/core";
 import { buildBlogPosting } from "@/lib/seo/schema/blog-posting";
 import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
+import { buildFAQPage } from "@/lib/seo/schema/faq-page";
 import ArticleCard from "@/components/blog/ArticleCard";
+import QuickAnswer from "@/components/article/QuickAnswer";
+import FAQList from "@/components/article/FAQList";
+import Sources from "@/components/article/Sources";
+import { addHeadingAnchors } from "@/lib/article/headings";
 
 const SITE_URL = getSiteUrl();
 
@@ -60,8 +65,9 @@ export default async function ArticlePage({ params }: Props) {
   if (!article) notFound();
 
   const {
-    title, content, excerpt, featured_image, category,
+    title, content, excerpt, quickAnswer, featured_image, category,
     author_name, author_image, published_date, reading_time,
+    lastReviewedAt, faqs, sources,
   } = article;
 
   const imageUrl = featured_image?.url;
@@ -71,6 +77,13 @@ export default async function ArticlePage({ params }: Props) {
   const formattedDate = new Date(published_date).toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
   });
+  const formattedReviewedDate = lastReviewedAt
+    ? new Date(lastReviewedAt).toLocaleDateString("en-US", {
+        year: "numeric", month: "long", day: "numeric",
+      })
+    : null;
+
+  const { html: anchoredContent } = addHeadingAnchors(content);
 
   let relatedArticles: Awaited<ReturnType<typeof getRelatedArticles>> = [];
   if (category?.slug) {
@@ -86,9 +99,19 @@ export default async function ArticlePage({ params }: Props) {
   }
   breadcrumbs.push({ name: title, url: `${SITE_URL}/article/${params.slug}` });
 
+  const articleUrl = `${SITE_URL}/article/${params.slug}`;
+  const faqPageId = faqs && faqs.length > 0 ? `${articleUrl}#faq` : undefined;
+  const faqNode = faqs && faqPageId ? buildFAQPage(faqs, faqPageId) : null;
+
+  const graph: SchemaNode[] = [
+    buildBlogPosting(article, { faqPageId: faqNode ? faqPageId : undefined }),
+    buildBreadcrumb(breadcrumbs),
+  ];
+  if (faqNode) graph.push(faqNode);
+
   return (
     <>
-      <JsonLd graph={[buildBlogPosting(article), buildBreadcrumb(breadcrumbs)]} />
+      <JsonLd graph={graph} />
 
       <article>
         <header className="py-12 sm:py-16">
@@ -142,6 +165,12 @@ export default async function ArticlePage({ params }: Props) {
                   <span className="h-1 w-1 rounded-full bg-gray-300" />
                   <span>{reading_time} min read</span>
                 </div>
+                {formattedReviewedDate && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Last reviewed:{" "}
+                    <time dateTime={lastReviewedAt!}>{formattedReviewedDate}</time>
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -162,9 +191,13 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        <div className="mx-auto max-w-3xl px-6 pb-16">
-          <div className="prose-article" dangerouslySetInnerHTML={{ __html: content }} />
+        <div className="mx-auto max-w-3xl px-6 pb-12">
+          {quickAnswer && <QuickAnswer answer={quickAnswer} />}
+          <div className="prose-article" dangerouslySetInnerHTML={{ __html: anchoredContent }} />
         </div>
+
+        {faqs && faqs.length > 0 && <FAQList faqs={faqs} />}
+        {sources && sources.length > 0 && <Sources sources={sources} />}
       </article>
 
       {relatedArticles.length > 0 && (
