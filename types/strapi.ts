@@ -79,6 +79,36 @@ export interface Footer {
   description?: string;
 }
 
+// ─── Divine Name (Phase C2 entity) ──────────────────────────────────
+
+export interface DivineNameRef {
+  id: number;
+  documentId: string;
+  number: number;
+  arabic: string;
+  transliteration: string;
+  slug: string;
+}
+
+export interface DivineName extends DivineNameRef {
+  rootLetters?: string | null;
+  quickAnswer?: string | null;
+  body?: string | null;
+  quranOccurrences?: { sura: number; ayah: number }[] | null;
+  mercyPair?: DivineNameRef[];
+  oppositePair?: DivineNameRef[];
+  quranicPair?: DivineNameRef[];
+  featuredImage?: StrapiMedia | null;
+  audio?: StrapiMedia | null;
+  lastReviewedAt?: string | null;
+  faqs?: FAQItem[];
+  sources?: SourceCitation[];
+  seo?: SEOComponent | null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
 // ─── Article semantic components (Phase B) ──────────────────────────
 
 export interface FAQItem {
