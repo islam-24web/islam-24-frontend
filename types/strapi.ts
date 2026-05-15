@@ -301,7 +301,21 @@ export interface HomeHeroBlock {
   eyebrow?: string | null;
 }
 
-export type HomeBlock = DailyTilesBlock | CategoryStripBlock | HomeHeroBlock;
+export interface DivineNamesFeatureBlock {
+  id: number;
+  __component: "blocks.divine-names-feature";
+  mode: "card-cta" | "strip";
+  headline_ar?: string | null;
+  body_ar?: string | null;
+  cta_label?: string | null;
+  strip_count: number;
+}
+
+export type HomeBlock =
+  | DailyTilesBlock
+  | CategoryStripBlock
+  | HomeHeroBlock
+  | DivineNamesFeatureBlock;
 
 export interface Homepage {
   id: number;

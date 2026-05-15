@@ -41,6 +41,10 @@ function revalidateModelPaths(model: string, entry?: { slug?: string }) {
   if (model === "article" || model === "category") {
     revalidatePath("/");
   }
+  // Divine-names-feature strip on / pulls from divine-name list.
+  if (model === "divine-name") {
+    revalidatePath("/");
+  }
 }
 
 export async function POST(request: NextRequest) {

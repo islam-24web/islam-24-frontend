@@ -188,6 +188,7 @@ export default async function HomePage() {
     : [];
   const cmsHasCategoryStrips = cmsBlocks.some((b) => b.__component === "blocks.category-strip");
   const cmsHasHomeHero = cmsBlocks.some((b) => b.__component === "blocks.home-hero");
+  const cmsHasDivineNames = cmsBlocks.some((b) => b.__component === "blocks.divine-names-feature");
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
@@ -338,12 +339,14 @@ export default async function HomePage() {
                   ))}
                 </div>
               </div>
-              {/* Asma Allah */}
-              <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl p-5 shadow-sm">
-                <h3 className="font-bold text-lg mb-2">🌟 أسماء الله الحسنى</h3>
-                <p className="text-white/80 text-sm mb-4 leading-relaxed">تعرف على أسماء الله الحسنى الـ ٩٩ ومعانيها وآثارها الإيمانية</p>
-                <Link href="/category/names-of-allah" className="block text-center bg-white text-amber-700 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-50 transition-colors">تصفح الأسماء ←</Link>
-              </div>
+              {/* Asma Allah sidebar — hidden when CMS supplied a divine-names-feature block */}
+              {!cmsHasDivineNames && (
+                <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl p-5 shadow-sm">
+                  <h3 className="font-bold text-lg mb-2">🌟 أسماء الله الحسنى</h3>
+                  <p className="text-white/80 text-sm mb-4 leading-relaxed">تعرف على أسماء الله الحسنى الـ ٩٩ ومعانيها وآثارها الإيمانية</p>
+                  <Link href="/asma-allah" className="block text-center bg-white text-amber-700 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-50 transition-colors">تصفح الأسماء ←</Link>
+                </div>
+              )}
             </div>
           </aside>
         </div>

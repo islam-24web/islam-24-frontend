@@ -2,6 +2,7 @@ import type { HomeBlock } from "@/types/strapi";
 import DailyTiles from "./DailyTiles";
 import CategoryStrip from "./CategoryStrip";
 import HomeHero from "./HomeHero";
+import DivineNamesFeature from "./DivineNamesFeature";
 
 interface Props {
   blocks: HomeBlock[];
@@ -19,6 +20,8 @@ export default function HomeBlockRenderer({ blocks }: Props) {
             return <CategoryStrip key={block.id} block={block} />;
           case "blocks.home-hero":
             return <HomeHero key={block.id} block={block} />;
+          case "blocks.divine-names-feature":
+            return <DivineNamesFeature key={block.id} block={block} />;
           default: {
             const exhaustive: never = block;
             console.warn(`Unknown home block: ${(exhaustive as HomeBlock).__component}`);
