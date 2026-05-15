@@ -48,6 +48,7 @@ export const CATEGORY_TO_WORLD: Record<string, World> = {
   "fiqh": "worship",
   // life
   "marriage-family": "life",
+  "mental-health": "life",
 };
 
 export function worldForCategory(slug: string | null | undefined): World | null {
