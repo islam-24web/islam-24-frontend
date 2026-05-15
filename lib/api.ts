@@ -255,6 +255,7 @@ export async function getNavigation(): Promise<Navigation | null> {
       params: {
         "populate[logo]": "*",
         "populate[links]": "*",
+        "populate[nav_items][populate][sub_items]": "*",
       },
       tags: ["navigation"],
       revalidate: 300,

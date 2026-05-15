@@ -62,12 +62,25 @@ export interface SocialLink {
   url: string;
 }
 
+export interface NavItem {
+  id: number;
+  label: string;
+  href?: string | null;
+  is_external: boolean;
+  highlight: boolean;
+  sub_items: NavLink[];
+}
+
 export interface Navigation {
   id: number;
   documentId: string;
   logo: StrapiMedia | null;
   logo_text: string;
   links: NavLink[];
+  nav_items?: NavItem[];
+  show_date_strip?: boolean;
+  tagline_ar?: string | null;
+  tagline_en?: string | null;
 }
 
 export interface Footer {

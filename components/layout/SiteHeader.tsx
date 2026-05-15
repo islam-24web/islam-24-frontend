@@ -1,0 +1,171 @@
+import Link from "next/link";
+import Image from "next/image";
+import type { NavItem, NavLink, Navigation } from "@/types/strapi";
+import { getStrapiMediaUrl } from "@/lib/api";
+
+interface Props {
+  navigation: Navigation | null;
+}
+
+const FALLBACK_ITEMS: NavItem[] = [
+  { id: 0, label: "القرآن", href: "/category/quran-tafsir", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الحديث", href: "/category/hadith", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الفقه", href: "/category/fiqh", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "أسماء الله", href: "/asma-allah", is_external: false, highlight: false, sub_items: [] },
+];
+
+function linksToItems(links: NavLink[]): NavItem[] {
+  return links.map((l) => ({
+    id: l.id,
+    label: l.name,
+    href: l.url,
+    is_external: l.is_external,
+    highlight: false,
+    sub_items: [],
+  }));
+}
+
+function NavItemLink({ item }: { item: NavItem }) {
+  const baseClasses =
+    "flex-shrink-0 text-sm font-medium px-3 py-2.5 transition-colors hover:bg-emerald-700/50 border-b-2 border-transparent hover:border-amber-400 whitespace-nowrap";
+  const colorClasses = item.highlight
+    ? "text-amber-400"
+    : "text-emerald-100 hover:text-amber-400";
+
+  if (item.sub_items && item.sub_items.length > 0) {
+    return (
+      <div className="relative group flex-shrink-0">
+        <span className={`${baseClasses} ${colorClasses} cursor-pointer flex items-center gap-1`}>
+          {item.label}
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+        <div className="absolute top-full right-0 mt-0 bg-white rounded-b-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 z-50 min-w-[200px]">
+          {item.sub_items.map((sub) => (
+            <Link
+              key={sub.id}
+              href={sub.url}
+              target={sub.is_external ? "_blank" : undefined}
+              rel={sub.is_external ? "noopener noreferrer" : undefined}
+              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors whitespace-nowrap border-b border-gray-50 last:border-0"
+            >
+              {sub.name}
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const href = item.href || "#";
+  return (
+    <Link
+      href={href}
+      target={item.is_external ? "_blank" : undefined}
+      rel={item.is_external ? "noopener noreferrer" : undefined}
+      className={`${baseClasses} ${colorClasses}`}
+    >
+      {item.label}
+    </Link>
+  );
+}
+
+export default function SiteHeader({ navigation }: Props) {
+  const logoUrl = navigation?.logo?.url;
+  const logoText = navigation?.logo_text || "إسلام 24";
+  const taglineAr = navigation?.tagline_ar ?? "بوابتك الإسلامية الشاملة";
+  const showDate = navigation?.show_date_strip ?? true;
+
+  const items: NavItem[] =
+    navigation?.nav_items && navigation.nav_items.length > 0
+      ? navigation.nav_items
+      : navigation?.links && navigation.links.length > 0
+      ? linksToItems(navigation.links)
+      : FALLBACK_ITEMS;
+
+  const flatItems: { id: number; label: string; href: string; is_external: boolean }[] = items.flatMap((item) => {
+    if (item.sub_items && item.sub_items.length > 0) {
+      return [
+        ...(item.href ? [{ id: item.id, label: item.label, href: item.href, is_external: item.is_external }] : []),
+        ...item.sub_items.map((s) => ({ id: s.id, label: s.name, href: s.url, is_external: s.is_external })),
+      ];
+    }
+    return [{ id: item.id, label: item.label, href: item.href || "#", is_external: item.is_external }];
+  });
+
+  return (
+    <header className="sticky top-0 z-50 bg-emerald-800 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between py-2 border-b border-emerald-700">
+          <Link href="/" className="flex items-center gap-2" aria-label={logoText}>
+            <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center overflow-hidden">
+              {logoUrl ? (
+                <Image
+                  src={getStrapiMediaUrl(logoUrl)}
+                  alt={logoText}
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-white font-bold text-base">﷽</span>
+              )}
+            </div>
+            <div>
+              <span className="text-white font-bold text-lg">{logoText}</span>
+              {taglineAr && (
+                <p className="text-emerald-300 text-[10px] hidden sm:block">{taglineAr}</p>
+              )}
+            </div>
+          </Link>
+          {showDate && (
+            <div className="text-emerald-300 text-xs hidden md:block">
+              {new Date().toLocaleDateString("ar-EG", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </div>
+          )}
+        </div>
+
+        <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
+          <Link
+            href="/"
+            className="flex-shrink-0 text-amber-400 text-sm font-bold px-3 py-2.5 border-b-2 border-amber-400"
+          >
+            الرئيسية
+          </Link>
+          {items.map((item, idx) => (
+            <NavItemLink key={`${item.id}-${idx}`} item={item} />
+          ))}
+        </nav>
+
+        <nav
+          aria-label="Primary mobile"
+          className="md:hidden flex items-center overflow-x-auto no-scrollbar -mx-1 pb-1"
+        >
+          <Link
+            href="/"
+            className="flex-shrink-0 text-amber-400 text-xs font-bold px-2 py-2 border-b-2 border-amber-400"
+          >
+            الرئيسية
+          </Link>
+          {flatItems.map((item, idx) => (
+            <Link
+              key={`${item.id}-${idx}`}
+              href={item.href}
+              target={item.is_external ? "_blank" : undefined}
+              rel={item.is_external ? "noopener noreferrer" : undefined}
+              className="flex-shrink-0 text-emerald-100 text-xs font-medium px-2 py-2 whitespace-nowrap"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}

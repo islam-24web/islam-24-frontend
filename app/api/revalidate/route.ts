@@ -32,6 +32,9 @@ function revalidateModelPaths(model: string, entry?: { slug?: string }) {
     revalidatePath("/sitemap.xml");
     if (entry?.slug) revalidatePath(`/asma-allah/${entry.slug}`);
   }
+  if (model === "navigation" || model === "footer") {
+    revalidatePath("/");
+  }
 }
 
 export async function POST(request: NextRequest) {

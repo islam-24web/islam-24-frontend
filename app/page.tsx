@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getArticles, getCategories, getStrapiMediaUrl } from "@/lib/api";
+import { getArticles, getCategories, getFooter, getNavigation, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
+import { isCmsHomepage } from "@/lib/feature-flags";
 import type { Article, Category } from "@/types/strapi";
 
 export const revalidate = 300;
@@ -149,10 +152,14 @@ function DropdownNavItem({ name, items }: { name: string; items: { name: string;
 }
 
 export default async function HomePage() {
-  const [categories, featuredRes, mostReadRes, ...sectionResults] = await Promise.all([
+  const useCms = isCmsHomepage();
+
+  const [categories, featuredRes, mostReadRes, navigation, footer, ...sectionResults] = await Promise.all([
     getCategories(),
     getArticles({ featured: true, pageSize: 5 }),
     getArticles({ pageSize: 20 }),
+    useCms ? getNavigation() : Promise.resolve(null),
+    useCms ? getFooter() : Promise.resolve(null),
     ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7 })),
   ]);
   void categories;
@@ -168,7 +175,7 @@ export default async function HomePage() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-50">
-      {/* Navigation Bar */}
+      {useCms ? <SiteHeader navigation={navigation} /> : (
       <header className="sticky top-0 z-50 bg-emerald-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between py-2 border-b border-emerald-700">
@@ -215,6 +222,7 @@ export default async function HomePage() {
           </nav>
         </div>
       </header>
+      )}
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
@@ -312,7 +320,7 @@ export default async function HomePage() {
         </div>
       </main>
 
-      {/* Footer */}
+      {useCms ? <SiteFooter footer={footer} /> : (
       <footer className="bg-emerald-900 text-white mt-12">
         <div className="max-w-7xl mx-auto px-4 py-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -355,6 +363,7 @@ export default async function HomePage() {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 }
