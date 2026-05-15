@@ -17,8 +17,6 @@ import {
 } from "@/lib/jobs/i18n";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   params: { slug: string };
   searchParams: { lang?: string };

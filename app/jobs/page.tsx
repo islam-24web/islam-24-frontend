@@ -5,8 +5,6 @@ import JobsFilters from "@/components/jobs/JobsFilters";
 import JobCard from "@/components/jobs/JobCard";
 import Pagination from "@/components/ui/Pagination";
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   searchParams: {
     lang?: string;
