@@ -330,12 +330,25 @@ export interface AppsFeatureBlock {
   items: AppCard[];
 }
 
+export interface NewsletterCtaBlock {
+  id: number;
+  __component: "blocks.newsletter-cta";
+  enabled: boolean;
+  headline_ar?: string | null;
+  body_ar?: string | null;
+  placeholder?: string | null;
+  cta_label?: string | null;
+  success_message?: string | null;
+  consent_label?: string | null;
+}
+
 export type HomeBlock =
   | DailyTilesBlock
   | CategoryStripBlock
   | HomeHeroBlock
   | DivineNamesFeatureBlock
-  | AppsFeatureBlock;
+  | AppsFeatureBlock
+  | NewsletterCtaBlock;
 
 export interface Homepage {
   id: number;

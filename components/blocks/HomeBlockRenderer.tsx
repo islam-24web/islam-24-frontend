@@ -4,6 +4,7 @@ import CategoryStrip from "./CategoryStrip";
 import HomeHero from "./HomeHero";
 import DivineNamesFeature from "./DivineNamesFeature";
 import AppsFeature from "./AppsFeature";
+import NewsletterCta from "./NewsletterCta";
 
 interface Props {
   blocks: HomeBlock[];
@@ -25,6 +26,8 @@ export default function HomeBlockRenderer({ blocks }: Props) {
             return <DivineNamesFeature key={block.id} block={block} />;
           case "blocks.apps-feature":
             return <AppsFeature key={block.id} block={block} />;
+          case "blocks.newsletter-cta":
+            return <NewsletterCta key={block.id} block={block} />;
           default: {
             const exhaustive: never = block;
             console.warn(`Unknown home block: ${(exhaustive as HomeBlock).__component}`);
