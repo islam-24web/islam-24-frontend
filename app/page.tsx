@@ -187,6 +187,7 @@ export default async function HomePage() {
     ? (homepage?.sections?.length ? homepage.sections : [FALLBACK_DAILY_TILES])
     : [];
   const cmsHasCategoryStrips = cmsBlocks.some((b) => b.__component === "blocks.category-strip");
+  const cmsHasHomeHero = cmsBlocks.some((b) => b.__component === "blocks.home-hero");
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
@@ -252,8 +253,8 @@ export default async function HomePage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-8">
-            {/* Hero Swiper */}
-            <HeroSwiper articles={heroArticles} />
+            {/* Hero — inline swiper runs unless CMS has supplied a home-hero block */}
+            {!cmsHasHomeHero && <HeroSwiper articles={heroArticles} />}
 
             {/* Daily Content Cards */}
             {useCms ? (

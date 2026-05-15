@@ -291,7 +291,17 @@ export interface CategoryStripBlock {
   see_more_label?: string | null;
 }
 
-export type HomeBlock = DailyTilesBlock | CategoryStripBlock;
+export interface HomeHeroBlock {
+  id: number;
+  __component: "blocks.home-hero";
+  mode: "latest-featured" | "hand-picked";
+  articles?: Article[];
+  variant: "carousel" | "single";
+  limit: number;
+  eyebrow?: string | null;
+}
+
+export type HomeBlock = DailyTilesBlock | CategoryStripBlock | HomeHeroBlock;
 
 export interface Homepage {
   id: number;

@@ -274,6 +274,8 @@ export async function getHomepage(): Promise<Homepage | null> {
       params: {
         "populate[sections][on][blocks.daily-tiles][populate][items]": "true",
         "populate[sections][on][blocks.category-strip][populate][category]": "true",
+        "populate[sections][on][blocks.home-hero][populate][articles][populate][featured_image]": "true",
+        "populate[sections][on][blocks.home-hero][populate][articles][populate][category]": "true",
         "populate[seo][populate]": "*",
       },
       tags: ["homepage"],
