@@ -32,3 +32,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local backup zips (e.g. frontend-source.zip) — never commit
+*.zip
