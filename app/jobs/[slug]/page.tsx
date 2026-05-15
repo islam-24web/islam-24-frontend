@@ -15,18 +15,19 @@ import {
   t,
   type Messages,
 } from "@/lib/jobs/i18n";
-import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getSiteUrl, SITE_NAME_AR } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
+import { buildJobPosting } from "@/lib/seo/schema/job-posting";
 
 interface Props {
   params: { slug: string };
   searchParams: { lang?: string };
 }
 
-const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.islam-24.com"
-).replace(/\/$/, "");
+const SITE_URL = getSiteUrl();
 
-const BRAND_NAME = "إسلام 24";
+const BRAND_NAME = SITE_NAME_AR;
 const SOURCE_NAME = "RemoteOK";
 
 export async function generateMetadata({
@@ -67,86 +68,6 @@ function formatLocationLabel(job: Job, messages: Messages): string {
   return messages.remote;
 }
 
-function buildJobPostingJsonLd(
-  job: Job,
-  canonicalUrl: string,
-): Record<string, unknown> {
-  const ld: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "JobPosting",
-    title: job.title,
-    description: job.description,
-    datePosted: job.datePosted,
-    hiringOrganization: {
-      "@type": "Organization",
-      name: job.company?.name ?? "Unknown",
-    },
-    validThrough: job.validThrough,
-    employmentType: job.employmentType,
-    jobLocationType: job.jobLocationType,
-    directApply: false,
-    url: canonicalUrl,
-    identifier: {
-      "@type": "PropertyValue",
-      name: "islam-24.com Job ID",
-      value: job.documentId,
-    },
-  };
-
-  // Google's Rich Results validator errors when a TELECOMMUTE job omits
-  // applicantLocationRequirements (even though the spec calls it optional).
-  // Always emit at least ["Worldwide"] for remote jobs; for ONSITE/HYBRID,
-  // strip "Worldwide" since jobLocation carries the real geographic info.
-  if (job.jobLocationType === "TELECOMMUTE") {
-    const reqs =
-      job.applicantLocationRequirements.length > 0
-        ? job.applicantLocationRequirements
-        : ["Worldwide"];
-    ld.applicantLocationRequirements = reqs.map((r) => ({
-      "@type": "Country",
-      name: r,
-    }));
-  } else {
-    const reqs = job.applicantLocationRequirements.filter(
-      (r) => r && r.toLowerCase() !== "worldwide",
-    );
-    if (reqs.length > 0) {
-      ld.applicantLocationRequirements = reqs.map((r) => ({
-        "@type": "Country",
-        name: r,
-      }));
-    }
-  }
-
-  if (job.physicalLocation) {
-    const address: Record<string, unknown> = {
-      "@type": "PostalAddress",
-      addressCountry: job.physicalLocation.country,
-    };
-    if (job.physicalLocation.region)
-      address.addressRegion = job.physicalLocation.region;
-    if (job.physicalLocation.city)
-      address.addressLocality = job.physicalLocation.city;
-    ld.jobLocation = { "@type": "Place", address };
-  }
-
-  if (job.salaryMin > 0 || job.salaryMax > 0) {
-    const value: Record<string, unknown> = {
-      "@type": "QuantitativeValue",
-      unitText: job.salaryUnit ?? "YEAR",
-    };
-    if (job.salaryMin > 0) value.minValue = job.salaryMin;
-    if (job.salaryMax > 0) value.maxValue = job.salaryMax;
-    ld.baseSalary = {
-      "@type": "MonetaryAmount",
-      currency: job.salaryCurrency || "USD",
-      value,
-    };
-  }
-
-  return ld;
-}
-
 export default async function JobDetailPage({ params, searchParams }: Props) {
   const locale = parseLocale(searchParams.lang);
   const messages = getMessages(locale);
@@ -175,7 +96,6 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
     },
     { name: job.title, url: canonical },
   ];
-  const jobPostingLd = buildJobPostingJsonLd(job, canonical);
 
   const employmentLabel = job.employmentType.replace("_", " ").toLowerCase();
 
@@ -259,10 +179,11 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
         </div>
       </article>
 
-      <BreadcrumbJsonLd items={breadcrumbs} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingLd) }}
+      <JsonLd
+        graph={[
+          buildJobPosting({ job, canonicalUrl: canonical, locale }),
+          buildBreadcrumb(breadcrumbs),
+        ]}
       />
     </main>
   );

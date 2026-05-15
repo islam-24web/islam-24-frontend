@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getArticleBySlug, getArticles, getRelatedArticles, getStrapiMediaUrl } from "@/lib/api";
-import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
-import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getSiteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildBlogPosting } from "@/lib/seo/schema/blog-posting";
+import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
 import ArticleCard from "@/components/blog/ArticleCard";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = getSiteUrl();
 
 interface Props {
   params: { slug: string };
@@ -86,8 +88,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <>
-      <ArticleJsonLd article={article} siteUrl={SITE_URL} />
-      <BreadcrumbJsonLd items={breadcrumbs} />
+      <JsonLd graph={[buildBlogPosting(article), buildBreadcrumb(breadcrumbs)]} />
 
       <article>
         <header className="py-12 sm:py-16">

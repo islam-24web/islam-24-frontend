@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { fetchJobs, fetchJobCategories } from "@/lib/jobs/api";
 import { getDir, getMessages, parseLocale } from "@/lib/jobs/i18n";
+import { getSiteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildItemList } from "@/lib/seo/schema/item-list";
 import JobsFilters from "@/components/jobs/JobsFilters";
 import JobCard from "@/components/jobs/JobCard";
 import Pagination from "@/components/ui/Pagination";
@@ -26,9 +29,7 @@ export async function generateMetadata({
   };
 }
 
-const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.islam-24.com"
-).replace(/\/$/, "");
+const SITE_URL = getSiteUrl();
 
 export default async function JobsPage({ searchParams }: Props) {
   const locale = parseLocale(searchParams.lang);
@@ -97,21 +98,17 @@ export default async function JobsPage({ searchParams }: Props) {
             extraParams={paginationExtra}
           />
 
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ItemList",
-                itemListElement: jobs.map((j, i) => ({
-                  "@type": "ListItem",
-                  position: (page - 1) * pagination.pageSize + i + 1,
+          <JsonLd
+            graph={[
+              buildItemList(
+                jobs.map((j) => ({
                   url: `${SITE_URL}/jobs/${j.slug}${
                     locale !== "en" ? `?lang=${locale}` : ""
                   }`,
                 })),
-              }),
-            }}
+                (page - 1) * pagination.pageSize + 1,
+              ),
+            ]}
           />
         </>
       )}
