@@ -45,59 +45,114 @@ const SOCIAL_ICONS: Record<SocialLink["platform"], JSX.Element> = {
 
 export default function SiteFooter({ footer }: Props) {
   const description = footer?.description;
-  const links = footer?.links ?? [];
+  const sections = footer?.sections ?? [];
+  const flatLinks = footer?.links ?? [];
   const social = footer?.social_links ?? [];
   const copyright = footer?.copyright_text;
   const year = new Date().getFullYear();
 
+  const useGrid = sections.length > 0;
+
   return (
     <footer className="bg-emerald-900 text-white mt-12">
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex flex-col items-center gap-6 text-center">
-          <Link href="/" className="flex items-center gap-2" aria-label="إسلام 24">
-            <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold">﷽</span>
+        {useGrid ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <Link href="/" className="flex items-center gap-2 mb-3" aria-label="إسلام 24">
+                <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold">﷽</span>
+                </div>
+                <span className="font-bold text-lg">إسلام 24</span>
+              </Link>
+              {description && (
+                <p className="text-emerald-300 text-xs leading-relaxed">{description}</p>
+              )}
+              {social.length > 0 && (
+                <div className="flex items-center gap-3 mt-4">
+                  {social.map((s) => (
+                    <a
+                      key={s.platform + s.url}
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.platform}
+                      className="text-emerald-300 hover:text-amber-400 transition-colors"
+                    >
+                      {SOCIAL_ICONS[s.platform]}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-            <span className="font-bold text-lg">إسلام 24</span>
-          </Link>
 
-          {description && (
-            <p className="text-emerald-300 text-sm max-w-xl leading-relaxed">{description}</p>
-          )}
+            {sections.map((section) => (
+              <div key={section.id}>
+                <h4 className="font-bold text-amber-400 mb-3 text-sm">{section.title}</h4>
+                <ul className="space-y-1.5">
+                  {section.links.map((link) => (
+                    <li key={link.id}>
+                      <Link
+                        href={link.url}
+                        target={link.is_external ? "_blank" : undefined}
+                        rel={link.is_external ? "noopener noreferrer" : undefined}
+                        className="text-emerald-300 hover:text-amber-400 text-xs transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-6 text-center">
+            <Link href="/" className="flex items-center gap-2" aria-label="إسلام 24">
+              <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold">﷽</span>
+              </div>
+              <span className="font-bold text-lg">إسلام 24</span>
+            </Link>
 
-          {links.length > 0 && (
-            <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 max-w-3xl">
-              {links.map((link) => (
-                <Link
-                  key={link.id}
-                  href={link.url}
-                  target={link.is_external ? "_blank" : undefined}
-                  rel={link.is_external ? "noopener noreferrer" : undefined}
-                  className="text-emerald-300 hover:text-amber-400 text-sm transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          )}
+            {description && (
+              <p className="text-emerald-300 text-sm max-w-xl leading-relaxed">{description}</p>
+            )}
 
-          {social.length > 0 && (
-            <div className="flex items-center gap-3">
-              {social.map((s) => (
-                <a
-                  key={s.platform + s.url}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.platform}
-                  className="text-emerald-300 hover:text-amber-400 transition-colors"
-                >
-                  {SOCIAL_ICONS[s.platform]}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
+            {flatLinks.length > 0 && (
+              <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 max-w-3xl">
+                {flatLinks.map((link) => (
+                  <Link
+                    key={link.id}
+                    href={link.url}
+                    target={link.is_external ? "_blank" : undefined}
+                    rel={link.is_external ? "noopener noreferrer" : undefined}
+                    className="text-emerald-300 hover:text-amber-400 text-sm transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            )}
+
+            {social.length > 0 && (
+              <div className="flex items-center gap-3">
+                {social.map((s) => (
+                  <a
+                    key={s.platform + s.url}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.platform}
+                    className="text-emerald-300 hover:text-amber-400 transition-colors"
+                  >
+                    {SOCIAL_ICONS[s.platform]}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="border-t border-emerald-800 mt-8 pt-6 text-center">
           <p className="text-emerald-400 text-xs">

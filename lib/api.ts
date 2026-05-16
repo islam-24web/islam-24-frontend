@@ -300,6 +300,7 @@ export async function getFooter(): Promise<Footer | null> {
       path: "/footer",
       params: {
         "populate[links]": "*",
+        "populate[sections][populate][links]": "*",
         "populate[social_links]": "*",
       },
       tags: ["footer"],

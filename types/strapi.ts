@@ -83,11 +83,18 @@ export interface Navigation {
   tagline_en?: string | null;
 }
 
+export interface LinkGroup {
+  id: number;
+  title: string;
+  links: NavLink[];
+}
+
 export interface Footer {
   id: number;
   documentId: string;
   copyright_text: string;
   links: NavLink[];
+  sections?: LinkGroup[];
   social_links: SocialLink[];
   description?: string;
 }
