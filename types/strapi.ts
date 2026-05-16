@@ -196,6 +196,10 @@ export interface Category {
   children: Category[];
   articles: Article[];
   seo?: SEOComponent | null;
+  approved_for_homepage?: boolean;
+  homepage_layout?: "hero-grid" | "horizontal-scroll" | "three-up";
+  homepage_limit?: number;
+  homepage_order?: number;
 }
 
 // ─── Dynamic Zone Blocks ────────────────────────────────────────────
