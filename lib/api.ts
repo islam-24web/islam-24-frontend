@@ -249,6 +249,32 @@ export async function getCategories(): Promise<Category[]> {
   return res.data;
 }
 
+// Approved categories that should auto-render as homepage category strips.
+// Filtered + sorted server-side; only the fields the merge step in app/page.tsx
+// reads are requested.
+export async function getApprovedHomepageCategories(): Promise<Category[]> {
+  const res = await safeFetch<StrapiResponse<Category[]>>(
+    {
+      path: "/categories",
+      params: {
+        "filters[approved_for_homepage][$eq]": "true",
+        "sort[0]": "homepage_order:asc",
+        "sort[1]": "slug:asc",
+        "fields[0]": "name",
+        "fields[1]": "slug",
+        "fields[2]": "homepage_layout",
+        "fields[3]": "homepage_limit",
+        "fields[4]": "homepage_order",
+        "pagination[pageSize]": "100",
+      },
+      tags: ["categories"],
+      revalidate: 300,
+    },
+    EMPTY_LIST_RESPONSE<Category>()
+  );
+  return res.data;
+}
+
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
   const res = await safeFetch<StrapiResponse<Category[]>>(
     {

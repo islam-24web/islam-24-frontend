@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
+import { getApprovedHomepageCategories, getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
-import { isCmsHomepage } from "@/lib/feature-flags";
-import type { Article, Category, DailyTilesBlock } from "@/types/strapi";
+import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
+import type { Article, CategoryStripBlock, DailyTilesBlock, HomeBlock } from "@/types/strapi";
 
 export const revalidate = 300;
 
@@ -169,23 +169,54 @@ function DropdownNavItem({ name, items }: { name: string; items: { name: string;
 
 export default async function HomePage() {
   const useCms = isCmsHomepage();
+  const useAutoStrips = useCms && isAutoCategoryStrips();
 
-  const [categories, featuredRes, mostReadRes, navigation, footer, homepage, ...sectionResults] = await Promise.all([
+  const [categories, featuredRes, mostReadRes, navigation, footer, homepage, approvedCategories, ...sectionResults] = await Promise.all([
     getCategories(),
     getArticles({ featured: true, pageSize: 5 }),
     getArticles({ pageSize: 20 }),
     useCms ? getNavigation() : Promise.resolve(null),
     useCms ? getFooter() : Promise.resolve(null),
     useCms ? getHomepage() : Promise.resolve(null),
+    useAutoStrips ? getApprovedHomepageCategories() : Promise.resolve([]),
     ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7 })),
   ]);
   void categories;
 
-  // When the CMS path is on, prefer editor-published blocks. Fall back to a
-  // safe hardcoded daily-tiles block if the editor hasn't published yet.
-  const cmsBlocks = useCms
+  // Manual blocks come from the homepage singleton. When CMS is on but the
+  // editor hasn't published yet, render a safe hardcoded daily-tiles block.
+  const manualBlocks: HomeBlock[] = useCms
     ? (homepage?.sections?.length ? homepage.sections : [FALLBACK_DAILY_TILES])
     : [];
+
+  // Singleton override: a manual category strip (source: category) claims its
+  // category slug. The auto path skips any category slug already claimed so
+  // editors can override layout/limit/headline by adding a manual strip.
+  const claimedSlugs = new Set(
+    manualBlocks
+      .filter((b): b is CategoryStripBlock => b.__component === "blocks.category-strip")
+      .filter((b) => (b.source ?? "category") === "category" && b.category)
+      .map((b) => b.category!.slug)
+  );
+
+  // Synthesize a category-strip block for each approved category not already
+  // covered by a manual strip. Negative ids stay unique among themselves and
+  // can't collide with Strapi's positive auto-increment ids.
+  const autoBlocks: CategoryStripBlock[] = approvedCategories
+    .filter((c) => !claimedSlugs.has(c.slug))
+    .map((c) => ({
+      id: -c.id,
+      __component: "blocks.category-strip",
+      source: "category",
+      category: { id: c.id, name: c.name, slug: c.slug },
+      headline_ar: null,
+      headline_en: null,
+      layout: c.homepage_layout ?? "hero-grid",
+      limit: c.homepage_limit ?? 7,
+      see_more_label: null,
+    }));
+
+  const cmsBlocks: HomeBlock[] = [...manualBlocks, ...autoBlocks];
   const cmsHasCategoryStrips = cmsBlocks.some((b) => b.__component === "blocks.category-strip");
   const cmsHasHomeHero = cmsBlocks.some((b) => b.__component === "blocks.home-hero");
   const cmsHasDivineNames = cmsBlocks.some((b) => b.__component === "blocks.divine-names-feature");
