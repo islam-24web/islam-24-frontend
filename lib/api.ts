@@ -137,9 +137,16 @@ export async function getArticles(options?: {
   pageSize?: number;
   categorySlug?: string;
   featured?: boolean;
+  showInHero?: boolean;
+  showInEditorPick?: boolean;
+  showInFeaturedStrip?: boolean;
+  sortByHomepagePriority?: boolean;
 }): Promise<StrapiResponse<Article[]>> {
+  const sortByPriority = options?.sortByHomepagePriority;
   const params: Record<string, string> = {
-    "sort[0]": "published_date:desc",
+    ...(sortByPriority
+      ? { "sort[0]": "homepage_priority:desc", "sort[1]": "published_date:desc" }
+      : { "sort[0]": "published_date:desc" }),
     "pagination[page]": String(options?.page ?? 1),
     "pagination[pageSize]": String(options?.pageSize ?? 12),
     "populate[featured_image]": "*",
@@ -154,6 +161,21 @@ export async function getArticles(options?: {
 
   if (options?.featured !== undefined) {
     params["filters[is_featured][$eq]"] = String(options.featured);
+  }
+
+  if (options?.showInHero) {
+    // flag-driven hero treats is_featured OR show_in_hero as a positive signal,
+    // so existing featured articles surface during rollout.
+    params["filters[$or][0][show_in_hero][$eq]"] = "true";
+    params["filters[$or][1][is_featured][$eq]"] = "true";
+  }
+
+  if (options?.showInEditorPick) {
+    params["filters[show_in_editor_pick][$eq]"] = "true";
+  }
+
+  if (options?.showInFeaturedStrip) {
+    params["filters[show_in_featured_strip][$eq]"] = "true";
   }
 
   return safeFetch<StrapiResponse<Article[]>>(

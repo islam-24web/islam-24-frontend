@@ -169,6 +169,10 @@ export interface Article {
   author_name: string;
   author_image: StrapiMedia | null;
   is_featured: boolean;
+  show_in_hero?: boolean;
+  show_in_editor_pick?: boolean;
+  show_in_featured_strip?: boolean;
+  homepage_priority?: number;
   published_date: string;
   reading_time: number;
   seo?: SEOComponent | null;
@@ -290,6 +294,7 @@ export interface DailyTilesBlock {
 export interface CategoryStripBlock {
   id: number;
   __component: "blocks.category-strip";
+  source?: "category" | "featured-flag";
   category: { id: number; name: string; slug: string } | null;
   headline_ar?: string | null;
   headline_en?: string | null;
@@ -301,7 +306,7 @@ export interface CategoryStripBlock {
 export interface HomeHeroBlock {
   id: number;
   __component: "blocks.home-hero";
-  mode: "latest-featured" | "hand-picked";
+  mode: "latest-featured" | "hand-picked" | "flag-driven";
   articles?: Article[];
   variant: "carousel" | "single";
   limit: number;
@@ -352,6 +357,8 @@ export interface NewsletterCtaBlock {
 export interface EditorPickBlock {
   id: number;
   __component: "blocks.editor-pick";
+  mode?: "hand-picked" | "flag-driven";
+  limit?: number;
   headline_ar?: string | null;
   headline_en?: string | null;
   subhead?: string | null;

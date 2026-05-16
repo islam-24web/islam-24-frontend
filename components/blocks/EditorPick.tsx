@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getStrapiMediaUrl } from "@/lib/api";
+import { getArticles, getStrapiMediaUrl } from "@/lib/api";
 import type { Article, EditorPickBlock } from "@/types/strapi";
 
 interface Props {
@@ -47,8 +47,20 @@ function PickCard({ article, prominent = false }: { article: Article; prominent?
   );
 }
 
-export default function EditorPick({ block }: Props) {
-  const articles = (block.articles ?? []).filter(Boolean);
+export default async function EditorPick({ block }: Props) {
+  const limit = Math.max(1, Math.min(12, block.limit ?? 4));
+
+  let articles: Article[];
+  if (block.mode === "flag-driven") {
+    const res = await getArticles({
+      showInEditorPick: true,
+      sortByHomepagePriority: true,
+      pageSize: limit,
+    });
+    articles = (res.data ?? []).filter(Boolean);
+  } else {
+    articles = (block.articles ?? []).filter(Boolean);
+  }
   if (articles.length === 0) return null;
 
   return (

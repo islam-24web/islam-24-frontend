@@ -89,6 +89,17 @@ export default async function HomeHero({ block }: Props) {
   let articles: Article[] = [];
   if (block.mode === "hand-picked") {
     articles = (block.articles ?? []).slice(0, limit);
+  } else if (block.mode === "flag-driven") {
+    const res = await getArticles({
+      showInHero: true,
+      sortByHomepagePriority: true,
+      pageSize: limit,
+    });
+    articles = res.data ?? [];
+    if (articles.length < Math.min(3, limit)) {
+      const fallback = await getArticles({ featured: true, pageSize: limit });
+      articles = (fallback.data ?? []).slice(0, limit);
+    }
   } else {
     const res = await getArticles({ featured: true, pageSize: limit });
     articles = res.data ?? [];

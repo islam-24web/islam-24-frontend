@@ -94,41 +94,52 @@ function SmallCard({ article }: { article: Article }) {
   );
 }
 
-function SectionHeader({ name, slug, seeMoreLabel }: { name: string; slug: string; seeMoreLabel: string }) {
+function SectionHeader({ name, slug, seeMoreLabel }: { name: string; slug?: string; seeMoreLabel: string }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
         <div className="w-1.5 h-7 bg-emerald-600 rounded-full" aria-hidden="true" />
         <h2 className="text-lg font-bold text-gray-800">{name}</h2>
       </div>
-      <Link
-        href={`/category/${slug}`}
-        className="text-emerald-600 text-sm font-medium hover:text-emerald-700 flex items-center gap-1"
-      >
-        {seeMoreLabel}
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </Link>
+      {slug && (
+        <Link
+          href={`/category/${slug}`}
+          className="text-emerald-600 text-sm font-medium hover:text-emerald-700 flex items-center gap-1"
+        >
+          {seeMoreLabel}
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </Link>
+      )}
     </div>
   );
 }
 
 export default async function CategoryStrip({ block }: Props) {
-  if (!block.category) return null;
-  const { slug, name } = block.category;
-  const headline = block.headline_ar || name;
-  const seeMoreLabel = block.see_more_label || "المزيد";
   const limit = Math.max(3, Math.min(12, block.limit ?? 7));
+  const seeMoreLabel = block.see_more_label || "المزيد";
+  const useFlag = block.source === "featured-flag";
 
-  const res = await getArticles({ categorySlug: slug, pageSize: limit });
+  if (!useFlag && !block.category) return null;
+
+  const headline = block.headline_ar || (useFlag ? "مختارات" : block.category!.name);
+  const linkSlug = useFlag ? undefined : block.category!.slug;
+
+  const res = useFlag
+    ? await getArticles({
+        showInFeaturedStrip: true,
+        sortByHomepagePriority: true,
+        pageSize: limit,
+      })
+    : await getArticles({ categorySlug: block.category!.slug, pageSize: limit });
   const articles = res.data ?? [];
   if (articles.length === 0) return null;
 
   if (block.layout === "horizontal-scroll") {
     return (
       <section aria-label={headline}>
-        <SectionHeader name={headline} slug={slug} seeMoreLabel={seeMoreLabel} />
+        <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
         <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-1 px-1 pb-2">
           {articles.map((a) => (
             <div key={a.slug || a.id} className="flex-shrink-0 w-44">
@@ -143,7 +154,7 @@ export default async function CategoryStrip({ block }: Props) {
   if (block.layout === "three-up") {
     return (
       <section aria-label={headline}>
-        <SectionHeader name={headline} slug={slug} seeMoreLabel={seeMoreLabel} />
+        <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {articles.slice(0, 3).map((a) => (
             <SmallCard key={a.slug || a.id} article={a} />
@@ -158,7 +169,7 @@ export default async function CategoryStrip({ block }: Props) {
   const subs = articles.slice(1, 7);
   return (
     <section aria-label={headline}>
-      <SectionHeader name={headline} slug={slug} seeMoreLabel={seeMoreLabel} />
+      <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
       <div className="space-y-3">
         <FeaturedCard article={main} />
         {subs.length > 0 && (
