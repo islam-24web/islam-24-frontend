@@ -39,3 +39,6 @@ next-env.d.ts
 # local one-shot seed/admin scripts — never commit
 .seed-*.py
 .seed-*.json
+
+# Sentry Config File
+.env.sentry-build-plugin

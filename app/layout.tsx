@@ -1,6 +1,7 @@
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
+import * as Sentry from '@sentry/nextjs';
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
 import { buildOrganization } from "@/lib/seo/schema/organization";
@@ -11,19 +12,24 @@ const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap
 const serif = Instrument_Serif({ subsets: ["latin"], weight: ["400"], variable: "--font-serif", display: "swap" });
 const SITE_URL = getSiteUrl();
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: { default: SITE_NAME_AR, template: `%s | ${SITE_NAME_AR}` },
-  description: "موقع إسلامي شامل: القرآن الكريم، الحديث النبوي، الفقه، السيرة، أسماء الله الحسنى، الأدعية والأذكار",
-  openGraph: {
-    type: "website",
-    locale: "ar_EG",
-    siteName: SITE_NAME_AR,
-    images: [{ url: DEFAULT_OG_IMAGE.url, width: DEFAULT_OG_IMAGE.width, height: DEFAULT_OG_IMAGE.height }],
-  },
-  twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE.url] },
-  robots: { index: true, follow: true },
-};
+export function generateMetadata(): Metadata {
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: SITE_NAME_AR, template: `%s | ${SITE_NAME_AR}` },
+    description: "موقع إسلامي شامل: القرآن الكريم، الحديث النبوي، الفقه، السيرة، أسماء الله الحسنى، الأدعية والأذكار",
+    openGraph: {
+      type: "website",
+      locale: "ar_EG",
+      siteName: SITE_NAME_AR,
+      images: [{ url: DEFAULT_OG_IMAGE.url, width: DEFAULT_OG_IMAGE.width, height: DEFAULT_OG_IMAGE.height }],
+    },
+    twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE.url] },
+    robots: { index: true, follow: true },
+    other: {
+      ...Sentry.getTraceData(),
+    },
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
