@@ -18,20 +18,20 @@ export default function FAQList({ faqs, locale = "ar" }: FAQListProps) {
     >
       <h2
         id="faq-heading"
-        className="mb-6 text-2xl font-extrabold leading-relaxed text-white"
+        className="article-title mb-6 text-2xl font-extrabold leading-relaxed"
       >
         {heading}
       </h2>
-      <div className="article-faq-panel divide-y divide-white/10 rounded-2xl border">
+      <div className="article-faq-panel divide-y divide-[color:var(--article-border)] rounded-2xl border">
         {faqs.map((faq, i) => (
           <details
             key={faq.id}
             className="group p-5 sm:p-6 [&_summary::-webkit-details-marker]:hidden"
             open={i === 0}
           >
-            <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-bold leading-relaxed text-white sm:text-lg">
+            <summary className="article-title flex cursor-pointer items-center justify-between gap-4 text-base font-bold leading-relaxed sm:text-lg">
               <span>{faq.question}</span>
-              <span className="text-amber-300 transition-transform group-open:rotate-45 text-xl leading-none select-none">
+              <span className="article-accent transition-transform group-open:rotate-45 text-xl leading-none select-none">
                 +
               </span>
             </summary>

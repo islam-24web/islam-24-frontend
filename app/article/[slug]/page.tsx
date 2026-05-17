@@ -135,22 +135,22 @@ export default async function ArticlePage({ params }: Props) {
 
       <div className="article-reading-shell">
       <article>
-        <header className="border-b border-white/10 py-10 sm:py-14">
+        <header className="border-b border-[color:var(--article-border)] py-10 sm:py-14">
           <div className="mx-auto max-w-3xl px-6">
             <nav className="article-muted mb-8 flex items-center gap-2 text-sm">
-              <Link href="/" className="transition-colors hover:text-white">الرئيسية</Link>
+              <Link href="/" className="transition-opacity hover:opacity-80">الرئيسية</Link>
               <span>/</span>
               {world ? (
-                <Link href={worldHref(world)} className="transition-colors hover:text-white">
+                <Link href={worldHref(world)} className="transition-opacity hover:opacity-80">
                   {worldLabel(world, "ar")}
                 </Link>
               ) : (
-                <Link href="/blog" className="transition-colors hover:text-white">المقالات</Link>
+                <Link href="/blog" className="transition-opacity hover:opacity-80">المقالات</Link>
               )}
               {category && (
                 <>
                   <span>/</span>
-                  <Link href={`/category/${category.slug}`} className="transition-colors hover:text-white">
+                  <Link href={`/category/${category.slug}`} className="transition-opacity hover:opacity-80">
                     {category.name}
                   </Link>
                 </>
@@ -166,7 +166,7 @@ export default async function ArticlePage({ params }: Props) {
               </Link>
             )}
 
-            <h1 className="text-balance text-3xl font-extrabold leading-[1.65] text-white sm:text-4xl lg:text-5xl">
+            <h1 className="article-title text-balance text-3xl font-extrabold leading-[1.65] sm:text-4xl lg:text-5xl">
               {title}
             </h1>
             <p
@@ -186,12 +186,12 @@ export default async function ArticlePage({ params }: Props) {
                   className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow"
                 />
               ) : (
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white">
+                <div className="article-avatar flex h-11 w-11 items-center justify-center rounded-full text-sm font-bold">
                   {author_name.charAt(0)}
                 </div>
               )}
               <div>
-                <p className="text-sm font-bold text-white">{author_name}</p>
+                <p className="article-title text-sm font-bold">{author_name}</p>
                 <div className="article-muted flex items-center gap-2 text-sm">
                   <time dateTime={published_date}>{formattedDate}</time>
                   <span className="h-1 w-1 rounded-full bg-white/30" />
@@ -232,9 +232,9 @@ export default async function ArticlePage({ params }: Props) {
         {sources && sources.length > 0 && <Sources sources={sources} />}
 
       {relatedArticles.length > 0 && (
-        <section className="border-t border-white/10 py-16 sm:py-20">
+        <section className="border-t border-[color:var(--article-border)] py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-6">
-            <h2 className="mb-10 text-2xl font-extrabold leading-relaxed text-white">مقالات ذات صلة</h2>
+            <h2 className="article-title mb-10 text-2xl font-extrabold leading-relaxed">مقالات ذات صلة</h2>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {relatedArticles.map((a) => (
                 <ArticleCard key={a.id} article={a} />

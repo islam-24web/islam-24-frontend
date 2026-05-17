@@ -19,10 +19,10 @@ export default function QuickAnswer({
       dir={isRtl ? "rtl" : "ltr"}
       data-speakable-summary={speakable ? true : undefined}
     >
-      <p className="text-xs font-semibold uppercase text-amber-300">
+      <p className="article-accent text-xs font-semibold uppercase">
         {label}
       </p>
-      <p className="mt-2 text-base sm:text-lg font-medium leading-[2] text-white">
+      <p className="article-primary mt-2 text-base sm:text-lg font-medium leading-[2]">
         {answer}
       </p>
     </aside>

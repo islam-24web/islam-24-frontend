@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { NavItem, NavLink, Navigation } from "@/types/strapi";
 import { getStrapiMediaUrl } from "@/lib/api";
 import HeaderSearchForm from "@/components/search/HeaderSearchForm";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 interface Props {
   navigation: Navigation | null;
@@ -120,17 +121,20 @@ export default function SiteHeader({ navigation }: Props) {
               )}
             </div>
           </Link>
-          {showDate && (
-            <div className="text-emerald-300 text-xs hidden md:block">
-              {new Date().toLocaleDateString("ar-EG", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-          )}
-          <HeaderSearchForm id="site-search-desktop" className="hidden w-56 md:flex lg:w-64" />
+          <div className="flex items-center gap-2">
+            {showDate && (
+              <div className="text-emerald-300 text-xs hidden lg:block">
+                {new Date().toLocaleDateString("ar-EG", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
+            )}
+            <HeaderSearchForm id="site-search-desktop" className="hidden w-56 md:flex lg:w-64" />
+            <ThemeToggle />
+          </div>
         </div>
 
         <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">

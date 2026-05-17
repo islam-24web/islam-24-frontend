@@ -7,6 +7,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import HeaderSearchForm from "@/components/search/HeaderSearchForm";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
 import type { Article, CategoryStripBlock, DailyTilesBlock, HomeBlock } from "@/types/strapi";
 
@@ -247,14 +248,17 @@ export default async function HomePage() {
                 <p className="text-emerald-300 text-[10px] hidden sm:block">بوابتك الإسلامية الشاملة</p>
               </div>
             </Link>
-            <div className="text-emerald-300 text-xs hidden md:block">
-              {new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            <div className="flex items-center gap-2">
+              <div className="text-emerald-300 text-xs hidden lg:block">
+                {new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </div>
+              <HeaderSearchForm id="home-search-desktop" className="hidden w-56 md:flex lg:w-64" />
+              <ThemeToggle />
+              {/* Mobile menu icon */}
+              <button className="md:hidden text-white p-1" aria-label="Menu">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
             </div>
-            <HeaderSearchForm id="home-search-desktop" className="hidden w-56 md:flex lg:w-64" />
-            {/* Mobile menu icon */}
-            <button className="md:hidden text-white p-1" aria-label="Menu">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-            </button>
           </div>
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">

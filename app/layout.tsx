@@ -9,6 +9,7 @@ import { JsonLd } from "@/lib/seo/schema/core";
 import { buildOrganization } from "@/lib/seo/schema/organization";
 import { buildWebsite } from "@/lib/seo/schema/website";
 import SiteHeader from "@/components/layout/SiteHeader";
+import ThemeScript from "@/components/theme/ThemeScript";
 import "./globals.css";
 
 const sans = Noto_Kufi_Arabic({
@@ -54,7 +55,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const dir = locale === "ar" ? "rtl" : "ltr";
   const navigation = pathname === "/" ? null : await getNavigation();
   return (
-    <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`}>
+    <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900 antialiased">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />
