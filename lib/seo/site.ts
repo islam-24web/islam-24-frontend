@@ -6,7 +6,7 @@
  */
 
 const RAW_SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.islam-24.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://islam-24.com";
 
 const SITE_URL = RAW_SITE_URL.replace(/\/$/, "");
 

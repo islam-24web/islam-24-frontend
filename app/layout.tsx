@@ -1,5 +1,6 @@
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Inter, Instrument_Serif } from "next/font/google";
 import * as Sentry from '@sentry/nextjs';
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
@@ -11,6 +12,14 @@ import "./globals.css";
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const serif = Instrument_Serif({ subsets: ["latin"], weight: ["400"], variable: "--font-serif", display: "swap" });
 const SITE_URL = getSiteUrl();
+
+// /jobs is the only bilingual subtree. Default locale = en (matches
+// lib/jobs/i18n parseLocale fallback); ?lang=ar opts into Arabic.
+function resolveHtmlLocale(pathname: string, search: string): "ar" | "en" {
+  if (!pathname.startsWith("/jobs")) return "ar";
+  const lang = new URLSearchParams(search).get("lang");
+  return lang === "ar" ? "ar" : "en";
+}
 
 export function generateMetadata(): Metadata {
   return {
@@ -32,8 +41,11 @@ export function generateMetadata(): Metadata {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const h = headers();
+  const locale = resolveHtmlLocale(h.get("x-pathname") ?? "/", h.get("x-search") ?? "");
+  const dir = locale === "ar" ? "rtl" : "ltr";
   return (
-    <html lang="ar" dir="rtl" className={`${sans.variable} ${serif.variable}`}>
+    <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`}>
       <body className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900 antialiased">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />

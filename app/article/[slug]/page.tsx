@@ -13,6 +13,7 @@ import QuickAnswer from "@/components/article/QuickAnswer";
 import FAQList from "@/components/article/FAQList";
 import Sources from "@/components/article/Sources";
 import { addHeadingAnchors } from "@/lib/article/headings";
+import { sanitizeArticleBody } from "@/lib/article/sanitize";
 import { worldForCategory, worldLabel, worldHref } from "@/lib/editorial/worlds";
 
 const SITE_URL = getSiteUrl();
@@ -21,33 +22,42 @@ interface Props {
   params: { slug: string };
 }
 
+// Placeholders that leak from preview/template content and should never render.
+const RESERVED_SLUGS = new Set(["article", "preview", "test", "undefined", "null"]);
+
 export async function generateStaticParams() {
   try {
     const { data: articles } = await getArticles({ pageSize: 100 });
-    return articles.map((article) => ({ slug: article.slug }));
+    return articles
+      .filter((a) => !RESERVED_SLUGS.has(a.slug))
+      .map((article) => ({ slug: article.slug }));
   } catch {
     return [];
   }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (RESERVED_SLUGS.has(params.slug)) {
+    return { title: "Not found", robots: { index: false, follow: false } };
+  }
   const article = await getArticleBySlug(params.slug);
   if (!article) return { title: "Article Not Found" };
 
   const { title, excerpt, seo, featured_image, author_name, published_date } = article;
   const ogImage = seo?.og_image?.url || featured_image?.url;
+  const canonical = `${SITE_URL}/article/${params.slug}`;
 
   return {
     title: seo?.meta_title || title,
     description: seo?.meta_description || excerpt,
     authors: [{ name: author_name }],
-    alternates: { canonical: seo?.canonical_url || `${SITE_URL}/article/${params.slug}` },
+    alternates: { canonical },
     robots: seo?.no_index ? { index: false, follow: false } : undefined,
     openGraph: {
       type: "article",
       title: seo?.meta_title || title,
       description: seo?.meta_description || excerpt,
-      url: `${SITE_URL}/article/${params.slug}`,
+      url: canonical,
       publishedTime: published_date,
       authors: [author_name],
       images: ogImage ? [{ url: getStrapiMediaUrl(ogImage), width: 1200, height: 630 }] : undefined,
@@ -62,6 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
+  if (RESERVED_SLUGS.has(params.slug)) notFound();
   const article = await getArticleBySlug(params.slug);
   if (!article) notFound();
 
@@ -84,7 +95,7 @@ export default async function ArticlePage({ params }: Props) {
       })
     : null;
 
-  const { html: anchoredContent } = addHeadingAnchors(content);
+  const { html: anchoredContent } = addHeadingAnchors(sanitizeArticleBody(content));
 
   let relatedArticles: Awaited<ReturnType<typeof getRelatedArticles>> = [];
   if (category?.slug) {

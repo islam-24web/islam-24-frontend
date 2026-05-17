@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/api";
 import { getAllJobSlugs } from "@/lib/jobs/api";
 import { getAllDivineNameSlugs } from "@/lib/divine-names/api";
+import { getSiteUrl } from "@/lib/seo/site";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = getSiteUrl();
+const RESERVED_ARTICLE_SLUGS = new Set(["article", "preview", "test", "undefined", "null"]);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let slugs = { pages: [] as string[], articles: [] as string[], categories: [] as string[] };
@@ -61,6 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // so exclude them from /article/* sitemap entries even if the source
     // article rows are still published mid-migration.
     .filter((slug) => !/^name-\d+-/.test(slug))
+    .filter((slug) => !RESERVED_ARTICLE_SLUGS.has(slug))
     .map((slug) => ({
       url: `${SITE_URL}/article/${slug}`,
       lastModified: new Date(),

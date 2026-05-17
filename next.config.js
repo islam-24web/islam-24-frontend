@@ -64,6 +64,14 @@ const nextConfig = {
   // Redirects
   async redirects() {
     return [
+      // Canonical host: apex islam-24.com. Strip the www. variant at the edge
+      // so Ahrefs/Google never see two competing 200s with conflicting canonicals.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.islam-24.com" }],
+        destination: "https://islam-24.com/:path*",
+        permanent: true,
+      },
       {
         source: "/home",
         destination: "/",
@@ -74,6 +82,26 @@ const nextConfig = {
       {
         source: "/article/:slug(name-\\d+-.+)",
         destination: "/asma-allah/:slug",
+        permanent: true,
+      },
+      // Legacy URL patterns surfaced in Strapi-authored homepage tiles
+      // and historical backlinks. Singular `/article/:slug` and
+      // `/category/:slug` are the canonical routes.
+      {
+        source: "/articles/:slug",
+        destination: "/article/:slug",
+        permanent: true,
+      },
+      {
+        source: "/categories/:slug",
+        destination: "/category/:slug",
+        permanent: true,
+      },
+      // /blog?page=1 is identical to /blog — collapse it to one canonical URL.
+      {
+        source: "/blog",
+        has: [{ type: "query", key: "page", value: "1" }],
+        destination: "/blog",
         permanent: true,
       },
     ];

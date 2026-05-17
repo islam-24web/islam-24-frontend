@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { fetchJobs, fetchJobCategories } from "@/lib/jobs/api";
 import { getDir, getMessages, parseLocale } from "@/lib/jobs/i18n";
 import { getSiteUrl } from "@/lib/seo/site";
@@ -71,9 +72,27 @@ export default async function JobsPage({ searchParams }: Props) {
 
   const isAREmpty = locale === "ar" && pagination.total === 0 && !search && !categorySlug;
 
+  // Internal-link affordances. Even when the listing is empty (the common
+  // case for ?lang=ar while translations roll in), every page must still
+  // emit anchor tags — Ahrefs flagged /jobs?lang=ar for "page has no
+  // outgoing links" because the empty-state was a bare <div>.
+  const otherLocale: typeof locale = locale === "ar" ? "en" : "ar";
+  const switcherHref = otherLocale === "en" ? "/jobs" : "/jobs?lang=ar";
+  const switcherLabel =
+    otherLocale === "en" ? messages.localeEnglish : messages.localeArabic;
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-10" dir={dir} lang={locale}>
       <header className="mb-8">
+        <nav className="mb-3 flex items-center gap-3 text-xs text-gray-500">
+          <Link href="/" className="hover:text-gray-700">
+            {locale === "ar" ? "الرئيسية" : "Home"}
+          </Link>
+          <span aria-hidden>·</span>
+          <Link href={switcherHref} className="hover:text-gray-700" hrefLang={otherLocale}>
+            {switcherLabel}
+          </Link>
+        </nav>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
           {messages.pageTitle}
         </h1>
@@ -94,6 +113,15 @@ export default async function JobsPage({ searchParams }: Props) {
           <p className="mt-2 text-sm text-gray-600">
             {isAREmpty ? messages.noJobsTranslating : messages.noJobsBody}
           </p>
+          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
+            <Link href={switcherHref} className="font-medium text-emerald-700 hover:text-emerald-900" hrefLang={otherLocale}>
+              {switcherLabel}
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href="/" className="text-gray-600 hover:text-gray-900">
+              {locale === "ar" ? "العودة للرئيسية" : "Back to home"}
+            </Link>
+          </div>
         </div>
       ) : (
         <>
