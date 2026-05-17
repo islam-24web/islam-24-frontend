@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Inter, Instrument_Serif } from "next/font/google";
 import * as Sentry from '@sentry/nextjs';
+import { getNavigation } from "@/lib/api";
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
 import { buildOrganization } from "@/lib/seo/schema/organization";
 import { buildWebsite } from "@/lib/seo/schema/website";
+import SiteHeader from "@/components/layout/SiteHeader";
 import "./globals.css";
 
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -40,15 +42,18 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const h = headers();
-  const locale = resolveHtmlLocale(h.get("x-pathname") ?? "/", h.get("x-search") ?? "");
+  const pathname = h.get("x-pathname") ?? "/";
+  const locale = resolveHtmlLocale(pathname, h.get("x-search") ?? "");
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const navigation = pathname === "/" ? null : await getNavigation();
   return (
     <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`}>
       <body className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900 antialiased">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />
+        {pathname !== "/" && <SiteHeader navigation={navigation} />}
         <main className="flex-1">{children}</main>
         <GoogleAnalytics gaId="G-148QLR48P0" />
       </body>

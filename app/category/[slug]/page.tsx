@@ -7,6 +7,7 @@ import Pagination from "@/components/ui/Pagination";
 import { getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
 import { buildBreadcrumb } from "@/lib/seo/schema/breadcrumb";
+import { buildItemList } from "@/lib/seo/schema/item-list";
 
 const SITE_URL = getSiteUrl();
 
@@ -68,10 +69,17 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     breadcrumbs.push({ name: parent.name, url: `${SITE_URL}/category/${parent.slug}` });
   }
   breadcrumbs.push({ name, url: `${SITE_URL}/category/${params.slug}` });
+  const itemList = buildItemList(
+    articles.map((article) => ({
+      url: `${SITE_URL}/article/${article.slug}`,
+      name: article.title,
+    })),
+    ((pagination?.page ?? currentPage) - 1) * (pagination?.pageSize ?? 12) + 1,
+  );
 
   return (
     <>
-      <JsonLd graph={[buildBreadcrumb(breadcrumbs)]} />
+      <JsonLd graph={[buildBreadcrumb(breadcrumbs), ...(articles.length > 0 ? [itemList] : [])]} />
 
       <div className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">

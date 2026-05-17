@@ -184,6 +184,35 @@ export async function getArticles(options?: {
   );
 }
 
+export async function searchArticles(options: {
+  query: string;
+  page?: number;
+  pageSize?: number;
+}): Promise<StrapiResponse<Article[]>> {
+  const query = options.query.trim();
+  if (!query) return EMPTY_LIST_RESPONSE<Article>();
+
+  const params: Record<string, string> = {
+    "sort[0]": "published_date:desc",
+    "pagination[page]": String(options.page ?? 1),
+    "pagination[pageSize]": String(options.pageSize ?? 12),
+    "populate[featured_image]": "*",
+    "populate[author_image]": "*",
+    "populate[category]": "*",
+    "populate[seo][populate]": "*",
+    "filters[$or][0][title][$containsi]": query,
+    "filters[$or][1][excerpt][$containsi]": query,
+    "filters[$or][2][quickAnswer][$containsi]": query,
+    "filters[$or][3][content][$containsi]": query,
+    "filters[$or][4][category][name][$containsi]": query,
+  };
+
+  return safeFetch<StrapiResponse<Article[]>>(
+    { path: "/articles", params, tags: ["articles"] },
+    EMPTY_LIST_RESPONSE<Article>()
+  );
+}
+
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const res = await safeFetch<StrapiResponse<Article[]>>(
     {

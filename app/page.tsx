@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getApprovedHomepageCategories, getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import SiteHeader from "@/components/layout/SiteHeader";
+import HeaderSearchForm from "@/components/search/HeaderSearchForm";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
 import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
@@ -249,6 +250,7 @@ export default async function HomePage() {
             <div className="text-emerald-300 text-xs hidden md:block">
               {new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
             </div>
+            <HeaderSearchForm id="home-search-desktop" className="hidden w-64 lg:flex" />
             {/* Mobile menu icon */}
             <button className="md:hidden text-white p-1" aria-label="Menu">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
@@ -268,6 +270,7 @@ export default async function HomePage() {
               )
             )}
           </nav>
+          <HeaderSearchForm id="home-search-mobile" className="pb-3 md:hidden" />
           {/* Mobile Nav (horizontal scroll, no scrollbar) */}
           <nav className="md:hidden flex items-center overflow-x-auto no-scrollbar -mx-1 pb-1">
             <Link href="/" className="flex-shrink-0 text-amber-400 text-xs font-bold px-2 py-2 border-b-2 border-amber-400">الرئيسية</Link>

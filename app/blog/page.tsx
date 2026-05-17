@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getArticles, getCategories } from "@/lib/api";
 import { getSiteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/lib/seo/schema/core";
+import { buildItemList } from "@/lib/seo/schema/item-list";
 import ArticleCard from "@/components/blog/ArticleCard";
 import Pagination from "@/components/ui/Pagination";
 
@@ -42,10 +44,19 @@ export default async function BlogPage({ searchParams }: Props) {
 
   const pagination = meta.pagination;
   const parentCategories = categories.filter((c) => !c.parent);
+  const itemList = buildItemList(
+    articles.map((article) => ({
+      url: `${SITE_URL}/article/${article.slug}`,
+      name: article.title,
+    })),
+    ((pagination?.page ?? currentPage) - 1) * (pagination?.pageSize ?? 12) + 1,
+  );
 
   return (
-    <div className="py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-6">
+    <>
+      {articles.length > 0 && <JsonLd graph={[itemList]} />}
+      <div className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Blog</h1>
           <p className="mt-4 text-lg text-gray-600">Discover our latest articles and insights</p>
@@ -101,6 +112,7 @@ export default async function BlogPage({ searchParams }: Props) {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }

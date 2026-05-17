@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { NavItem, NavLink, Navigation } from "@/types/strapi";
 import { getStrapiMediaUrl } from "@/lib/api";
+import HeaderSearchForm from "@/components/search/HeaderSearchForm";
 
 interface Props {
   navigation: Navigation | null;
@@ -129,6 +130,7 @@ export default function SiteHeader({ navigation }: Props) {
               })}
             </div>
           )}
+          <HeaderSearchForm id="site-search-desktop" className="hidden w-64 lg:flex" />
         </div>
 
         <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
@@ -165,6 +167,7 @@ export default function SiteHeader({ navigation }: Props) {
             </Link>
           ))}
         </nav>
+        <HeaderSearchForm id="site-search-mobile" className="pb-3 md:hidden" />
       </div>
     </header>
   );
