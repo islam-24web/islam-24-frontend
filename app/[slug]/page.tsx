@@ -30,15 +30,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = page.seo;
   const ogImage = seo?.og_image?.url;
 
+  const canonical = `${SITE_URL}/${params.slug}`;
   return {
     title: seo?.meta_title || page.title,
     description: seo?.meta_description,
-    alternates: { canonical: seo?.canonical_url || `${SITE_URL}/${params.slug}` },
+    alternates: { canonical },
     robots: seo?.no_index ? { index: false, follow: false } : undefined,
     openGraph: {
       title: seo?.meta_title || page.title,
       description: seo?.meta_description || undefined,
-      url: `${SITE_URL}/${params.slug}`,
+      url: canonical,
       type: "website",
       images: ogImage ? [{ url: getStrapiMediaUrl(ogImage) }] : undefined,
     },

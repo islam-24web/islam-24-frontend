@@ -91,7 +91,7 @@ export interface FetchJobsResult {
 }
 
 const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.islam-24.com"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://islam-24.com"
 ).replace(/\/$/, "");
 
 function getStrapiBaseUrl(): string {

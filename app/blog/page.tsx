@@ -1,16 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getArticles, getCategories } from "@/lib/api";
+import { getSiteUrl } from "@/lib/seo/site";
 import ArticleCard from "@/components/blog/ArticleCard";
 import Pagination from "@/components/ui/Pagination";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Read our latest articles, tutorials, and insights.",
-};
+const SITE_URL = getSiteUrl();
 
 interface Props {
   searchParams: { page?: string; category?: string };
+}
+
+export function generateMetadata({ searchParams }: Props): Metadata {
+  const category = searchParams.category;
+  // `?page=1` is canonical-equivalent to no page param (and is 301'd to /blog
+  // in next.config.js redirects). Page >1 keeps its own canonical so paginated
+  // listings stay indexable and don't collapse into /blog.
+  const page = Number(searchParams.page);
+  const canonical = category
+    ? page > 1
+      ? `${SITE_URL}/blog?category=${category}&page=${page}`
+      : `${SITE_URL}/blog?category=${category}`
+    : page > 1
+      ? `${SITE_URL}/blog?page=${page}`
+      : `${SITE_URL}/blog`;
+  return {
+    title: "Blog",
+    description: "Read our latest articles, tutorials, and insights.",
+    alternates: { canonical },
+  };
 }
 
 export default async function BlogPage({ searchParams }: Props) {
