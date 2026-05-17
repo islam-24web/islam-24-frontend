@@ -20,6 +20,17 @@ const TONE_CLASSES: Record<DailyTileItem["tone"], { card: string; pill: string; 
   },
 };
 
+// Editors occasionally save tile hrefs under the legacy plural paths
+// (/articles/<slug>, /categories/<slug>) which never existed as real routes
+// and were a top source of 404-from-homepage Ahrefs errors. Rewrite to the
+// canonical singular form at render time so the emitted HTML is correct
+// even before/without the next.config.js 301 catches it.
+function normalizeHref(href: string): string {
+  if (href.startsWith("/articles/")) return "/article/" + href.slice("/articles/".length);
+  if (href.startsWith("/categories/")) return "/category/" + href.slice("/categories/".length);
+  return href;
+}
+
 function Tile({ item }: { item: DailyTileItem }) {
   const tone = TONE_CLASSES[item.tone] ?? TONE_CLASSES.emerald;
   const inner = (
@@ -41,7 +52,7 @@ function Tile({ item }: { item: DailyTileItem }) {
     </div>
   );
   return item.href ? (
-    <Link href={item.href} className="block">
+    <Link href={normalizeHref(item.href)} className="block">
       {inner}
     </Link>
   ) : (

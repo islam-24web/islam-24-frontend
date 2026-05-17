@@ -11,12 +11,18 @@ const TONE_CLASSES: Record<AppCard["tone"], { hover: string; cta: string }> = {
   neutral: { hover: "hover:border-gray-300", cta: "text-gray-700" },
 };
 
+function normalizeHref(href: string): string {
+  if (href.startsWith("/articles/")) return "/article/" + href.slice("/articles/".length);
+  if (href.startsWith("/categories/")) return "/category/" + href.slice("/categories/".length);
+  return href;
+}
+
 function AppTile({ item }: { item: AppCard }) {
   const tone = TONE_CLASSES[item.tone] ?? TONE_CLASSES.emerald;
   const external = item.open_in_new_tab || /^https?:/i.test(item.href);
   return (
     <Link
-      href={item.href}
+      href={normalizeHref(item.href)}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={`group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all ${tone.hover}`}
