@@ -45,6 +45,14 @@ interface BuildBlogPostingOptions {
   faqPageId?: string;
 }
 
+function buildSpeakable(summary: string | null | undefined): SchemaNode | null {
+  if (!summary?.trim()) return null;
+  return {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["[data-speakable-summary]"],
+  };
+}
+
 /**
  * BlogPosting node for an article page. Author and publisher both reference
  * the site Organization by @id (editorial byline). When the Author content
@@ -57,6 +65,7 @@ export function buildBlogPosting(
   const siteUrl = getSiteUrl();
   const canonicalUrl = article.seo?.canonical_url || `${siteUrl}/article/${article.slug}`;
   const description = article.seo?.meta_description || article.excerpt;
+  const speakableSummary = article.quickAnswer?.trim() || article.excerpt?.trim();
 
   const node: SchemaNode = {
     "@type": "BlogPosting",
@@ -72,8 +81,9 @@ export function buildBlogPosting(
     inLanguage: detectInLanguage(article.content),
   };
 
-  if (article.quickAnswer?.trim()) {
-    node.abstract = article.quickAnswer.trim();
+  if (speakableSummary) {
+    node.abstract = speakableSummary;
+    node.speakable = buildSpeakable(speakableSummary);
   }
 
   if (article.category?.name) {

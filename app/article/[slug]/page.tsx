@@ -168,7 +168,12 @@ export default async function ArticlePage({ params }: Props) {
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl leading-tight text-balance">
               {title}
             </h1>
-            <p className="mt-6 text-lg text-gray-600 leading-relaxed">{excerpt}</p>
+            <p
+              className="mt-6 text-lg text-gray-600 leading-relaxed"
+              data-speakable-summary={quickAnswer?.trim() ? undefined : true}
+            >
+              {excerpt}
+            </p>
 
             <div className="mt-8 flex items-center gap-4">
               {authorImgUrl ? (
@@ -218,7 +223,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         <div className="mx-auto max-w-3xl px-6 pb-12">
-          {quickAnswer && <QuickAnswer answer={quickAnswer} />}
+          {quickAnswer && <QuickAnswer answer={quickAnswer} speakable />}
           <div className="prose-article" dangerouslySetInnerHTML={{ __html: anchoredContent }} />
         </div>
 
