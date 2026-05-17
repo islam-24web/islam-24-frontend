@@ -64,7 +64,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
 
   if (!slides || slides.length === 0) {
     return (
-      <div className="w-full h-[400px] bg-gradient-to-br from-emerald-800 to-emerald-900 flex items-center justify-center rounded-2xl">
+      <div className="hero-panel hero-fallback w-full h-[400px] flex items-center justify-center rounded-2xl">
         <p className="text-white/70 text-lg">لا توجد مقالات مميزة</p>
       </div>
     );
@@ -88,7 +88,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
         .hero-progress-bar { animation: heroProgress 5s linear infinite; }
       `}</style>
       <div
-        className="relative w-full overflow-hidden rounded-2xl bg-gray-900"
+        className="hero-panel relative w-full overflow-hidden rounded-2xl"
         style={{ height: 400 }}
         dir="rtl"
       >
@@ -105,7 +105,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
               className="object-cover transition-opacity duration-700"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-emerald-800 to-emerald-950" />
+            <div className="hero-fallback w-full h-full" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
@@ -118,7 +118,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
               {current.category && (
                 <Link
                   href={`/category/${current.category.slug}`}
-                  className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+                  className="hero-category-pill text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {current.category.name}
@@ -132,7 +132,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
               </span>
             </div>
             <Link href={`/article/${current.slug}`}>
-              <h2 className="text-white font-bold text-xl md:text-3xl line-clamp-2 leading-relaxed mb-3 hover:text-amber-300 transition-colors">
+              <h2 className="text-white font-bold text-xl md:text-3xl line-clamp-2 leading-relaxed mb-3 hover:text-[color:var(--site-gold)] transition-colors">
                 {current.title}
               </h2>
             </Link>
@@ -143,7 +143,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
             )}
             <Link
               href={`/article/${current.slug}`}
-              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
+              className="hero-cta inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
             >
               اقرأ المزيد
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,13 +155,13 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
 
         {/* Progress bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-white/20">
-          <div key={currentIndex} className="h-full bg-amber-500 hero-progress-bar" />
+          <div key={currentIndex} className="hero-progress-fill h-full hero-progress-bar" />
         </div>
 
         {/* Arrows */}
         <button
           onClick={handlePrev}
-          className="absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center transition-all z-10"
+          className="hero-icon-button absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-10"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -169,7 +169,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
         </button>
         <button
           onClick={handleNext}
-          className="absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center transition-all z-10"
+          className="hero-icon-button absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-10"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5l-7 7 7 7" />
@@ -184,7 +184,7 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
               onClick={() => handleDotClick(i)}
               className={`transition-all duration-300 rounded-full ${
                 i === currentIndex
-                  ? "bg-amber-500 w-8 h-2.5"
+                  ? "hero-dot-active w-8 h-2.5"
                   : "bg-white/50 hover:bg-white/80 w-2.5 h-2.5"
               }`}
             />

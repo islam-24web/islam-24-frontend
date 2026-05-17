@@ -114,7 +114,7 @@ export default async function JobsPage({ searchParams }: Props) {
             {isAREmpty ? messages.noJobsTranslating : messages.noJobsBody}
           </p>
           <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-            <Link href={switcherHref} className="font-medium text-emerald-700 hover:text-emerald-900" hrefLang={otherLocale}>
+            <Link href={switcherHref} className="font-medium text-blue-700 hover:text-blue-900" hrefLang={otherLocale}>
               {switcherLabel}
             </Link>
             <span aria-hidden>·</span>

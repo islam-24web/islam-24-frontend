@@ -52,7 +52,7 @@ export default function NewsletterForm({
     return (
       <div
         role="status"
-        className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 text-sm text-center"
+        className="rounded-xl border border-[color:var(--site-border)] bg-[color:var(--site-surface)] p-4 text-center text-sm font-semibold text-[color:var(--site-heading)]"
       >
         {successMessage}
       </div>
@@ -74,12 +74,12 @@ export default function NewsletterForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 rounded-xl border border-emerald-200 bg-white/95 px-4 py-3 text-sm text-emerald-900 placeholder:text-emerald-500/70 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          className="flex-1 rounded-xl border border-white/30 bg-white/95 px-4 py-3 text-sm font-semibold text-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[color:var(--site-gold)]"
         />
         <button
           type="submit"
           disabled={state === "submitting" || !email || !consent}
-          className="rounded-xl bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/50 disabled:cursor-not-allowed text-white font-bold text-sm px-6 py-3 transition-colors"
+          className="rounded-xl bg-[color:var(--site-gold)] px-6 py-3 text-sm font-bold text-slate-950 transition-colors hover:bg-[color:var(--site-gold-strong)] disabled:cursor-not-allowed disabled:opacity-55"
         >
           {state === "submitting" ? "..." : ctaLabel}
         </button>
@@ -89,7 +89,7 @@ export default function NewsletterForm({
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 rounded border-emerald-300 text-amber-500 focus:ring-amber-400"
+          className="mt-0.5 rounded border-white/40 text-[color:var(--site-gold)] focus:ring-[color:var(--site-gold)]"
         />
         <span className="leading-relaxed">{consentLabel}</span>
       </label>

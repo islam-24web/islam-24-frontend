@@ -12,9 +12,9 @@ export default function AudioEmbed({ block }: Props) {
   if (!src) return null;
 
   return (
-    <section aria-label={block.title || "Audio"} className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5">
+    <section aria-label={block.title || "Audio"} className="content-card rounded-xl p-5">
       {block.title && (
-        <h2 className="text-base md:text-lg font-bold text-emerald-900 mb-3 leading-snug">
+        <h2 className="site-section-title text-base md:text-lg font-bold mb-3 leading-snug">
           {block.title}
         </h2>
       )}
@@ -24,11 +24,11 @@ export default function AudioEmbed({ block }: Props) {
       </audio>
       {(block.caption || block.transcript_url) && (
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm">
-          {block.caption && <p className="text-gray-600 leading-relaxed">{block.caption}</p>}
+          {block.caption && <p className="site-muted leading-relaxed">{block.caption}</p>}
           {block.transcript_url && (
             <a
               href={block.transcript_url}
-              className="text-emerald-700 font-medium hover:text-emerald-900 transition-colors"
+              className="site-section-link font-bold transition-colors"
               target={/^https?:/i.test(block.transcript_url) ? "_blank" : undefined}
               rel={/^https?:/i.test(block.transcript_url) ? "noopener noreferrer" : undefined}
             >

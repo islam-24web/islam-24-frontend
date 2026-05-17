@@ -120,7 +120,7 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
       <article className="mt-6">
         <header className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           {job.jobCategory?.name ? (
-            <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+            <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
               {job.jobCategory.name}
             </span>
           ) : null}

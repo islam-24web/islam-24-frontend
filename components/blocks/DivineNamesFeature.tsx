@@ -13,13 +13,13 @@ function CardCta({ block }: { block: DivineNamesFeatureBlock }) {
   return (
     <section
       aria-label="أسماء الله الحسنى"
-      className="bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl p-6 shadow-sm"
+      className="rounded-xl bg-[linear-gradient(135deg,#101b33_0%,#31200c_100%)] text-white p-6 shadow-sm"
     >
       <h2 className="font-bold text-lg mb-2">{headline}</h2>
       <p className="text-white/90 text-sm mb-4 leading-relaxed">{body}</p>
       <Link
         href="/asma-allah"
-        className="inline-block bg-white text-amber-700 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-50 transition-colors"
+        className="inline-block rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-950 transition-colors hover:bg-[color:var(--site-gold)]"
       >
         {cta}
       </Link>
@@ -40,12 +40,12 @@ async function Strip({ block }: { block: DivineNamesFeatureBlock }) {
     <section aria-label="أسماء الله الحسنى">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-1.5 h-7 bg-amber-500 rounded-full" aria-hidden="true" />
-          <h2 className="text-lg font-bold text-gray-800">{headline}</h2>
+          <div className="site-section-kicker w-1.5 h-7 rounded-full" aria-hidden="true" />
+          <h2 className="site-section-title text-lg font-bold">{headline}</h2>
         </div>
         <Link
           href="/asma-allah"
-          className="text-amber-600 text-sm font-medium hover:text-amber-700 flex items-center gap-1"
+          className="site-section-link text-sm font-bold flex items-center gap-1 transition-colors"
         >
           {cta}
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -58,13 +58,13 @@ async function Strip({ block }: { block: DivineNamesFeatureBlock }) {
           <Link
             key={name.documentId}
             href={`/asma-allah/${name.slug}`}
-            className="group aspect-square rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 border border-amber-200/60 hover:border-amber-300 flex flex-col items-center justify-center text-center p-2 transition-all hover:shadow-md"
+            className="content-card group aspect-square rounded-xl flex flex-col items-center justify-center text-center p-2 transition-all"
           >
-            <span className="text-[10px] text-amber-600 font-semibold">{name.number}</span>
-            <span className="text-lg md:text-xl font-bold text-amber-900 leading-tight my-0.5">
+            <span className="text-[10px] text-[color:var(--site-gold)] font-semibold">{name.number}</span>
+            <span className="text-lg md:text-xl font-bold text-[color:var(--site-heading)] leading-tight my-0.5">
               {name.arabic}
             </span>
-            <span className="text-[10px] text-amber-700/80 line-clamp-1">{name.transliteration}</span>
+            <span className="text-[10px] text-[color:var(--site-muted)] line-clamp-1">{name.transliteration}</span>
           </Link>
         ))}
       </div>

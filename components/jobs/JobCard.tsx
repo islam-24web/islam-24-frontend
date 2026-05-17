@@ -38,7 +38,7 @@ export default function JobCard({ job, locale, messages }: Props) {
             {job.title}
           </h2>
           {job.jobCategory?.name ? (
-            <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+            <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
               {job.jobCategory.name}
             </span>
           ) : null}

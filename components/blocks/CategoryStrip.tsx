@@ -38,12 +38,12 @@ function FeaturedCard({ article }: { article: Article }) {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900" />
+        <div className="hero-fallback w-full h-full" />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       <div className="absolute bottom-0 right-0 left-0 p-4">
         {article.category && (
-          <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full font-medium mb-2 inline-block">
+          <span className="hero-category-pill text-xs px-2 py-0.5 rounded-full font-bold mb-2 inline-block">
             {article.category.name}
           </span>
         )}
@@ -62,7 +62,7 @@ function SmallCard({ article }: { article: Article }) {
   return (
     <Link
       href={`/article/${article.slug}`}
-      className="group flex flex-col rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all bg-white"
+      className="content-card group flex flex-col rounded-xl overflow-hidden transition-all"
     >
       <div className="relative w-full overflow-hidden" style={{ height: 101 }}>
         {hasImg ? (
@@ -74,19 +74,19 @@ function SmallCard({ article }: { article: Article }) {
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full bg-emerald-50 flex items-center justify-center text-2xl">
+          <div className="content-thumb-fallback w-full h-full flex items-center justify-center text-2xl">
             📖
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         {article.category && (
-          <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+          <span className="content-badge absolute bottom-1 right-1 text-[10px] px-1.5 py-0.5 rounded-full font-bold">
             {article.category.name}
           </span>
         )}
       </div>
       <div className="p-2">
-        <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 group-hover:text-emerald-700 transition-colors leading-relaxed">
+        <h4 className="content-card-title text-xs font-semibold line-clamp-2 transition-colors leading-relaxed">
           {article.title}
         </h4>
       </div>
@@ -98,13 +98,13 @@ function SectionHeader({ name, slug, seeMoreLabel }: { name: string; slug?: stri
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="w-1.5 h-7 bg-emerald-600 rounded-full" aria-hidden="true" />
-        <h2 className="text-lg font-bold text-gray-800">{name}</h2>
+        <div className="site-section-kicker w-1.5 h-7 rounded-full" aria-hidden="true" />
+        <h2 className="site-section-title text-lg font-bold">{name}</h2>
       </div>
       {slug && (
         <Link
           href={`/category/${slug}`}
-          className="text-emerald-600 text-sm font-medium hover:text-emerald-700 flex items-center gap-1"
+          className="site-section-link text-sm font-bold flex items-center gap-1 transition-colors"
         >
           {seeMoreLabel}
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -140,7 +140,7 @@ export default async function CategoryStrip({ block }: Props) {
     return (
       <section aria-label={headline}>
         <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
-        <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-1 px-1 pb-2">
+        <div className="flex gap-4 overflow-x-auto no-scrollbar -mx-1 px-1 pb-2">
           {articles.map((a) => (
             <div key={a.slug || a.id} className="flex-shrink-0 w-44">
               <SmallCard article={a} />
@@ -155,7 +155,7 @@ export default async function CategoryStrip({ block }: Props) {
     return (
       <section aria-label={headline}>
         <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {articles.slice(0, 3).map((a) => (
             <SmallCard key={a.slug || a.id} article={a} />
           ))}
@@ -170,10 +170,10 @@ export default async function CategoryStrip({ block }: Props) {
   return (
     <section aria-label={headline}>
       <SectionHeader name={headline} slug={linkSlug} seeMoreLabel={seeMoreLabel} />
-      <div className="space-y-3">
+      <div className="space-y-4">
         <FeaturedCard article={main} />
         {subs.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {subs.map((a) => (
               <SmallCard key={a.slug || a.id} article={a} />
             ))}

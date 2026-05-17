@@ -27,7 +27,7 @@ function HeroSingle({ article, eyebrow }: { article: Article; eyebrow?: string |
   return (
     <Link
       href={`/article/${article.slug}`}
-      className="relative block w-full overflow-hidden rounded-2xl bg-gray-900 group"
+      className="hero-panel relative block w-full overflow-hidden rounded-2xl group"
       style={{ height: 400 }}
       dir="rtl"
     >
@@ -41,7 +41,7 @@ function HeroSingle({ article, eyebrow }: { article: Article; eyebrow?: string |
           className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-emerald-800 to-emerald-950" />
+        <div className="hero-fallback w-full h-full" />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" aria-hidden="true" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" aria-hidden="true" />
@@ -50,12 +50,12 @@ function HeroSingle({ article, eyebrow }: { article: Article; eyebrow?: string |
         {(eyebrow || article.category) && (
           <div className="flex items-center gap-3 mb-3">
             {eyebrow && (
-              <span className="text-amber-400 text-xs font-semibold tracking-wide uppercase">
+              <span className="text-[color:var(--site-gold)] text-xs font-semibold tracking-wide uppercase">
                 {eyebrow}
               </span>
             )}
             {article.category && (
-              <span className="bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+              <span className="hero-category-pill text-xs font-bold px-3 py-1.5 rounded-full">
                 {article.category.name}
               </span>
             )}
@@ -64,7 +64,7 @@ function HeroSingle({ article, eyebrow }: { article: Article; eyebrow?: string |
             </span>
           </div>
         )}
-        <h2 className="text-white font-bold text-xl md:text-3xl line-clamp-2 leading-relaxed mb-3 group-hover:text-amber-300 transition-colors">
+        <h2 className="text-white font-bold text-xl md:text-3xl line-clamp-2 leading-relaxed mb-3 group-hover:text-[color:var(--site-gold)] transition-colors">
           {article.title}
         </h2>
         {article.excerpt && (
@@ -72,7 +72,7 @@ function HeroSingle({ article, eyebrow }: { article: Article; eyebrow?: string |
             {article.excerpt}
           </p>
         )}
-        <span className="inline-flex items-center gap-2 bg-emerald-600 group-hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition-all">
+        <span className="hero-cta inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all">
           اقرأ المزيد
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

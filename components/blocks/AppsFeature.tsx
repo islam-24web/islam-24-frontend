@@ -6,9 +6,9 @@ interface Props {
 }
 
 const TONE_CLASSES: Record<AppCard["tone"], { hover: string; cta: string }> = {
-  emerald: { hover: "hover:border-emerald-200", cta: "text-emerald-600" },
-  amber: { hover: "hover:border-amber-200", cta: "text-amber-600" },
-  neutral: { hover: "hover:border-gray-300", cta: "text-gray-700" },
+  emerald: { hover: "hover:border-[color:var(--site-accent)]", cta: "text-[color:var(--site-accent)]" },
+  amber: { hover: "hover:border-[color:var(--site-gold)]", cta: "text-[color:var(--site-gold)]" },
+  neutral: { hover: "hover:border-[color:var(--site-border)]", cta: "text-[color:var(--site-muted)]" },
 };
 
 function normalizeHref(href: string): string {
@@ -25,15 +25,15 @@ function AppTile({ item }: { item: AppCard }) {
       href={normalizeHref(item.href)}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all ${tone.hover}`}
+      className={`content-card group flex items-center gap-4 rounded-xl p-5 transition-all ${tone.hover}`}
     >
       {item.icon && <span className="text-5xl shrink-0">{item.icon}</span>}
       <div className="min-w-0">
-        <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
+        <h3 className="content-card-title text-base font-bold transition-colors">
           {item.title}
         </h3>
         {item.description && (
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">
+          <p className="site-muted text-xs mt-1 leading-relaxed line-clamp-2">
             {item.description}
           </p>
         )}
@@ -54,10 +54,10 @@ export default function AppsFeature({ block }: Props) {
   return (
     <section aria-label={headline}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-1.5 h-7 bg-emerald-600 rounded-full" aria-hidden="true" />
-        <h2 className="text-lg font-bold text-gray-800">{headline}</h2>
+        <div className="site-section-kicker w-1.5 h-7 rounded-full" aria-hidden="true" />
+        <h2 className="site-section-title text-lg font-bold">{headline}</h2>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {items.map((item) => (
           <AppTile key={item.id} item={item} />
         ))}

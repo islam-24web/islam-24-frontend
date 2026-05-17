@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { NavItem, NavLink, Navigation } from "@/types/strapi";
-import { getStrapiMediaUrl } from "@/lib/api";
 import HeaderSearchForm from "@/components/search/HeaderSearchForm";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 interface Props {
   navigation: Navigation | null;
@@ -13,7 +12,28 @@ const FALLBACK_ITEMS: NavItem[] = [
   { id: 0, label: "القرآن", href: "/category/quran-tafsir", is_external: false, highlight: false, sub_items: [] },
   { id: 0, label: "الحديث", href: "/category/hadith", is_external: false, highlight: false, sub_items: [] },
   { id: 0, label: "الفقه", href: "/category/fiqh", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "السيرة", href: "/category/seerah", is_external: false, highlight: false, sub_items: [] },
   { id: 0, label: "أسماء الله", href: "/asma-allah", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الأدعية", href: "/category/duas", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الأذكار", href: "/category/category", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "رمضان", href: "/category/ramadan", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الحج", href: "/category/hajj-umrah", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الصلاة", href: "/category/prayer", is_external: false, highlight: false, sub_items: [] },
+  {
+    id: 0,
+    label: "الإدمان",
+    href: "/category/addiction",
+    is_external: false,
+    highlight: false,
+    sub_items: [
+      { id: 0, name: "إدمان الإباحية", url: "/category/porn-addiction", is_external: false },
+      { id: 0, name: "إدمان العادة السرية", url: "/category/masturbation-addiction", is_external: false },
+      { id: 0, name: "إدمان المخدرات", url: "/category/drug-addiction", is_external: false },
+      { id: 0, name: "إدمان الجوال", url: "/category/phone-addiction", is_external: false },
+    ],
+  },
+  { id: 0, label: "الصحة النفسية", href: "/category/mental-health", is_external: false, highlight: false, sub_items: [] },
+  { id: 0, label: "الزواج", href: "/category/marriage-family", is_external: false, highlight: false, sub_items: [] },
 ];
 
 function linksToItems(links: NavLink[]): NavItem[] {
@@ -29,10 +49,8 @@ function linksToItems(links: NavLink[]): NavItem[] {
 
 function NavItemLink({ item }: { item: NavItem }) {
   const baseClasses =
-    "flex-shrink-0 text-sm font-medium px-3 py-2.5 transition-colors hover:bg-emerald-700/50 border-b-2 border-transparent hover:border-amber-400 whitespace-nowrap";
-  const colorClasses = item.highlight
-    ? "text-amber-400"
-    : "text-emerald-100 hover:text-amber-400";
+    "site-nav-link";
+  const colorClasses = item.highlight ? "site-nav-link-active" : "";
 
   if (item.sub_items && item.sub_items.length > 0) {
     return (
@@ -43,14 +61,14 @@ function NavItemLink({ item }: { item: NavItem }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </span>
-        <div className="absolute top-full right-0 mt-0 bg-white rounded-b-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 z-50 min-w-[200px]">
+        <div className="site-dropdown absolute top-full right-0 mt-0 rounded-b-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-200 z-50 min-w-[200px]">
           {item.sub_items.map((sub) => (
             <Link
               key={sub.id}
               href={sub.url}
               target={sub.is_external ? "_blank" : undefined}
               rel={sub.is_external ? "noopener noreferrer" : undefined}
-              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors whitespace-nowrap border-b border-gray-50 last:border-0"
+              className="site-dropdown-link block px-4 py-2.5 text-sm transition-colors whitespace-nowrap border-b border-[color:var(--site-border)] last:border-0"
             >
               {sub.name}
             </Link>
@@ -74,8 +92,6 @@ function NavItemLink({ item }: { item: NavItem }) {
 }
 
 export default function SiteHeader({ navigation }: Props) {
-  const logoUrl = navigation?.logo?.url;
-  const logoText = navigation?.logo_text || "إسلام 24";
   const taglineAr = navigation?.tagline_ar ?? "بوابتك الإسلامية الشاملة";
   const showDate = navigation?.show_date_strip ?? true;
 
@@ -97,33 +113,13 @@ export default function SiteHeader({ navigation }: Props) {
   });
 
   return (
-    <header className="sticky top-0 z-50 bg-emerald-800 shadow-lg">
+    <header className="site-header sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between py-2 border-b border-emerald-700">
-          <Link href="/" className="flex items-center gap-2" aria-label={logoText}>
-            <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center overflow-hidden">
-              {logoUrl ? (
-                <Image
-                  src={getStrapiMediaUrl(logoUrl)}
-                  alt={logoText}
-                  width={36}
-                  height={36}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-white font-bold text-base">﷽</span>
-              )}
-            </div>
-            <div>
-              <span className="text-white font-bold text-lg">{logoText}</span>
-              {taglineAr && (
-                <p className="text-emerald-300 text-[10px] hidden sm:block">{taglineAr}</p>
-              )}
-            </div>
-          </Link>
+        <div className="site-header-row flex items-center justify-between py-3">
+          <BrandLogo tagline={taglineAr} />
           <div className="flex items-center gap-2">
             {showDate && (
-              <div className="text-emerald-300 text-xs hidden lg:block">
+              <div className="hidden text-xs font-semibold text-[color:var(--site-header-muted)] lg:block">
                 {new Date().toLocaleDateString("ar-EG", {
                   weekday: "long",
                   year: "numeric",
@@ -140,7 +136,7 @@ export default function SiteHeader({ navigation }: Props) {
         <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
           <Link
             href="/"
-            className="flex-shrink-0 text-amber-400 text-sm font-bold px-3 py-2.5 border-b-2 border-amber-400"
+            className="site-nav-link-active"
           >
             الرئيسية
           </Link>
@@ -155,7 +151,7 @@ export default function SiteHeader({ navigation }: Props) {
         >
           <Link
             href="/"
-            className="flex-shrink-0 text-amber-400 text-xs font-bold px-2 py-2 border-b-2 border-amber-400"
+            className="site-nav-link-active px-2 py-2 text-xs"
           >
             الرئيسية
           </Link>
@@ -165,7 +161,7 @@ export default function SiteHeader({ navigation }: Props) {
               href={item.href}
               target={item.is_external ? "_blank" : undefined}
               rel={item.is_external ? "noopener noreferrer" : undefined}
-              className="flex-shrink-0 text-emerald-100 text-xs font-medium px-2 py-2 whitespace-nowrap"
+              className="site-nav-link px-2 py-2 text-xs"
             >
               {item.label}
             </Link>

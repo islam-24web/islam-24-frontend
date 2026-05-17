@@ -10,18 +10,18 @@ type IconComponent = (props: SVGProps<SVGSVGElement>) => ReactElement;
 
 const TONE_CLASSES: Record<DailyTileItem["tone"], { card: string; pill: string; text: string; ref: string; icon: string }> = {
   emerald: {
-    card: "bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200",
-    pill: "bg-emerald-600 text-white",
-    text: "text-emerald-900",
-    ref: "text-emerald-600",
-    icon: "bg-white/70 text-emerald-700",
+    card: "daily-card daily-card-blue",
+    pill: "daily-pill-blue",
+    text: "daily-text",
+    ref: "daily-ref",
+    icon: "bg-[color:var(--site-surface)] text-[color:var(--site-accent)]",
   },
   amber: {
-    card: "bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200",
-    pill: "bg-amber-500 text-white",
-    text: "text-amber-900",
-    ref: "text-amber-600",
-    icon: "bg-white/70 text-amber-700",
+    card: "daily-card daily-card-gold",
+    pill: "daily-pill-gold",
+    text: "daily-text",
+    ref: "daily-ref",
+    icon: "bg-[color:var(--site-surface)] text-[color:var(--site-gold)]",
   },
 };
 
@@ -140,9 +140,9 @@ export default function DailyTiles({ block }: Props) {
   return (
     <section aria-label={block.headline_ar || "Daily content"}>
       {block.headline_ar && (
-        <h2 className="text-lg font-bold text-gray-800 mb-3">{block.headline_ar}</h2>
+        <h2 className="site-section-title text-lg font-bold mb-4">{block.headline_ar}</h2>
       )}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {items.map((item) => (
           <Tile key={item.id} item={item} />
         ))}

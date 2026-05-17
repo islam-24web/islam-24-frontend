@@ -22,11 +22,11 @@ export default function NewsletterCta({ block }: Props) {
   return (
     <section
       aria-label={headline}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-900 text-white p-6 md:p-8 shadow-sm"
+      className="relative overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#070a12_0%,#101b33_58%,#31200c_100%)] text-white p-6 md:p-8 shadow-sm"
     >
       <div className="relative z-10 max-w-2xl">
         <h2 className="text-xl md:text-2xl font-bold mb-2 leading-snug">{headline}</h2>
-        <p className="text-emerald-100 text-sm md:text-base leading-relaxed mb-5">{body}</p>
+        <p className="text-slate-200 text-sm md:text-base leading-relaxed mb-5">{body}</p>
         <NewsletterForm
           placeholder={placeholder}
           ctaLabel={ctaLabel}
@@ -34,14 +34,7 @@ export default function NewsletterCta({ block }: Props) {
           successMessage={successMessage}
         />
       </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-12 -left-12 w-48 h-48 rounded-full bg-amber-500/20 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-emerald-400/10 blur-3xl"
-      />
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-[color:var(--site-gold)]" />
     </section>
   );
 }

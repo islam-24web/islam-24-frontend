@@ -4,10 +4,9 @@ import Link from "next/link";
 import { getApprovedHomepageCategories, getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import SiteHeader from "@/components/layout/SiteHeader";
-import HeaderSearchForm from "@/components/search/HeaderSearchForm";
 import SiteFooter from "@/components/layout/SiteFooter";
+import BrandLogo from "@/components/layout/BrandLogo";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
-import ThemeToggle from "@/components/theme/ThemeToggle";
 import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
 import type { Article, CategoryStripBlock, DailyTilesBlock, HomeBlock } from "@/types/strapi";
 
@@ -85,10 +84,10 @@ function SectionHeader({ name, slug }: { name: string; slug: string }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="w-1.5 h-7 bg-emerald-600 rounded-full" />
-        <h2 className="text-lg font-bold text-gray-800">{name}</h2>
+        <div className="site-section-kicker w-1.5 h-7 rounded-full" />
+        <h2 className="site-section-title text-lg font-bold">{name}</h2>
       </div>
-      <Link href={`/category/${slug}`} className="text-emerald-600 text-sm font-medium hover:text-emerald-700 flex items-center gap-1">
+      <Link href={`/category/${slug}`} className="site-section-link text-sm font-bold flex items-center gap-1 transition-colors">
         المزيد
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -112,12 +111,12 @@ function FeaturedCard({ article }: { article: Article }) {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900" />
+        <div className="hero-fallback w-full h-full" />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       <div className="absolute bottom-0 right-0 left-0 p-4">
         {article.category && (
-          <span className="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full font-medium mb-2 inline-block">{article.category.name}</span>
+          <span className="hero-category-pill text-xs px-2 py-0.5 rounded-full font-bold mb-2 inline-block">{article.category.name}</span>
         )}
         <h3 className="text-white font-bold text-base line-clamp-2 leading-relaxed">{article.title}</h3>
         <p className="text-gray-300 text-xs mt-1">{formatDate(article.published_date || article.publishedAt)}</p>
@@ -130,42 +129,22 @@ function SmallCard({ article }: { article: Article }) {
   const img = getStrapiMediaUrl(article.featured_image?.url);
   const hasImg = img && img !== "/placeholder.jpg";
   return (
-    <Link href={`/article/${article.slug}`} className="group flex flex-col rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all bg-white">
+    <Link href={`/article/${article.slug}`} className="content-card group flex flex-col rounded-xl overflow-hidden transition-all">
       <div className="relative w-full overflow-hidden" style={{ height: 101 }}>
         {hasImg ? (
           <img src={img} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
-          <div className="w-full h-full bg-emerald-50 flex items-center justify-center text-2xl">📖</div>
+          <div className="content-thumb-fallback w-full h-full flex items-center justify-center text-2xl">📖</div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         {article.category && (
-          <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">{article.category.name}</span>
+          <span className="content-badge absolute bottom-1 right-1 text-[10px] px-1.5 py-0.5 rounded-full font-bold">{article.category.name}</span>
         )}
       </div>
       <div className="p-2">
-        <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 group-hover:text-emerald-700 transition-colors leading-relaxed">{article.title}</h4>
+        <h4 className="content-card-title text-xs font-semibold line-clamp-2 transition-colors leading-relaxed">{article.title}</h4>
       </div>
     </Link>
-  );
-}
-
-// Dropdown for parent categories like الإدمان
-function DropdownNavItem({ name, items }: { name: string; items: { name: string; slug: string }[] }) {
-  return (
-    <div className="relative group flex-shrink-0">
-      <span className="text-emerald-100 group-hover:text-amber-400 text-sm font-medium px-3 py-2.5 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap">
-        {name}
-        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-      </span>
-      <div className="absolute top-full right-0 mt-0 bg-white rounded-b-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 min-w-[180px]">
-        {items.map(c => (
-          <Link key={c.slug} href={`/category/${c.slug}`}
-            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors whitespace-nowrap border-b border-gray-50 last:border-0">
-            {c.name}
-          </Link>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -235,64 +214,12 @@ export default async function HomePage() {
 
   return (
     <div dir="rtl" className="site-page min-h-screen">
-      {useCms ? <SiteHeader navigation={navigation} /> : (
-      <header className="sticky top-0 z-50 bg-emerald-800 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between py-2 border-b border-emerald-700">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-base">﷽</span>
-              </div>
-              <div>
-                <span className="text-white font-bold text-lg">إسلام 24</span>
-                <p className="text-emerald-300 text-[10px] hidden sm:block">بوابتك الإسلامية الشاملة</p>
-              </div>
-            </Link>
-            <div className="flex items-center gap-2">
-              <div className="text-emerald-300 text-xs hidden lg:block">
-                {new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-              </div>
-              <HeaderSearchForm id="home-search-desktop" className="hidden w-56 md:flex lg:w-64" />
-              <ThemeToggle />
-              {/* Mobile menu icon */}
-              <button className="md:hidden text-white p-1" aria-label="Menu">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-              </button>
-            </div>
-          </div>
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
-            <Link href="/" className="flex-shrink-0 text-amber-400 text-sm font-bold px-3 py-2.5 border-b-2 border-amber-400">الرئيسية</Link>
-            {navCategories.map((cat) => 
-              cat.children ? (
-                <DropdownNavItem key={cat.slug} name={cat.name} items={cat.children} />
-              ) : (
-                <Link key={cat.slug} href={`/category/${cat.slug}`}
-                  className="flex-shrink-0 text-emerald-100 hover:text-amber-400 text-sm font-medium px-3 py-2.5 transition-colors hover:bg-emerald-700/50 border-b-2 border-transparent hover:border-amber-400 whitespace-nowrap">
-                  {cat.name}
-                </Link>
-              )
-            )}
-          </nav>
-          <HeaderSearchForm id="home-search-mobile" className="pb-3 md:hidden" />
-          {/* Mobile Nav (horizontal scroll, no scrollbar) */}
-          <nav className="md:hidden flex items-center overflow-x-auto no-scrollbar -mx-1 pb-1">
-            <Link href="/" className="flex-shrink-0 text-amber-400 text-xs font-bold px-2 py-2 border-b-2 border-amber-400">الرئيسية</Link>
-            {navCategories.map((cat) => (
-              <Link key={cat.slug} href={`/category/${cat.slug}`}
-                className="flex-shrink-0 text-emerald-100 text-xs font-medium px-2 py-2 whitespace-nowrap">
-                {cat.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </header>
-      )}
+      <SiteHeader navigation={useCms ? navigation : null} />
 
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <main className="site-main max-w-7xl mx-auto px-4">
+        <div className="flex flex-col lg:flex-row gap-8 xl:gap-10">
           {/* Content */}
-          <div className="flex-1 min-w-0 space-y-8">
+          <div className="site-stack flex-1 min-w-0">
             {/* Hero — inline swiper runs unless CMS has supplied a home-hero block */}
             {!cmsHasHomeHero && <HeroSwiper articles={heroArticles} />}
 
@@ -300,22 +227,22 @@ export default async function HomePage() {
             {useCms ? (
               <HomeBlockRenderer blocks={cmsBlocks} />
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { icon: "📖", title: "آية اليوم", text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", ref: "سورة الطلاق: ٢-٣", color: "emerald" },
+                  { icon: "📖", title: "آية اليوم", text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ", ref: "سورة الطلاق: ٢-٣", color: "blue" },
                   { icon: "☪", title: "حديث اليوم", text: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى", ref: "متفق عليه", color: "amber" },
-                  { icon: "💡", title: "حكمة اليوم", text: "من عرف الله أحبه، ومن أحبه أطاعه، ومن أطاعه سعد", ref: "— ابن القيم", color: "emerald" },
+                  { icon: "💡", title: "حكمة اليوم", text: "من عرف الله أحبه، ومن أحبه أطاعه، ومن أطاعه سعد", ref: "— ابن القيم", color: "blue" },
                   { icon: "🤲", title: "دعاء اليوم", text: "اللهم إني أسألك الهدى والتقى والعفاف والغنى", ref: "رواه مسلم", color: "amber" },
                 ].map((card, i) => (
-                  <div key={i} className={`rounded-xl p-4 border hover:shadow-md transition-shadow ${
-                    card.color === "emerald" ? "bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200" : "bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200"
+                  <div key={i} className={`daily-card rounded-xl p-4 transition-shadow hover:shadow-md ${
+                    card.color === "blue" ? "daily-card-blue" : "daily-card-gold"
                   }`}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-2xl">{card.icon}</span>
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${card.color === "emerald" ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>{card.title}</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${card.color === "blue" ? "daily-pill-blue" : "daily-pill-gold"}`}>{card.title}</span>
                     </div>
-                    <p className={`text-sm font-semibold leading-relaxed line-clamp-3 ${card.color === "emerald" ? "text-emerald-900" : "text-amber-900"}`}>{card.text}</p>
-                    <p className={`text-xs mt-2 ${card.color === "emerald" ? "text-emerald-600" : "text-amber-600"}`}>{card.ref}</p>
+                    <p className="daily-text text-sm font-semibold leading-relaxed line-clamp-3">{card.text}</p>
+                    <p className="daily-ref text-xs mt-2">{card.ref}</p>
                   </div>
                 ))}
               </div>
@@ -325,15 +252,15 @@ export default async function HomePage() {
             {!cmsHasApps && (
               <section>
                 <SectionHeader name="تطبيقاتنا الإسلامية" slug="apps" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {FEATURED_APPS.map(app => (
                     <Link key={app.slug} href={`/apps/${app.slug}`} target="_blank" rel="noopener noreferrer"
-                      className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all">
+                      className="content-card group flex items-center gap-4 rounded-xl p-5 transition-all">
                       <span className="text-5xl shrink-0">{app.icon}</span>
                       <div>
-                        <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">{app.title}</h3>
-                        <p className="text-xs text-gray-500 mt-1 leading-relaxed">{app.description}</p>
-                        <span className="inline-block mt-2 text-xs font-medium text-emerald-600">افتح التطبيق ←</span>
+                        <h3 className="content-card-title text-base font-bold transition-colors">{app.title}</h3>
+                        <p className="site-muted text-xs mt-1 leading-relaxed">{app.description}</p>
+                        <span className="inline-block mt-2 text-xs font-bold text-[color:var(--site-accent)]">افتح التطبيق ←</span>
                       </div>
                     </Link>
                   ))}
@@ -349,10 +276,10 @@ export default async function HomePage() {
               return (
                 <section key={slug}>
                   <SectionHeader name={name} slug={slug} />
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <FeaturedCard article={main} />
                     {subs.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {subs.map((a) => <SmallCard key={a.slug || a.id} article={a} />)}
                       </div>
                     )}
@@ -364,28 +291,28 @@ export default async function HomePage() {
 
           {/* Sidebar */}
           <aside className="w-full lg:w-72 flex-shrink-0">
-            <div className="lg:sticky lg:top-24 space-y-5">
+            <div className="lg:sticky lg:top-28 space-y-6">
               {/* Most Read */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="bg-emerald-700 px-4 py-3">
+              <div className="content-card rounded-xl overflow-hidden">
+                <div className="bg-[color:var(--site-heading)] px-4 py-3">
                   <h3 className="text-white font-bold text-base">📊 الأكثر قراءة</h3>
                 </div>
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-[color:var(--site-border)]">
                   {mostRead.slice(0, 10).map((article, i) => (
                     <Link key={article.slug || article.id} href={`/article/${article.slug}`}
-                      className="flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 transition-colors group">
-                      <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-amber-500 text-white" : "bg-gray-100 text-gray-500"}`}>{i + 1}</span>
-                      <span className="text-sm text-gray-700 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-relaxed">{article.title}</span>
+                      className="group flex items-center gap-2 px-4 py-2.5 transition-colors hover:bg-[color:var(--site-surface-soft)]">
+                      <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[color:var(--site-gold)] text-slate-950" : "bg-[color:var(--site-surface-soft)] text-[color:var(--site-muted)]"}`}>{i + 1}</span>
+                      <span className="text-sm text-[color:var(--site-text)] group-hover:text-[color:var(--site-accent)] transition-colors line-clamp-2 leading-relaxed">{article.title}</span>
                     </Link>
                   ))}
                 </div>
               </div>
               {/* Asma Allah sidebar — hidden when CMS supplied a divine-names-feature block */}
               {!cmsHasDivineNames && (
-                <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl p-5 shadow-sm">
+                <div className="rounded-xl bg-[linear-gradient(135deg,#101b33_0%,#31200c_100%)] text-white p-5 shadow-sm">
                   <h3 className="font-bold text-lg mb-2">🌟 أسماء الله الحسنى</h3>
                   <p className="text-white/80 text-sm mb-4 leading-relaxed">تعرف على أسماء الله الحسنى الـ ٩٩ ومعانيها وآثارها الإيمانية</p>
-                  <Link href="/asma-allah" className="block text-center bg-white text-amber-700 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-50 transition-colors">تصفح الأسماء ←</Link>
+                  <Link href="/asma-allah" className="block text-center bg-white text-slate-950 py-2.5 rounded-xl font-bold text-sm hover:bg-[color:var(--site-gold)] transition-colors">تصفح الأسماء ←</Link>
                 </div>
               )}
             </div>
@@ -394,45 +321,42 @@ export default async function HomePage() {
       </main>
 
       {useCms ? <SiteFooter footer={footer} /> : (
-      <footer className="bg-emerald-900 text-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-10">
+      <footer className="footer-shell mt-16">
+        <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center"><span className="text-white font-bold">﷽</span></div>
-                <span className="font-bold text-lg">إسلام 24</span>
-              </div>
-              <p className="text-emerald-300 text-xs leading-relaxed">بوابتك الإسلامية الشاملة — محتوى موثوق في القرآن والحديث والفقه والسيرة</p>
+              <BrandLogo tagline={null} className="mb-3" />
+              <p className="footer-muted text-xs leading-relaxed">بوابتك الإسلامية الشاملة — محتوى موثوق في القرآن والحديث والفقه والسيرة</p>
             </div>
             <div>
-              <h4 className="font-bold text-amber-400 mb-3 text-sm">أقسام رئيسية</h4>
+              <h4 className="footer-heading font-bold mb-3 text-sm">أقسام رئيسية</h4>
               <ul className="space-y-1.5">
                 {navCategories.filter(c => !c.children).slice(0, 7).map(c => (
-                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="text-emerald-300 hover:text-amber-400 text-xs transition-colors">{c.name}</Link></li>
+                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="footer-link text-xs transition-colors">{c.name}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-amber-400 mb-3 text-sm">المزيد</h4>
+              <h4 className="footer-heading font-bold mb-3 text-sm">المزيد</h4>
               <ul className="space-y-1.5">
                 {navCategories.filter(c => !c.children).slice(7).map(c => (
-                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="text-emerald-300 hover:text-amber-400 text-xs transition-colors">{c.name}</Link></li>
+                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="footer-link text-xs transition-colors">{c.name}</Link></li>
                 ))}
-                <li><Link href="/apps/sibaq" className="text-emerald-300 hover:text-amber-400 text-xs transition-colors">سباق الفردوس الأعلى</Link></li>
+                <li><Link href="/apps/sibaq" className="footer-link text-xs transition-colors">سباق الفردوس الأعلى</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-amber-400 mb-3 text-sm">روابط</h4>
+              <h4 className="footer-heading font-bold mb-3 text-sm">روابط</h4>
               <ul className="space-y-1.5">
                 {["من نحن", "سياسة الخصوصية", "اتصل بنا"].map(l => (
-                  <li key={l}><Link href="#" className="text-emerald-300 hover:text-amber-400 text-xs transition-colors">{l}</Link></li>
+                  <li key={l}><Link href="#" className="footer-link text-xs transition-colors">{l}</Link></li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="border-t border-emerald-800 mt-8 pt-6 text-center">
-            <p className="text-emerald-400 text-xs">© {new Date().getFullYear()} إسلام 24 — جميع الحقوق محفوظة</p>
-            <p className="text-emerald-500 text-xs mt-1">﴿ وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ ۚ عَلَيْهِ تَوَكَّلْتُ وَإِلَيْهِ أُنِيبُ ﴾</p>
+          <div className="mt-10 border-t border-white/10 pt-6 text-center">
+            <p className="footer-muted text-xs">© {new Date().getFullYear()} إسلام 24 — جميع الحقوق محفوظة</p>
+            <p className="text-white/45 text-xs mt-1">﴿ وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ ۚ عَلَيْهِ تَوَكَّلْتُ وَإِلَيْهِ أُنِيبُ ﴾</p>
           </div>
         </div>
       </footer>
