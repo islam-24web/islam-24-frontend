@@ -45,7 +45,7 @@ export default function Pagination({
       {currentPage > 1 && (
         <Link
           href={buildHref(currentPage - 1)}
-          className="inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+          className="site-muted inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-bold transition-colors hover:bg-[color:var(--site-surface-soft)]"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -58,7 +58,7 @@ export default function Pagination({
       {visiblePages.map((page, idx) => {
         if (page < 0) {
           return (
-            <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">
+            <span key={`ellipsis-${idx}`} className="site-muted px-2">
               ...
             </span>
           );
@@ -71,8 +71,8 @@ export default function Pagination({
             href={buildHref(page)}
             className={`inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
               isActive
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "site-primary-button"
+                : "site-muted hover:bg-[color:var(--site-surface-soft)]"
             }`}
           >
             {page}
@@ -84,7 +84,7 @@ export default function Pagination({
       {currentPage < pageCount && (
         <Link
           href={buildHref(currentPage + 1)}
-          className="inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+          className="site-muted inline-flex h-10 items-center gap-1 rounded-lg px-3 text-sm font-bold transition-colors hover:bg-[color:var(--site-surface-soft)]"
         >
           Next
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

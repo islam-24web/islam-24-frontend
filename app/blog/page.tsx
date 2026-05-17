@@ -55,11 +55,11 @@ export default async function BlogPage({ searchParams }: Props) {
   return (
     <>
       {articles.length > 0 && <JsonLd graph={[itemList]} />}
-      <div className="py-16 sm:py-24">
+      <div className="site-page py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-2xl text-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Blog</h1>
-          <p className="mt-4 text-lg text-gray-600">Discover our latest articles and insights</p>
+          <h1 className="site-title text-4xl font-extrabold sm:text-5xl">المقالات</h1>
+          <p className="site-muted mt-4 text-lg leading-[2]">اقرأ أحدث المقالات والموضوعات التعليمية في إسلام 24</p>
         </div>
 
         {parentCategories.length > 0 && (
@@ -67,17 +67,17 @@ export default async function BlogPage({ searchParams }: Props) {
             <Link
               href="/blog"
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                !categorySlug ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                !categorySlug ? "site-primary-button" : "site-chip"
               }`}
             >
-              All
+              الكل
             </Link>
             {parentCategories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/blog?category=${cat.slug}`}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  categorySlug === cat.slug ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  categorySlug === cat.slug ? "site-primary-button" : "site-chip"
                 }`}
               >
                 {cat.name}
@@ -103,10 +103,10 @@ export default async function BlogPage({ searchParams }: Props) {
           </>
         ) : (
           <div className="text-center py-16">
-            <p className="text-gray-500 text-lg">No articles found.</p>
+            <p className="site-muted text-lg">لا توجد مقالات.</p>
             {categorySlug && (
-              <Link href="/blog" className="mt-4 inline-flex text-sm text-blue-600 hover:underline">
-                Clear filter
+              <Link href="/blog" className="site-link mt-4 inline-flex text-sm font-semibold hover:underline">
+                مسح الفلتر
               </Link>
             )}
           </div>

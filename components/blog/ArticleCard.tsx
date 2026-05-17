@@ -14,7 +14,7 @@ export default function ArticleCard({ article, featured = false }: Props) {
   const imageUrl = featured_image?.url;
   const imageAlt = featured_image?.alternativeText || title;
 
-  const formattedDate = new Date(published_date).toLocaleDateString("en-US", {
+  const formattedDate = new Date(published_date).toLocaleDateString("ar-EG", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -22,7 +22,7 @@ export default function ArticleCard({ article, featured = false }: Props) {
 
   if (featured) {
     return (
-      <article className="group relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/60 transition-all duration-300 hover:shadow-xl lg:grid lg:grid-cols-2 lg:gap-0">
+      <article className="site-card group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 lg:grid lg:grid-cols-2 lg:gap-0">
         <div className="relative aspect-[16/10] lg:aspect-auto overflow-hidden">
           {imageUrl && (
             <Image
@@ -39,23 +39,23 @@ export default function ArticleCard({ article, featured = false }: Props) {
           {category && (
             <Link
               href={`/category/${category.slug}`}
-              className="mb-3 inline-flex self-start rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+              className="site-chip mb-3 inline-flex self-start rounded-full px-3 py-1 text-xs font-bold transition-colors"
             >
               {category.name}
             </Link>
           )}
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight lg:text-3xl">
-            <Link href={`/article/${slug}`} className="hover:text-blue-600 transition-colors">
+          <h2 className="site-title text-2xl font-extrabold lg:text-3xl">
+            <Link href={`/article/${slug}`} className="site-link transition-colors">
               {title}
             </Link>
           </h2>
-          <p className="mt-4 text-gray-600 leading-relaxed line-clamp-3">{excerpt}</p>
-          <div className="mt-6 flex items-center gap-4 text-sm text-gray-500">
+          <p className="site-copy mt-4 line-clamp-3">{excerpt}</p>
+          <div className="site-muted mt-6 flex items-center gap-4 text-sm">
             <span>{author_name}</span>
-            <span className="h-1 w-1 rounded-full bg-gray-300" />
+            <span className="h-1 w-1 rounded-full bg-current opacity-40" />
             <time dateTime={published_date}>{formattedDate}</time>
-            <span className="h-1 w-1 rounded-full bg-gray-300" />
-            <span>{reading_time} min read</span>
+            <span className="h-1 w-1 rounded-full bg-current opacity-40" />
+            <span>{reading_time} دقائق قراءة</span>
           </div>
         </div>
       </article>
@@ -63,7 +63,7 @@ export default function ArticleCard({ article, featured = false }: Props) {
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/60 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <article className="site-card group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1">
       <div className="relative aspect-[16/10] overflow-hidden">
         {imageUrl && (
           <Image
@@ -79,21 +79,21 @@ export default function ArticleCard({ article, featured = false }: Props) {
         {category && (
           <Link
             href={`/category/${category.slug}`}
-            className="mb-2 inline-flex self-start rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+            className="site-chip mb-2 inline-flex self-start rounded-full px-2.5 py-0.5 text-xs font-bold transition-colors"
           >
             {category.name}
           </Link>
         )}
-        <h3 className="text-lg font-semibold text-gray-900 tracking-tight line-clamp-2">
-          <Link href={`/article/${slug}`} className="hover:text-blue-600 transition-colors">
+        <h3 className="site-title line-clamp-2 text-lg font-extrabold">
+          <Link href={`/article/${slug}`} className="site-link transition-colors">
             {title}
           </Link>
         </h3>
-        <p className="mt-2 flex-1 text-sm text-gray-600 leading-relaxed line-clamp-2">{excerpt}</p>
-        <div className="mt-4 flex items-center gap-3 text-xs text-gray-500">
+        <p className="site-copy mt-2 flex-1 line-clamp-2 text-sm">{excerpt}</p>
+        <div className="site-muted mt-4 flex items-center gap-3 text-xs">
           <time dateTime={published_date}>{formattedDate}</time>
-          <span className="h-1 w-1 rounded-full bg-gray-300" />
-          <span>{reading_time} min read</span>
+          <span className="h-1 w-1 rounded-full bg-current opacity-40" />
+          <span>{reading_time} دقائق قراءة</span>
         </div>
       </div>
     </article>

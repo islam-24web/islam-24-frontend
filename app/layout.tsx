@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <ThemeScript />
       </head>
-      <body className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900 antialiased">
+      <body className="min-h-screen flex flex-col bg-[color:var(--site-bg)] font-sans text-[color:var(--site-text)] antialiased transition-colors">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />
         {pathname !== "/" && <SiteHeader navigation={navigation} />}

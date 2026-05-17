@@ -60,10 +60,10 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <>
       {query && articles.length > 0 && <JsonLd graph={[itemList]} />}
-      <section className="py-14 sm:py-20">
+      <section className="site-page py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h1 className="site-title text-3xl font-extrabold sm:text-4xl">
               البحث في إسلام 24
             </h1>
             <form action="/search" method="get" role="search" className="mt-8 flex gap-2">
@@ -77,11 +77,11 @@ export default async function SearchPage({ searchParams }: Props) {
                 dir="rtl"
                 defaultValue={query}
                 placeholder="ابحث عن مقال، دعاء، حكم، أو موضوع"
-                className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+                className="site-input min-w-0 flex-1 rounded-lg border px-4 py-3 text-sm outline-none transition"
               />
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-lg bg-emerald-800 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                className="site-primary-button inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-bold transition"
               >
                 بحث
               </button>
@@ -90,7 +90,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
           {query ? (
             <div className="mt-12">
-              <p className="mb-8 text-center text-sm text-gray-600">
+              <p className="site-muted mb-8 text-center text-sm">
                 {pagination?.total
                   ? `${pagination.total} نتيجة بحث عن "${query}"`
                   : `لا توجد نتائج مطابقة لـ "${query}"`}
@@ -113,18 +113,18 @@ export default async function SearchPage({ searchParams }: Props) {
                   )}
                 </>
               ) : (
-                <div className="mx-auto max-w-xl rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center">
-                  <h2 className="text-lg font-semibold text-gray-900">لا توجد نتائج</h2>
-                  <p className="mt-2 text-sm text-gray-600">
+                <div className="site-empty mx-auto max-w-xl rounded-lg border border-dashed p-8 text-center">
+                  <h2 className="site-title text-lg font-bold">لا توجد نتائج</h2>
+                  <p className="site-muted mt-2 text-sm leading-[2]">
                     جرّب كلمة أقصر أو ابحث باسم تصنيف مثل القرآن، الحديث، الأذكار، أو الصحة النفسية.
                   </p>
                 </div>
               )}
             </div>
           ) : (
-            <div className="mx-auto mt-12 max-w-xl rounded-lg border border-gray-200 bg-white p-8 text-center">
-              <h2 className="text-lg font-semibold text-gray-900">ابدأ البحث</h2>
-              <p className="mt-2 text-sm text-gray-600">
+            <div className="site-empty mx-auto mt-12 max-w-xl rounded-lg border p-8 text-center">
+              <h2 className="site-title text-lg font-bold">ابدأ البحث</h2>
+              <p className="site-muted mt-2 text-sm leading-[2]">
                 اكتب كلمة أو موضوعاً للبحث في مقالات إسلام 24.
               </p>
             </div>

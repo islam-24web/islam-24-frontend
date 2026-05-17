@@ -62,8 +62,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const subcategories = children || [];
 
   const breadcrumbs = [
-    { name: "Home", url: SITE_URL },
-    { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: "الرئيسية", url: SITE_URL },
+    { name: "المقالات", url: `${SITE_URL}/blog` },
   ];
   if (parent) {
     breadcrumbs.push({ name: parent.name, url: `${SITE_URL}/category/${parent.slug}` });
@@ -81,27 +81,27 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     <>
       <JsonLd graph={[buildBreadcrumb(breadcrumbs), ...(articles.length > 0 ? [itemList] : [])]} />
 
-      <div className="py-16 sm:py-24">
+      <div className="site-page py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
+          <nav className="site-muted mb-8 flex items-center gap-2 text-sm">
+            <Link href="/" className="transition-opacity hover:opacity-80">الرئيسية</Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-gray-700 transition-colors">Blog</Link>
+            <Link href="/blog" className="transition-opacity hover:opacity-80">المقالات</Link>
             {parent && (
               <>
                 <span>/</span>
-                <Link href={`/category/${parent.slug}`} className="hover:text-gray-700 transition-colors">
+                <Link href={`/category/${parent.slug}`} className="transition-opacity hover:opacity-80">
                   {parent.name}
                 </Link>
               </>
             )}
             <span>/</span>
-            <span className="text-gray-900 font-medium">{name}</span>
+            <span className="site-title font-bold">{name}</span>
           </nav>
 
           <div className="mb-12">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{name}</h1>
-            {description && <p className="mt-4 text-lg text-gray-600 max-w-2xl">{description}</p>}
+            <h1 className="site-title text-4xl font-extrabold sm:text-5xl">{name}</h1>
+            {description && <p className="site-muted mt-4 max-w-2xl text-lg leading-[2]">{description}</p>}
           </div>
 
           {subcategories.length > 0 && (
@@ -110,7 +110,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 <Link
                   key={sub.id}
                   href={`/category/${sub.slug}`}
-                  className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                  className="site-chip rounded-full px-4 py-2 text-sm font-bold transition-colors"
                 >
                   {sub.name}
                 </Link>
@@ -135,9 +135,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             </>
           ) : (
             <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No articles in this category yet.</p>
-              <Link href="/blog" className="mt-4 inline-flex text-sm text-blue-600 hover:underline">
-                Browse all articles
+              <p className="site-muted text-lg">لا توجد مقالات في هذا التصنيف بعد.</p>
+              <Link href="/blog" className="site-link mt-4 inline-flex text-sm font-semibold hover:underline">
+                تصفح كل المقالات
               </Link>
             </div>
           )}

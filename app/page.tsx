@@ -234,7 +234,7 @@ export default async function HomePage() {
     .filter((s) => s.articles.length > 0);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50">
+    <div dir="rtl" className="site-page min-h-screen">
       {useCms ? <SiteHeader navigation={navigation} /> : (
       <header className="sticky top-0 z-50 bg-emerald-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">

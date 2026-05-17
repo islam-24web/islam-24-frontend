@@ -6,6 +6,18 @@
   :root {
     --font-sans: "Noto Kufi Arabic", system-ui, sans-serif;
     --font-serif: "Instrument Serif", Georgia, serif;
+    --site-bg: #f7f8fb;
+    --site-surface: #ffffff;
+    --site-surface-soft: #f3f4f6;
+    --site-heading: #111827;
+    --site-text: #1f2937;
+    --site-muted: #5b6472;
+    --site-accent: #047857;
+    --site-accent-strong: #065f46;
+    --site-accent-contrast: #ffffff;
+    --site-chip: #ecfdf5;
+    --site-chip-text: #047857;
+    --site-border: rgb(15 23 42 / 0.12);
     --article-bg: #2b3446;
     --article-bg-soft: #354054;
     --article-surface: rgb(255 255 255 / 0.07);
@@ -20,6 +32,18 @@
 
   html[data-theme="dark"] {
     color-scheme: dark;
+    --site-bg: #2b3446;
+    --site-surface: #354054;
+    --site-surface-soft: rgb(255 255 255 / 0.07);
+    --site-heading: #ffffff;
+    --site-text: #f5f7fb;
+    --site-muted: #c4ccd8;
+    --site-accent: #f2c968;
+    --site-accent-strong: #ffe29a;
+    --site-accent-contrast: #172033;
+    --site-chip: rgb(255 255 255 / 0.08);
+    --site-chip-text: #f2c968;
+    --site-border: rgb(255 255 255 / 0.12);
   }
 
   html[data-theme="light"] {
@@ -44,6 +68,8 @@
 
   body {
     font-feature-settings: "rlig" 1, "calt" 1;
+    background: var(--site-bg);
+    color: var(--site-text);
   }
 
   ::selection {
@@ -52,6 +78,116 @@
 }
 
 @layer components {
+  .site-page {
+    background: var(--site-bg);
+    color: var(--site-text);
+  }
+
+  .site-surface {
+    background: var(--site-surface);
+    color: var(--site-text);
+    border-color: var(--site-border);
+  }
+
+  .site-card {
+    background: var(--site-surface);
+    color: var(--site-text);
+    border-color: var(--site-border);
+    box-shadow: 0 14px 35px rgb(15 23 42 / 0.08);
+  }
+
+  html[data-theme="dark"] .site-card {
+    box-shadow: 0 18px 42px rgb(0 0 0 / 0.18);
+  }
+
+  .site-title {
+    color: var(--site-heading);
+    line-height: 1.65;
+    letter-spacing: 0;
+  }
+
+  .site-copy {
+    color: var(--site-text);
+    line-height: 2;
+    letter-spacing: 0;
+  }
+
+  .site-muted {
+    color: var(--site-muted);
+  }
+
+  .site-chip {
+    background: var(--site-chip);
+    color: var(--site-chip-text);
+    border: 1px solid var(--site-border);
+  }
+
+  .site-link {
+    color: var(--site-accent);
+  }
+
+  .site-link:hover {
+    color: var(--site-accent-strong);
+  }
+
+  .site-primary-button {
+    background: var(--site-accent);
+    color: var(--site-accent-contrast);
+  }
+
+  .site-primary-button:hover {
+    background: var(--site-accent-strong);
+  }
+
+  .site-input {
+    background: var(--site-surface);
+    border-color: var(--site-border);
+    color: var(--site-heading);
+  }
+
+  .site-input::placeholder {
+    color: var(--site-muted);
+  }
+
+  .site-input:focus {
+    border-color: var(--site-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--site-accent), transparent 78%);
+  }
+
+  .site-empty {
+    background: var(--site-surface);
+    border-color: var(--site-border);
+    color: var(--site-text);
+  }
+
+  html[data-theme="dark"] .site-page .bg-white,
+  html[data-theme="dark"] .site-page .bg-gray-50,
+  html[data-theme="dark"] .site-page .bg-gray-100 {
+    background-color: var(--site-surface);
+  }
+
+  html[data-theme="dark"] .site-page .text-gray-900,
+  html[data-theme="dark"] .site-page .text-gray-800,
+  html[data-theme="dark"] .site-page .text-gray-700 {
+    color: var(--site-heading);
+  }
+
+  html[data-theme="dark"] .site-page .text-gray-600,
+  html[data-theme="dark"] .site-page .text-gray-500,
+  html[data-theme="dark"] .site-page .text-gray-400 {
+    color: var(--site-muted);
+  }
+
+  html[data-theme="dark"] .site-page .border-gray-100,
+  html[data-theme="dark"] .site-page .border-gray-200,
+  html[data-theme="dark"] .site-page .border-gray-300 {
+    border-color: var(--site-border);
+  }
+
+  html[data-theme="dark"] .site-page .ring-gray-200\/60 {
+    --tw-ring-color: var(--site-border);
+  }
+
   /* Prose enhancements for article content */
   .prose-article {
     @apply prose prose-lg prose-gray max-w-none;
@@ -66,6 +202,22 @@
     @apply prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none;
     @apply prose-li:marker:text-gray-400;
     @apply prose-hr:border-gray-200;
+    color: var(--site-text);
+    font-size: 1.1rem;
+    line-height: 2;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .prose-article :where(p, li) {
+    line-height: 2;
+  }
+
+  .prose-article :where(h2, h3, h4) {
+    color: var(--site-heading);
+    font-weight: 800;
+    line-height: 1.65;
+    letter-spacing: 0;
   }
 
   .article-reading-shell {
