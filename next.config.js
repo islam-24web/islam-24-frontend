@@ -62,19 +62,36 @@ const nextConfig = {
   },
 
   // Redirects
+  //
+  // NOTE: www→apex canonicalization is done at the Vercel domain level
+  // (Project → Settings → Domains: www.islam-24.com permanently redirects
+  // to islam-24.com). Doing it here in next.config.js with a host matcher
+  // collided with Vercel's own primary-domain redirect (apex→www, the
+  // pre-fix state) and produced an infinite 307↔308 loop on every URL
+  // — including /robots.txt — which broke Ahrefs/Google crawling. Always
+  // canonicalize the host at exactly one layer, not both.
   async redirects() {
     return [
-      // Canonical host: apex islam-24.com. Strip the www. variant at the edge
-      // so Ahrefs/Google never see two competing 200s with conflicting canonicals.
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.islam-24.com" }],
-        destination: "https://islam-24.com/:path*",
-        permanent: true,
-      },
       {
         source: "/home",
         destination: "/",
+        permanent: true,
+      },
+      // Human-friendly topical aliases requested for LLM/AEO discovery.
+      // They point at the canonical routes to avoid duplicate indexed pages.
+      {
+        source: "/quran",
+        destination: "/category/quran-tafsir",
+        permanent: true,
+      },
+      {
+        source: "/hadith",
+        destination: "/category/hadith",
+        permanent: true,
+      },
+      {
+        source: "/articles",
+        destination: "/blog",
         permanent: true,
       },
       // Asma Allah: old /article/name-NN-X → new /asma-allah/name-NN-X
