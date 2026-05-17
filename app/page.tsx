@@ -250,7 +250,7 @@ export default async function HomePage() {
             <div className="text-emerald-300 text-xs hidden md:block">
               {new Date().toLocaleDateString("ar-EG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
             </div>
-            <HeaderSearchForm id="home-search-desktop" className="hidden w-64 lg:flex" />
+            <HeaderSearchForm id="home-search-desktop" className="hidden w-56 md:flex lg:w-64" />
             {/* Mobile menu icon */}
             <button className="md:hidden text-white p-1" aria-label="Menu">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>

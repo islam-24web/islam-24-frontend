@@ -130,7 +130,7 @@ export default function SiteHeader({ navigation }: Props) {
               })}
             </div>
           )}
-          <HeaderSearchForm id="site-search-desktop" className="hidden w-64 lg:flex" />
+          <HeaderSearchForm id="site-search-desktop" className="hidden w-56 md:flex lg:w-64" />
         </div>
 
         <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
