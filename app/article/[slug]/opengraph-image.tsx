@@ -164,6 +164,7 @@ export default async function Image({ params }: Props) {
                 display: "flex",
                 alignItems: "center",
                 gap: 18,
+                direction: "ltr",
               }}
             >
               <div
@@ -180,10 +181,23 @@ export default async function Image({ params }: Props) {
                   fontWeight: 700,
                 }}
               >
-                ﷽
+                24
               </div>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ fontSize: 34, fontWeight: 700 }}>إسلام 24</div>
+              <div style={{ display: "flex", flexDirection: "column", direction: "rtl" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 16,
+                    direction: "ltr",
+                    fontSize: 34,
+                    fontWeight: 700,
+                  }}
+                >
+                  <span>24</span>
+                  <span>إسلام</span>
+                </div>
                 <div style={{ fontSize: 18, color: "#bfe4d5", marginTop: 2 }}>
                   معرفة موثوقة وسياق واضح
                 </div>
@@ -210,7 +224,7 @@ export default async function Image({ params }: Props) {
               display: "flex",
               flexDirection: "column",
               maxWidth: 810,
-              marginRight: 0,
+              alignSelf: "flex-start",
               color: "#ffffff",
             }}
           >
@@ -226,6 +240,8 @@ export default async function Image({ params }: Props) {
             />
             <div
               style={{
+                display: "flex",
+                justifyContent: "flex-start",
                 fontSize: 58,
                 lineHeight: 1.32,
                 fontWeight: 700,
@@ -234,7 +250,23 @@ export default async function Image({ params }: Props) {
                 textWrap: "balance",
               }}
             >
-              {title}
+              {title === "إسلام 24" ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: 34,
+                    direction: "ltr",
+                  }}
+                >
+                  <div style={{ display: "flex" }}>24</div>
+                  <div style={{ display: "flex" }}>إسلام</div>
+                </div>
+              ) : (
+                title
+              )}
             </div>
           </div>
 
