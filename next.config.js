@@ -77,6 +77,23 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      // Human-friendly topical aliases requested for LLM/AEO discovery.
+      // They point at the canonical routes to avoid duplicate indexed pages.
+      {
+        source: "/quran",
+        destination: "/category/quran-tafsir",
+        permanent: true,
+      },
+      {
+        source: "/hadith",
+        destination: "/category/hadith",
+        permanent: true,
+      },
+      {
+        source: "/articles",
+        destination: "/blog",
+        permanent: true,
+      },
       // Asma Allah: old /article/name-NN-X → new /asma-allah/name-NN-X
       // Slug preserved (Phase C2 decision 6) so the path swap is mechanical.
       {
