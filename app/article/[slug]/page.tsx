@@ -13,6 +13,7 @@ import QuickAnswer from "@/components/article/QuickAnswer";
 import FAQList from "@/components/article/FAQList";
 import Sources from "@/components/article/Sources";
 import { addHeadingAnchors } from "@/lib/article/headings";
+import { sanitizeArticleBody } from "@/lib/article/sanitize";
 import { worldForCategory, worldLabel, worldHref } from "@/lib/editorial/worlds";
 
 const SITE_URL = getSiteUrl();
@@ -94,7 +95,7 @@ export default async function ArticlePage({ params }: Props) {
       })
     : null;
 
-  const { html: anchoredContent } = addHeadingAnchors(content);
+  const { html: anchoredContent } = addHeadingAnchors(sanitizeArticleBody(content));
 
   let relatedArticles: Awaited<ReturnType<typeof getRelatedArticles>> = [];
   if (category?.slug) {
