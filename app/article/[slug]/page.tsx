@@ -86,11 +86,11 @@ export default async function ArticlePage({ params }: Props) {
   const imageAlt = featured_image?.alternativeText || title;
   const authorImgUrl = author_image?.url;
 
-  const formattedDate = new Date(published_date).toLocaleDateString("en-US", {
+  const formattedDate = new Date(published_date).toLocaleDateString("ar-EG", {
     year: "numeric", month: "long", day: "numeric",
   });
   const formattedReviewedDate = lastReviewedAt
-    ? new Date(lastReviewedAt).toLocaleDateString("en-US", {
+    ? new Date(lastReviewedAt).toLocaleDateString("ar-EG", {
         year: "numeric", month: "long", day: "numeric",
       })
     : null;
@@ -104,15 +104,15 @@ export default async function ArticlePage({ params }: Props) {
 
   const world = worldForCategory(category?.slug);
   const breadcrumbs: { name: string; url: string }[] = [
-    { name: "Home", url: SITE_URL },
+    { name: "الرئيسية", url: SITE_URL },
   ];
   if (world) {
     breadcrumbs.push({
-      name: worldLabel(world, "en"),
+      name: worldLabel(world, "ar"),
       url: `${SITE_URL}${worldHref(world)}`,
     });
   } else {
-    breadcrumbs.push({ name: "Blog", url: `${SITE_URL}/blog` });
+    breadcrumbs.push({ name: "المقالات", url: `${SITE_URL}/blog` });
   }
   if (category) {
     breadcrumbs.push({ name: category.name, url: `${SITE_URL}/category/${category.slug}` });
@@ -133,23 +133,24 @@ export default async function ArticlePage({ params }: Props) {
     <>
       <JsonLd graph={graph} />
 
+      <div className="article-reading-shell">
       <article>
-        <header className="py-12 sm:py-16">
+        <header className="border-b border-white/10 py-10 sm:py-14">
           <div className="mx-auto max-w-3xl px-6">
-            <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500">
-              <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
+            <nav className="article-muted mb-8 flex items-center gap-2 text-sm">
+              <Link href="/" className="transition-colors hover:text-white">الرئيسية</Link>
               <span>/</span>
               {world ? (
-                <Link href={worldHref(world)} className="hover:text-gray-700 transition-colors">
-                  {worldLabel(world, "en")}
+                <Link href={worldHref(world)} className="transition-colors hover:text-white">
+                  {worldLabel(world, "ar")}
                 </Link>
               ) : (
-                <Link href="/blog" className="hover:text-gray-700 transition-colors">Blog</Link>
+                <Link href="/blog" className="transition-colors hover:text-white">المقالات</Link>
               )}
               {category && (
                 <>
                   <span>/</span>
-                  <Link href={`/category/${category.slug}`} className="hover:text-gray-700 transition-colors">
+                  <Link href={`/category/${category.slug}`} className="transition-colors hover:text-white">
                     {category.name}
                   </Link>
                 </>
@@ -159,17 +160,17 @@ export default async function ArticlePage({ params }: Props) {
             {category && (
               <Link
                 href={`/category/${category.slug}`}
-                className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors mb-4"
+                className="article-eyebrow-link mb-5 inline-flex rounded-full px-3 py-1 text-xs font-bold transition-colors"
               >
                 {category.name}
               </Link>
             )}
 
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl leading-tight text-balance">
+            <h1 className="text-balance text-3xl font-extrabold leading-[1.65] text-white sm:text-4xl lg:text-5xl">
               {title}
             </h1>
             <p
-              className="mt-6 text-lg text-gray-600 leading-relaxed"
+              className="article-muted mt-6 text-lg font-medium leading-[2]"
               data-speakable-summary={quickAnswer?.trim() ? undefined : true}
             >
               {excerpt}
@@ -185,20 +186,20 @@ export default async function ArticlePage({ params }: Props) {
                   className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow"
                 />
               ) : (
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-600">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white">
                   {author_name.charAt(0)}
                 </div>
               )}
               <div>
-                <p className="text-sm font-semibold text-gray-900">{author_name}</p>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <p className="text-sm font-bold text-white">{author_name}</p>
+                <div className="article-muted flex items-center gap-2 text-sm">
                   <time dateTime={published_date}>{formattedDate}</time>
-                  <span className="h-1 w-1 rounded-full bg-gray-300" />
-                  <span>{reading_time} min read</span>
+                  <span className="h-1 w-1 rounded-full bg-white/30" />
+                  <span>{reading_time} دقائق قراءة</span>
                 </div>
                 {formattedReviewedDate && (
-                  <p className="mt-1 text-xs text-gray-500">
-                    Last reviewed:{" "}
+                  <p className="article-muted mt-1 text-xs">
+                    آخر مراجعة:{" "}
                     <time dateTime={lastReviewedAt!}>{formattedReviewedDate}</time>
                   </p>
                 )}
@@ -209,7 +210,7 @@ export default async function ArticlePage({ params }: Props) {
 
         {imageUrl && (
           <div className="mx-auto max-w-5xl px-6 mb-12">
-            <div className="relative aspect-[21/9] overflow-hidden rounded-2xl shadow-xl">
+            <div className="relative aspect-[21/9] overflow-hidden rounded-lg shadow-2xl shadow-black/30 ring-1 ring-white/10">
               <Image
                 src={getStrapiMediaUrl(imageUrl)}
                 alt={imageAlt}
@@ -229,12 +230,11 @@ export default async function ArticlePage({ params }: Props) {
 
         {faqs && faqs.length > 0 && <FAQList faqs={faqs} />}
         {sources && sources.length > 0 && <Sources sources={sources} />}
-      </article>
 
       {relatedArticles.length > 0 && (
-        <section className="border-t border-gray-100 bg-gray-50/50 py-16 sm:py-20">
+        <section className="border-t border-white/10 py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-10">Related Articles</h2>
+            <h2 className="mb-10 text-2xl font-extrabold leading-relaxed text-white">مقالات ذات صلة</h2>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {relatedArticles.map((a) => (
                 <ArticleCard key={a.id} article={a} />
@@ -243,6 +243,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         </section>
       )}
+      </article>
+      </div>
     </>
   );
 }

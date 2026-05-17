@@ -1,7 +1,7 @@
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Instrument_Serif, Noto_Kufi_Arabic } from "next/font/google";
 import * as Sentry from '@sentry/nextjs';
 import { getNavigation } from "@/lib/api";
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
@@ -11,7 +11,12 @@ import { buildWebsite } from "@/lib/seo/schema/website";
 import SiteHeader from "@/components/layout/SiteHeader";
 import "./globals.css";
 
-const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const sans = Noto_Kufi_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
 const serif = Instrument_Serif({ subsets: ["latin"], weight: ["400"], variable: "--font-serif", display: "swap" });
 const SITE_URL = getSiteUrl();
 

@@ -39,14 +39,14 @@ export default function Sources({ sources, locale = "ar" }: SourcesProps) {
     >
       <h2
         id="sources-heading"
-        className="text-2xl font-bold tracking-tight text-gray-900 mb-6"
+        className="mb-6 text-2xl font-extrabold leading-relaxed text-white"
       >
         {heading}
       </h2>
-      <ol className="space-y-3 text-sm sm:text-base text-gray-700 list-decimal ps-6">
+      <ol className="space-y-3 text-sm sm:text-base text-slate-200 list-decimal ps-6">
         {sources.map((s) => (
-          <li key={s.id} className="leading-relaxed">
-            <span className="me-2 inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+          <li key={s.id} className="leading-[2]">
+            <span className="me-2 inline-flex rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium text-amber-200">
               {labels[s.kind]}
             </span>
             {s.url ? (
@@ -54,15 +54,15 @@ export default function Sources({ sources, locale = "ar" }: SourcesProps) {
                 href={s.url}
                 target="_blank"
                 rel="nofollow noopener"
-                className="font-medium text-blue-700 hover:underline"
+                className="font-semibold text-amber-200 hover:underline"
               >
                 {s.label}
               </a>
             ) : (
-              <span className="font-medium text-gray-900">{s.label}</span>
+              <span className="font-semibold text-white">{s.label}</span>
             )}
             {s.reference && (
-              <span className="ms-1 text-gray-500"> — {s.reference}</span>
+              <span className="ms-1 text-slate-300"> — {s.reference}</span>
             )}
           </li>
         ))}

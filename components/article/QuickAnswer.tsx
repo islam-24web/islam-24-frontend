@@ -14,15 +14,15 @@ export default function QuickAnswer({
 
   return (
     <aside
-      className="mb-10 rounded-2xl border border-blue-100 bg-blue-50/60 p-5 sm:p-6 shadow-sm"
+      className="article-quick-answer mb-10 rounded-2xl border p-5 sm:p-6 shadow-sm"
       aria-label={label}
       dir={isRtl ? "rtl" : "ltr"}
       data-speakable-summary={speakable ? true : undefined}
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+      <p className="text-xs font-semibold uppercase text-amber-300">
         {label}
       </p>
-      <p className="mt-2 text-base sm:text-lg leading-relaxed text-gray-900">
+      <p className="mt-2 text-base sm:text-lg font-medium leading-[2] text-white">
         {answer}
       </p>
     </aside>

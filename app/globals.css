@@ -4,8 +4,13 @@
 
 @layer base {
   :root {
-    --font-sans: "Inter", system-ui, sans-serif;
+    --font-sans: "Noto Kufi Arabic", system-ui, sans-serif;
     --font-serif: "Instrument Serif", Georgia, serif;
+    --article-bg: #2b3446;
+    --article-bg-soft: #354054;
+    --article-text: #f5f7fb;
+    --article-muted: #c4ccd8;
+    --article-border: rgb(255 255 255 / 0.12);
   }
 
   html {
@@ -38,6 +43,88 @@
     @apply prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none;
     @apply prose-li:marker:text-gray-400;
     @apply prose-hr:border-gray-200;
+  }
+
+  .article-reading-shell {
+    background: var(--article-bg);
+    color: var(--article-text);
+  }
+
+  .article-reading-shell .article-eyebrow-link {
+    background: rgb(255 255 255 / 0.08);
+    color: #f2c968;
+    border: 1px solid var(--article-border);
+  }
+
+  .article-reading-shell .article-eyebrow-link:hover {
+    background: rgb(255 255 255 / 0.12);
+    color: #ffe29a;
+  }
+
+  .article-reading-shell .prose-article {
+    --tw-prose-body: var(--article-text);
+    --tw-prose-headings: #ffffff;
+    --tw-prose-lead: var(--article-muted);
+    --tw-prose-links: #f2c968;
+    --tw-prose-bold: #ffffff;
+    --tw-prose-counters: var(--article-muted);
+    --tw-prose-bullets: var(--article-muted);
+    --tw-prose-hr: var(--article-border);
+    --tw-prose-quotes: #ffffff;
+    --tw-prose-quote-borders: #f2c968;
+    --tw-prose-captions: var(--article-muted);
+    --tw-prose-code: #ffffff;
+    --tw-prose-pre-code: #f5f7fb;
+    --tw-prose-pre-bg: #202839;
+    color: var(--article-text);
+    font-size: 1.2rem;
+    line-height: 2.05;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .article-reading-shell .prose-article :where(p, li) {
+    line-height: 2.05;
+  }
+
+  .article-reading-shell .prose-article :where(p) {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+  }
+
+  .article-reading-shell .prose-article :where(h2, h3, h4) {
+    font-weight: 800;
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+
+  .article-reading-shell .prose-article :where(blockquote) {
+    background: rgb(255 255 255 / 0.06);
+    border-inline-start-color: #f2c968;
+    border-left-color: #f2c968;
+    color: #ffffff;
+  }
+
+  .article-reading-shell .prose-article :where(a) {
+    color: #f2c968;
+    text-underline-offset: 0.2em;
+  }
+
+  .article-reading-shell .article-quick-answer,
+  .article-reading-shell .article-faq-panel {
+    border-color: var(--article-border);
+    background: rgb(255 255 255 / 0.07);
+    color: var(--article-text);
+  }
+
+  .article-reading-shell .article-muted {
+    color: var(--article-muted);
+  }
+
+  @media (min-width: 640px) {
+    .article-reading-shell .prose-article {
+      font-size: 1.32rem;
+    }
   }
 }
 
