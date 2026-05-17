@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900 antialiased">
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />
         <main className="flex-1">{children}</main>
+        <GoogleAnalytics gaId="G-148QLR48P0" />
       </body>
     </html>
   );
