@@ -77,23 +77,24 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
     <>
       <style>{`
         @keyframes heroFadeIn {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0);    }
         }
         @keyframes heroProgress {
-          from { width: 0%; }
-          to { width: 100%; }
+          from { width: 0%;    }
+          to   { width: 100%;  }
         }
-        .hero-text-anim { animation: heroFadeIn 0.6s ease-out both; }
-        .hero-progress-bar { animation: heroProgress 5s linear infinite; }
+        .hero-text-anim   { animation: heroFadeIn 0.5s ease-out both; }
+        .hero-progress-bar { animation: heroProgress 5s linear forwards; }
       `}</style>
+
+      {/* ── Card shell: image on top, text content below ── */}
       <div
-        className="hero-panel relative w-full overflow-hidden rounded-2xl"
-        style={{ height: 400 }}
+        className="content-card w-full overflow-hidden rounded-2xl"
         dir="rtl"
       >
-        {/* Background image */}
-        <div className="absolute inset-0">
+        {/* ── Image section ── */}
+        <div className="relative w-full overflow-hidden" style={{ height: 230 }}>
           {imgUrl && imgUrl !== "/placeholder.jpg" ? (
             <Image
               key={current.slug}
@@ -107,93 +108,106 @@ export default function HeroSwiper({ articles }: HeroSwiperProps) {
           ) : (
             <div className="hero-fallback w-full h-full" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+
+          {/* Subtle bottom fade for edge softening only */}
+          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+
+          {/* Progress bar */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-white/20">
+            <div key={currentIndex} className="hero-progress-fill h-full hero-progress-bar" />
+          </div>
+
+          {/* Arrows */}
+          <button
+            onClick={handlePrev}
+            aria-label="السابق"
+            className="hero-icon-button absolute top-1/2 right-3 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all z-10"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="التالي"
+            className="hero-icon-button absolute top-1/2 left-3 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all z-10"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
+
+          {/* Slide counter */}
+          <div className="absolute top-3 left-3 bg-black/50 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur-sm tabular-nums">
+            {currentIndex + 1} / {slides.length}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="absolute bottom-0 right-0 left-0 p-6 md:p-10">
+        {/* ── Content section — clean, below the image ── */}
+        <div className="p-5 md:p-6">
           <div key={current.slug} className="hero-text-anim">
+            {/* Meta row */}
             <div className="flex items-center gap-3 mb-3">
               {current.category && (
                 <Link
                   href={`/category/${current.category.slug}`}
-                  className="hero-category-pill text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+                  className="hero-category-pill text-xs font-bold px-3 py-1 rounded-full transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {current.category.name}
                 </Link>
               )}
-              <span className="text-gray-300 text-xs flex items-center gap-1">
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="site-muted text-xs flex items-center gap-1">
+                <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 {formatDate(current.published_date || current.publishedAt)}
               </span>
             </div>
+
+            {/* Title */}
             <Link href={`/article/${current.slug}`}>
-              <h2 className="text-white font-bold text-xl md:text-3xl line-clamp-2 leading-relaxed mb-3 hover:text-[color:var(--site-gold)] transition-colors">
+              <h2 className="site-title font-bold text-xl md:text-2xl line-clamp-2 leading-relaxed mb-2 hover:text-[color:var(--site-accent)] transition-colors">
                 {current.title}
               </h2>
             </Link>
+
+            {/* Excerpt */}
             {current.excerpt && (
-              <p className="text-gray-300 text-sm line-clamp-2 mb-4 max-w-2xl leading-relaxed">
+              <p className="site-muted text-sm line-clamp-2 mb-4 leading-relaxed">
                 {current.excerpt}
               </p>
             )}
-            <Link
-              href={`/article/${current.slug}`}
-              className="hero-cta inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
-            >
-              اقرأ المزيد
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
+
+            {/* CTA + dots */}
+            <div className="flex items-center justify-between">
+              <Link
+                href={`/article/${current.slug}`}
+                className="hero-cta inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all"
+              >
+                اقرأ المزيد
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </Link>
+
+              {/* Dots */}
+              <div className="flex items-center gap-1.5">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleDotClick(i)}
+                    aria-label={`الشريحة ${i + 1}`}
+                    className={`transition-all duration-300 rounded-full ${
+                      i === currentIndex
+                        ? "hero-dot-active w-6 h-2"
+                        : "bg-[color:var(--site-border)] hover:bg-[color:var(--site-muted)] w-2 h-2"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-white/20">
-          <div key={currentIndex} className="hero-progress-fill h-full hero-progress-bar" />
-        </div>
-
-        {/* Arrows */}
-        <button
-          onClick={handlePrev}
-          className="hero-icon-button absolute top-1/2 right-3 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-10"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button
-          onClick={handleNext}
-          className="hero-icon-button absolute top-1/2 left-3 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all z-10"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5l-7 7 7 7" />
-          </svg>
-        </button>
-
-        {/* Dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => handleDotClick(i)}
-              className={`transition-all duration-300 rounded-full ${
-                i === currentIndex
-                  ? "hero-dot-active w-8 h-2.5"
-                  : "bg-white/50 hover:bg-white/80 w-2.5 h-2.5"
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* Slide counter */}
-        <div className="absolute top-3 left-3 bg-black/50 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-          {currentIndex + 1} / {slides.length}
         </div>
       </div>
     </>

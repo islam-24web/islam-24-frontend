@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { NavItem, NavLink, Navigation } from "@/types/strapi";
 import HeaderSearchForm from "@/components/search/HeaderSearchForm";
@@ -95,6 +98,26 @@ export default function SiteHeader({ navigation }: Props) {
   const taglineAr = navigation?.tagline_ar ?? "بوابتك الإسلامية الشاملة";
   const showDate = navigation?.show_date_strip ?? true;
 
+  // ── scroll-aware: hide top-bar on scroll-down, reveal on scroll-up ──
+  const [topBarVisible, setTopBarVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y < 20) {
+        setTopBarVisible(true);
+      } else if (y > lastScrollY.current + 6) {
+        setTopBarVisible(false); // scrolling down
+      } else if (y < lastScrollY.current - 6) {
+        setTopBarVisible(true);  // scrolling up
+      }
+      lastScrollY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const items: NavItem[] =
     navigation?.nav_items && navigation.nav_items.length > 0
       ? navigation.nav_items
@@ -115,29 +138,40 @@ export default function SiteHeader({ navigation }: Props) {
   return (
     <header className="site-header sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="site-header-row flex items-center justify-between py-3">
-          <BrandLogo tagline={taglineAr} />
-          <div className="flex items-center gap-2">
-            {showDate && (
-              <div className="hidden text-xs font-semibold text-[color:var(--site-header-muted)] lg:block">
-                {new Date().toLocaleDateString("ar-EG", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-            )}
-            <HeaderSearchForm id="site-search-desktop" className="hidden w-56 md:flex lg:w-64" />
-            <ThemeToggle />
+
+        {/* ── Top bar (logo + search) — collapses on scroll-down ── */}
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: topBarVisible ? "80px" : "0px",
+            opacity: topBarVisible ? 1 : 0,
+            pointerEvents: topBarVisible ? "auto" : "none",
+          }}
+        >
+          <div className="site-header-row flex items-center justify-between py-3">
+            <BrandLogo tagline={taglineAr} />
+            <div className="flex items-center gap-2">
+              {showDate && (
+                <div className="hidden text-xs font-semibold text-[color:var(--site-header-muted)] lg:block">
+                  {new Date().toLocaleDateString("ar-EG", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
+              )}
+              <HeaderSearchForm id="site-search-desktop" className="hidden w-56 md:flex lg:w-64" />
+              <ThemeToggle />
+            </div>
           </div>
+          {/* Mobile search sits inside the collapsible too */}
+          <HeaderSearchForm id="site-search-mobile" className="pb-3 md:hidden" />
         </div>
 
+        {/* ── Nav bar — always visible (sticky) ── */}
         <nav aria-label="Primary" className="hidden md:flex items-center overflow-x-auto no-scrollbar -mx-1">
-          <Link
-            href="/"
-            className="site-nav-link-active"
-          >
+          <Link href="/" className="site-nav-link-active">
             الرئيسية
           </Link>
           {items.map((item, idx) => (
@@ -149,10 +183,7 @@ export default function SiteHeader({ navigation }: Props) {
           aria-label="Primary mobile"
           className="md:hidden flex items-center overflow-x-auto no-scrollbar -mx-1 pb-1"
         >
-          <Link
-            href="/"
-            className="site-nav-link-active px-2 py-2 text-xs"
-          >
+          <Link href="/" className="site-nav-link-active px-2 py-2 text-xs">
             الرئيسية
           </Link>
           {flatItems.map((item, idx) => (
@@ -167,7 +198,7 @@ export default function SiteHeader({ navigation }: Props) {
             </Link>
           ))}
         </nav>
-        <HeaderSearchForm id="site-search-mobile" className="pb-3 md:hidden" />
+
       </div>
     </header>
   );

@@ -100,25 +100,28 @@ function FeaturedCard({ article }: { article: Article }) {
   const img = getStrapiMediaUrl(article.featured_image?.url);
   const hasImg = img && img !== "/placeholder.jpg";
   return (
-    <Link href={`/article/${article.slug}`} className="group relative rounded-xl overflow-hidden block" style={{ height: 200 }}>
-      {hasImg ? (
-        <Image
-          src={img}
-          alt={article.title}
-          fill
-          sizes="(min-width: 1024px) 66vw, 100vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      ) : (
-        <div className="hero-fallback w-full h-full" />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-      <div className="absolute bottom-0 right-0 left-0 p-4">
+    <Link href={`/article/${article.slug}`} className="content-card group rounded-xl overflow-hidden block">
+      {/* Image on top */}
+      <div className="relative w-full overflow-hidden" style={{ height: 180 }}>
+        {hasImg ? (
+          <Image
+            src={img}
+            alt={article.title}
+            fill
+            sizes="(min-width: 1024px) 66vw, 100vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="hero-fallback w-full h-full" />
+        )}
+      </div>
+      {/* Content below image */}
+      <div className="p-4">
         {article.category && (
           <span className="hero-category-pill text-xs px-2 py-0.5 rounded-full font-bold mb-2 inline-block">{article.category.name}</span>
         )}
-        <h3 className="text-white font-bold text-base line-clamp-2 leading-relaxed">{article.title}</h3>
-        <p className="text-gray-300 text-xs mt-1">{formatDate(article.published_date || article.publishedAt)}</p>
+        <h3 className="content-card-title font-bold text-base line-clamp-2 leading-relaxed mt-1">{article.title}</h3>
+        <p className="site-muted text-xs mt-1.5">{formatDate(article.published_date || article.publishedAt)}</p>
       </div>
     </Link>
   );
