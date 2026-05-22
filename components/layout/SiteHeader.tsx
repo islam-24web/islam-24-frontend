@@ -99,23 +99,61 @@ export default function SiteHeader({ navigation }: Props) {
   const showDate = navigation?.show_date_strip ?? true;
 
   // ── scroll-aware: hide top-bar on scroll-down, reveal on scroll-up ──
+  // Uses an anchor-point approach: state only changes after scrolling
+  // COLLAPSE_PX downward or EXPAND_PX upward from the last state-change
+  // position. This prevents oscillation caused by bounce/momentum scrolling.
   const [topBarVisible, setTopBarVisible] = useState(true);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    const COLLAPSE_PX = 120; // must scroll this far down to hide
+    const EXPAND_PX   = 60;  // must scroll this far up to show
+    const TOP_SNAP    = 80;  // always show when within this many px of top
+
+    // Local vars avoid stale closures on React state
+    let shown   = true;
+    let anchorY = 0;
+    let raf: ReturnType<typeof requestAnimationFrame> | null = null;
+
+    const update = () => {
+      raf = null;
       const y = window.scrollY;
-      if (y < 20) {
-        setTopBarVisible(true);
-      } else if (y > lastScrollY.current + 6) {
-        setTopBarVisible(false); // scrolling down
-      } else if (y < lastScrollY.current - 6) {
-        setTopBarVisible(true);  // scrolling up
+
+      if (y < TOP_SNAP) {
+        if (!shown) { shown = true; setTopBarVisible(true); }
+        anchorY = 0;
+        return;
       }
-      lastScrollY.current = y;
+
+      if (shown) {
+        if (y > anchorY + COLLAPSE_PX) {
+          // Scrolled far enough down — collapse
+          shown = false; setTopBarVisible(false); anchorY = y;
+        } else if (y < anchorY) {
+          // Direction reversed while visible — reset anchor so collapse
+          // distance is measured from the new high-point
+          anchorY = y;
+        }
+      } else {
+        if (anchorY - y > EXPAND_PX) {
+          // Scrolled far enough up — expand
+          shown = true; setTopBarVisible(true); anchorY = y;
+        } else if (y > anchorY) {
+          // Direction reversed while hidden — reset anchor
+          anchorY = y;
+        }
+      }
     };
+
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    anchorY = window.scrollY;
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const items: NavItem[] =
