@@ -29,6 +29,8 @@
     --site-header-field: #f0f4fa;
     --site-header-field-text: #090d14;
     --site-logo-text: #090d14;
+    /* Category pill: white text on dark-amber bg in light mode */
+    --site-pill-text: #ffffff;
     /* Nav strip — light mode: gold bar + white text */
     --site-nav-bg: var(--site-gold);
     --site-nav-text: #ffffff;
@@ -72,6 +74,8 @@
     --site-header-field: rgb(255 255 255 / 0.08);
     --site-header-field-text: #ffffff;
     --site-logo-text: #ffffff;
+    /* Category pill: dark text on bright-gold bg in dark mode */
+    --site-pill-text: #090d14;
     /* Nav strip — dark mode: transparent bar, muted text (keep existing look) */
     --site-nav-bg: transparent;
     --site-nav-text: var(--site-header-text);
@@ -441,12 +445,12 @@
 
   .hero-category-pill {
     background: var(--site-gold);
-    color: #090d14;
+    color: var(--site-pill-text);
   }
 
   .hero-category-pill:hover {
     background: var(--site-gold-strong);
-    color: #090d14;
+    color: var(--site-pill-text);
   }
 
   .hero-cta {

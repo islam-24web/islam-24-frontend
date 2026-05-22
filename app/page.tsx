@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getApprovedHomepageCategories, getArticles, getCategories, getHomepage, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
+import SidebarTabs from "@/components/home/SidebarTabs";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
 import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
 import type { Article, CategoryStripBlock, DailyTilesBlock, HomeBlock } from "@/types/strapi";
@@ -154,10 +155,11 @@ export default async function HomePage() {
   const useCms = isCmsHomepage();
   const useAutoStrips = useCms && isAutoCategoryStrips();
 
-  const [categories, featuredRes, mostReadRes, homepage, approvedCategories, ...sectionResults] = await Promise.all([
+  const [categories, featuredRes, mostReadRes, popularRes, homepage, approvedCategories, ...sectionResults] = await Promise.all([
     getCategories(),
     getArticles({ featured: true, pageSize: 5 }),
     getArticles({ pageSize: 20 }),
+    getArticles({ sortByHomepagePriority: true, pageSize: 10 }),
     useCms ? getHomepage() : Promise.resolve(null),
     useAutoStrips ? getApprovedHomepageCategories() : Promise.resolve([]),
     ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7, includeChildCategories: true })),
@@ -205,6 +207,7 @@ export default async function HomePage() {
 
   const featured = featuredRes.data || [];
   const mostRead = mostReadRes.data || [];
+  const popular = popularRes.data || [];
   // Fallback: if we don't have ≥3 featured, reuse the top of mostRead (same sort order, no extra fetch)
   const heroArticles = featured.length >= 3 ? featured : mostRead.slice(0, 5);
 
@@ -290,21 +293,8 @@ export default async function HomePage() {
           {/* Sidebar */}
           <aside className="w-full lg:w-72 flex-shrink-0">
             <div className="lg:sticky lg:top-28 space-y-6">
-              {/* Most Read */}
-              <div className="content-card rounded-xl overflow-hidden">
-                <div className="bg-[color:var(--site-heading)] px-4 py-3">
-                  <h3 className="text-white font-bold text-base">📊 الأكثر قراءة</h3>
-                </div>
-                <div className="divide-y divide-[color:var(--site-border)]">
-                  {mostRead.slice(0, 10).map((article, i) => (
-                    <Link key={article.slug || article.id} href={`/article/${article.slug}`}
-                      className="group flex items-center gap-2 px-4 py-2.5 transition-colors hover:bg-[color:var(--site-surface-soft)]">
-                      <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[color:var(--site-gold)] text-slate-950" : "bg-[color:var(--site-surface-soft)] text-[color:var(--site-muted)]"}`}>{i + 1}</span>
-                      <span className="text-sm text-[color:var(--site-text)] group-hover:text-[color:var(--site-accent)] transition-colors line-clamp-2 leading-relaxed">{article.title}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {/* Most Read + Popular — tabbed */}
+              <SidebarTabs mostRead={mostRead} popular={popular} />
               {/* Asma Allah sidebar — hidden when CMS supplied a divine-names-feature block */}
               {!cmsHasDivineNames && (
                 <div className="rounded-xl bg-[linear-gradient(135deg,#101b33_0%,#31200c_100%)] text-white p-5 shadow-sm">
