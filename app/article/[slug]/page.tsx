@@ -115,6 +115,9 @@ export default async function ArticlePage({ params }: Props) {
     breadcrumbs.push({ name: "المقالات", url: `${SITE_URL}/blog` });
   }
   if (category) {
+    if (category.parent) {
+      breadcrumbs.push({ name: category.parent.name, url: `${SITE_URL}/category/${category.parent.slug}` });
+    }
     breadcrumbs.push({ name: category.name, url: `${SITE_URL}/category/${category.slug}` });
   }
   breadcrumbs.push({ name: title, url: `${SITE_URL}/article/${params.slug}` });
@@ -146,6 +149,14 @@ export default async function ArticlePage({ params }: Props) {
                 </Link>
               ) : (
                 <Link href="/blog" className="transition-opacity hover:opacity-80">المقالات</Link>
+              )}
+              {category?.parent && (
+                <>
+                  <span>/</span>
+                  <Link href={`/category/${category.parent.slug}`} className="transition-opacity hover:opacity-80">
+                    {category.parent.name}
+                  </Link>
+                </>
               )}
               {category && (
                 <>

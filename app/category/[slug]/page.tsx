@@ -51,15 +51,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   const { name, description, parent, children } = category;
   const currentPage = Number(searchParams.page) || 1;
+  const subcategories = children || [];
 
   const { data: articles, meta } = await getArticles({
     page: currentPage,
     pageSize: 12,
     categorySlug: params.slug,
+    includeChildCategories: subcategories.length > 0,
   });
 
   const pagination = meta.pagination;
-  const subcategories = children || [];
 
   const breadcrumbs = [
     { name: "الرئيسية", url: SITE_URL },
@@ -105,16 +106,22 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </div>
 
           {subcategories.length > 0 && (
-            <div className="mb-10 flex flex-wrap gap-2">
-              {subcategories.map((sub) => (
-                <Link
-                  key={sub.id}
-                  href={`/category/${sub.slug}`}
-                  className="site-chip rounded-full px-4 py-2 text-sm font-bold transition-colors"
-                >
-                  {sub.name}
-                </Link>
-              ))}
+            <div className="mb-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                {subcategories.map((sub) => (
+                  <Link
+                    key={sub.id}
+                    href={`/category/${sub.slug}`}
+                    className="content-card group rounded-xl p-6 transition-all hover:shadow-md"
+                  >
+                    <h3 className="content-card-title text-base font-bold transition-colors">{sub.name}</h3>
+                    {sub.description && (
+                      <p className="site-muted text-xs mt-2 leading-relaxed line-clamp-2">{sub.description}</p>
+                    )}
+                    <span className="inline-block mt-3 text-xs font-bold text-[color:var(--site-accent)]">تصفح ←</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 

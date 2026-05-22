@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Instrument_Serif, Noto_Kufi_Arabic } from "next/font/google";
 import * as Sentry from '@sentry/nextjs';
-import { getNavigation } from "@/lib/api";
+import { getNavigation, getFooter } from "@/lib/api";
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
 import { buildOrganization } from "@/lib/seo/schema/organization";
 import { buildWebsite } from "@/lib/seo/schema/website";
 import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
 import ThemeScript from "@/components/theme/ThemeScript";
 import "./globals.css";
 
@@ -53,7 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const pathname = h.get("x-pathname") ?? "/";
   const locale = resolveHtmlLocale(pathname, h.get("x-search") ?? "");
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const navigation = pathname === "/" ? null : await getNavigation();
+  const [navigation, footer] = await Promise.all([getNavigation(), getFooter()]);
   return (
     <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
@@ -62,8 +63,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen flex flex-col bg-[color:var(--site-bg)] font-sans text-[color:var(--site-text)] antialiased transition-colors">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
         <JsonLd graph={[buildOrganization(), buildWebsite()]} />
-        {pathname !== "/" && <SiteHeader navigation={navigation} />}
+        <SiteHeader navigation={navigation} />
         <main className="flex-1">{children}</main>
+        <SiteFooter footer={footer} />
         <GoogleAnalytics gaId="G-148QLR48P0" />
       </body>
     </html>

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getApprovedHomepageCategories, getArticles, getCategories, getFooter, getHomepage, getNavigation, getStrapiMediaUrl } from "@/lib/api";
+import { getApprovedHomepageCategories, getArticles, getCategories, getHomepage, getStrapiMediaUrl } from "@/lib/api";
 import HeroSwiper from "@/components/home/HeroSwiper";
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
-import BrandLogo from "@/components/layout/BrandLogo";
 import HomeBlockRenderer from "@/components/blocks/HomeBlockRenderer";
 import { isAutoCategoryStrips, isCmsHomepage } from "@/lib/feature-flags";
 import type { Article, CategoryStripBlock, DailyTilesBlock, HomeBlock } from "@/types/strapi";
@@ -53,6 +50,8 @@ const displaySections = [
   { name: "رمضان والصيام", slug: "ramadan" },
   { name: "الحج والعمرة", slug: "hajj-umrah" },
   { name: "الصلاة وأحكامها", slug: "prayer" },
+  { name: "الصحة النفسية", slug: "mental-health" },
+  { name: "علاج الإدمان", slug: "addiction-treatment" },
 ];
 
 const FEATURED_APPS = [
@@ -152,15 +151,13 @@ export default async function HomePage() {
   const useCms = isCmsHomepage();
   const useAutoStrips = useCms && isAutoCategoryStrips();
 
-  const [categories, featuredRes, mostReadRes, navigation, footer, homepage, approvedCategories, ...sectionResults] = await Promise.all([
+  const [categories, featuredRes, mostReadRes, homepage, approvedCategories, ...sectionResults] = await Promise.all([
     getCategories(),
     getArticles({ featured: true, pageSize: 5 }),
     getArticles({ pageSize: 20 }),
-    useCms ? getNavigation() : Promise.resolve(null),
-    useCms ? getFooter() : Promise.resolve(null),
     useCms ? getHomepage() : Promise.resolve(null),
     useAutoStrips ? getApprovedHomepageCategories() : Promise.resolve([]),
-    ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7 })),
+    ...displaySections.map((sec) => getArticles({ categorySlug: sec.slug, pageSize: 7, includeChildCategories: true })),
   ]);
   void categories;
 
@@ -214,8 +211,6 @@ export default async function HomePage() {
 
   return (
     <div dir="rtl" className="site-page min-h-screen">
-      <SiteHeader navigation={useCms ? navigation : null} />
-
       <main className="site-main max-w-7xl mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-8 xl:gap-10">
           {/* Content */}
@@ -320,47 +315,6 @@ export default async function HomePage() {
         </div>
       </main>
 
-      {useCms ? <SiteFooter footer={footer} /> : (
-      <footer className="footer-shell mt-16">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <BrandLogo tagline={null} className="mb-3" />
-              <p className="footer-muted text-xs leading-relaxed">بوابتك الإسلامية الشاملة — محتوى موثوق في القرآن والحديث والفقه والسيرة</p>
-            </div>
-            <div>
-              <h4 className="footer-heading font-bold mb-3 text-sm">أقسام رئيسية</h4>
-              <ul className="space-y-1.5">
-                {navCategories.filter(c => !c.children).slice(0, 7).map(c => (
-                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="footer-link text-xs transition-colors">{c.name}</Link></li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="footer-heading font-bold mb-3 text-sm">المزيد</h4>
-              <ul className="space-y-1.5">
-                {navCategories.filter(c => !c.children).slice(7).map(c => (
-                  <li key={c.slug}><Link href={`/category/${c.slug}`} className="footer-link text-xs transition-colors">{c.name}</Link></li>
-                ))}
-                <li><Link href="/apps/sibaq" className="footer-link text-xs transition-colors">سباق الفردوس الأعلى</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="footer-heading font-bold mb-3 text-sm">روابط</h4>
-              <ul className="space-y-1.5">
-                {["من نحن", "سياسة الخصوصية", "اتصل بنا"].map(l => (
-                  <li key={l}><Link href="#" className="footer-link text-xs transition-colors">{l}</Link></li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="mt-10 border-t border-white/10 pt-6 text-center">
-            <p className="footer-muted text-xs">© {new Date().getFullYear()} إسلام 24 — جميع الحقوق محفوظة</p>
-            <p className="text-white/45 text-xs mt-1">﴿ وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ ۚ عَلَيْهِ تَوَكَّلْتُ وَإِلَيْهِ أُنِيبُ ﴾</p>
-          </div>
-        </div>
-      </footer>
-      )}
     </div>
   );
 }

@@ -132,7 +132,7 @@ export default async function CategoryStrip({ block }: Props) {
         sortByHomepagePriority: true,
         pageSize: limit,
       })
-    : await getArticles({ categorySlug: block.category!.slug, pageSize: limit });
+    : await getArticles({ categorySlug: block.category!.slug, pageSize: limit, includeChildCategories: true });
   const articles = res.data ?? [];
   if (articles.length === 0) return null;
 

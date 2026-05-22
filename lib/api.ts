@@ -136,6 +136,7 @@ export async function getArticles(options?: {
   page?: number;
   pageSize?: number;
   categorySlug?: string;
+  includeChildCategories?: boolean;
   featured?: boolean;
   showInHero?: boolean;
   showInEditorPick?: boolean;
@@ -155,7 +156,11 @@ export async function getArticles(options?: {
     "populate[seo][populate]": "*",
   };
 
-  if (options?.categorySlug) {
+  if (options?.categorySlug && options?.includeChildCategories) {
+    // Match articles in the category itself OR in any direct child category
+    params["filters[$or][0][category][slug][$eq]"] = options.categorySlug;
+    params["filters[$or][1][category][parent][slug][$eq]"] = options.categorySlug;
+  } else if (options?.categorySlug) {
     params["filters[category][slug][$eq]"] = options.categorySlug;
   }
 
