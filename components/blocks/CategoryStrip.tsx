@@ -28,8 +28,8 @@ function FeaturedCard({ article }: { article: Article }) {
       href={`/article/${article.slug}`}
       className="content-card group rounded-xl overflow-hidden block"
     >
-      {/* Image on top */}
-      <div className="relative w-full overflow-hidden" style={{ height: 180 }}>
+      {/* Image on top — 16:9 */}
+      <div className="relative w-full aspect-video overflow-hidden">
         {hasImg ? (
           <Image
             src={img}
