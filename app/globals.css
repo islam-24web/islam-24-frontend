@@ -37,6 +37,8 @@
     --site-nav-text-muted: rgba(255, 255, 255, 0.82);
     --site-nav-hover-bg: rgba(0, 0, 0, 0.14);
     --site-nav-active-mark: rgba(255, 255, 255, 0.75);
+    /* Sidebar tab: dark background that works with white text in both modes */
+    --site-tab-primary-bg: #090d14;
     --article-bg: #080b14;
     --article-bg-soft: #111827;
     --article-surface: rgb(255 255 255 / 0.075);
@@ -82,6 +84,8 @@
     --site-nav-text-muted: var(--site-header-muted);
     --site-nav-hover-bg: color-mix(in srgb, var(--site-accent), transparent 90%);
     --site-nav-active-mark: var(--site-gold);
+    /* Sidebar tab: dark navy in dark mode (works with white text) */
+    --site-tab-primary-bg: #1e3558;
   }
 
   html[data-theme="light"] {

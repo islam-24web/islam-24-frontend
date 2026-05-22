@@ -31,7 +31,7 @@ export default function SidebarTabs({ mostRead, popular }: Props) {
           onClick={() => setActiveTab("most-read")}
           className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-sm font-bold transition-colors ${
             activeTab === "most-read"
-              ? "bg-[color:var(--site-heading)] text-white"
+              ? "bg-[color:var(--site-tab-primary-bg)] text-white"
               : "bg-[color:var(--site-surface-soft)] text-[color:var(--site-muted)] hover:text-[color:var(--site-text)]"
           }`}
         >
