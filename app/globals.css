@@ -250,21 +250,26 @@
     flex-shrink: 0;
   }
 
-  /* Image-based logo */
+  /* Image-based logo — horizontal header format (1900×300) */
   .brand-logo-img {
     display: block;
-    height: 56px;
+    height: 40px;   /* mobile default */
     width: auto;
     object-fit: contain;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
-  /* Light mode: white bg blends perfectly with header */
-  /* Dark mode: white pill so logo stays legible on dark bg */
+  @media (min-width: 768px) {
+    .brand-logo-img {
+      height: 48px;   /* desktop */
+    }
+  }
+
+  /* Dark mode: white pill so logo stays legible on dark header */
   html[data-theme="dark"] .brand-logo-img {
     background: #ffffff;
     border-radius: 8px;
-    padding: 3px 10px;
+    padding: 4px 10px;
   }
 
   .site-header .brand-logo {

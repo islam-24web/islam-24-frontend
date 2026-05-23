@@ -13,8 +13,8 @@ export default function BrandLogo({ className = "" }: BrandLogoProps) {
       <Image
         src="/images/logo.png"
         alt="إسلام 24 — حتى يغيروا ما بأنفسهم"
-        width={1422}
-        height={954}
+        width={1900}
+        height={300}
         className="brand-logo-img"
         priority
       />
