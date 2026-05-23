@@ -11,10 +11,10 @@ export default function BrandLogo({ className = "" }: BrandLogoProps) {
   return (
     <Link href="/" className={`brand-logo ${className}`} aria-label="إسلام 24 — الرئيسية">
       <Image
-        src="/images/logo.webp"
+        src="/images/logo.png"
         alt="إسلام 24 — حتى يغيروا ما بأنفسهم"
-        width={2528}
-        height={1696}
+        width={1422}
+        height={954}
         className="brand-logo-img"
         priority
       />
