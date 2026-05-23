@@ -1,22 +1,23 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface BrandLogoProps {
+  /** kept for API compatibility — tagline is already embedded in the logo image */
   tagline?: string | null;
   className?: string;
 }
 
-export default function BrandLogo({ tagline, className = "" }: BrandLogoProps) {
+export default function BrandLogo({ className = "" }: BrandLogoProps) {
   return (
-    <Link href="/" className={`brand-logo ${className}`} aria-label="islam-24">
-      <span className="brand-logo-mark" aria-hidden="true">
-        <span>24</span>
-      </span>
-      <span className="brand-logo-copy">
-        <span className="brand-wordmark" dir="ltr">
-          islam<span>-24</span>
-        </span>
-        {tagline && <span className="brand-tagline" dir="rtl">{tagline}</span>}
-      </span>
+    <Link href="/" className={`brand-logo ${className}`} aria-label="إسلام 24 — الرئيسية">
+      <Image
+        src="/images/logo.webp"
+        alt="إسلام 24 — حتى يغيروا ما بأنفسهم"
+        width={2528}
+        height={1696}
+        className="brand-logo-img"
+        priority
+      />
     </Link>
   );
 }

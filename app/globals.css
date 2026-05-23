@@ -245,19 +245,33 @@
 
   .brand-logo {
     display: inline-flex;
-    min-width: 0;
-    max-width: min(100%, 13rem);
     align-items: center;
-    gap: 0.65rem;
-    color: var(--site-logo-text);
-    direction: ltr;
     text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  /* Image-based logo */
+  .brand-logo-img {
+    display: block;
+    height: 52px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    object-position: top center;
+    border-radius: 6px;
+  }
+
+  /* Light mode: white bg blends with header — no extra treatment needed */
+  /* Dark mode: wrap with a white pill so the logo is legible */
+  html[data-theme="dark"] .brand-logo-img {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 3px 8px;
   }
 
   .site-header .brand-logo {
     flex: 1 1 auto;
     margin-right: 1.25rem;
-    overflow: hidden;
   }
 
   .brand-logo-mark {
@@ -573,6 +587,13 @@
   .footer-shell .brand-logo {
     --site-logo-text: #ffffff;
     --site-header-muted: #b7c0cf;
+  }
+
+  .footer-shell .brand-logo-img {
+    height: 44px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 3px 8px;
   }
 
   .footer-muted {
