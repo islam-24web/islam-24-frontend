@@ -181,12 +181,18 @@ export default function SiteHeader({ navigation }: Props) {
         <div
           className="overflow-hidden transition-all duration-300 ease-in-out"
           style={{
-            maxHeight: topBarVisible ? "80px" : "0px",
+            maxHeight: topBarVisible ? "200px" : "0px",
             opacity: topBarVisible ? 1 : 0,
             pointerEvents: topBarVisible ? "auto" : "none",
           }}
         >
-          <div className="site-header-row flex items-center justify-between py-3">
+          {/* Mobile: logo on its own full row, centered */}
+          <div className="flex md:hidden items-center justify-center py-5">
+            <BrandLogo tagline={taglineAr} />
+          </div>
+
+          {/* Desktop: logo + controls in one row */}
+          <div className="site-header-row hidden md:flex items-center justify-between py-3">
             <BrandLogo tagline={taglineAr} />
             <div className="flex items-center gap-2">
               {showDate && (
@@ -203,8 +209,12 @@ export default function SiteHeader({ navigation }: Props) {
               <ThemeToggle />
             </div>
           </div>
-          {/* Mobile search sits inside the collapsible too */}
-          <HeaderSearchForm id="site-search-mobile" className="pb-3 md:hidden" />
+
+          {/* Mobile: search + theme toggle row */}
+          <div className="flex md:hidden items-center justify-between gap-2 pb-3 px-1">
+            <HeaderSearchForm id="site-search-mobile" className="flex-1" />
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* ── Nav bar — always visible (sticky) ── */}
