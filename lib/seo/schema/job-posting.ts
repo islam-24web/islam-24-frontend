@@ -56,8 +56,14 @@ export function buildJobPosting({
     };
   }
 
+  const applicantLocationRequirements = Array.isArray(
+    job.applicantLocationRequirements,
+  )
+    ? job.applicantLocationRequirements
+    : [];
+
   if (job.jobLocationType === "TELECOMMUTE") {
-    const reqs = job.applicantLocationRequirements
+    const reqs = applicantLocationRequirements
       .map((r) => r.trim())
       .filter(Boolean);
     node.applicantLocationRequirements = reqs.map((r) => ({
@@ -65,7 +71,7 @@ export function buildJobPosting({
       name: r,
     }));
   } else {
-    const reqs = job.applicantLocationRequirements
+    const reqs = applicantLocationRequirements
       .map((r) => r.trim())
       .filter((r) => r && r.toLowerCase() !== "worldwide");
     if (reqs.length > 0) {
