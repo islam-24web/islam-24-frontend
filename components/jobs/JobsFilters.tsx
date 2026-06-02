@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { JobCategory, Locale } from "@/lib/jobs/api";
@@ -49,7 +50,7 @@ export default function JobsFilters({ categories, locale, messages }: Props) {
 
   function clearAll() {
     const params = new URLSearchParams();
-    if (locale !== "en") params.set("lang", locale);
+    if (locale === "en") params.set("lang", locale);
     const qs = params.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
@@ -61,7 +62,7 @@ export default function JobsFilters({ categories, locale, messages }: Props) {
       <select
         value={currentCategory}
         onChange={(e) => updateParam("category", e.target.value || null)}
-        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+        className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
         aria-label={messages.filterCategory}
       >
         <option value="">{messages.filterCategoryAll}</option>
@@ -77,11 +78,11 @@ export default function JobsFilters({ categories, locale, messages }: Props) {
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
         placeholder={messages.filterSearch}
-        className="grow min-w-[200px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+        className="grow min-w-[200px] rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-teal-700 focus:outline-none focus:ring-1 focus:ring-teal-700"
         aria-label={messages.filterSearch}
       />
 
-      <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm">
+      <label className="flex cursor-pointer items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm">
         <input
           type="checkbox"
           checked={remoteOnly}
@@ -95,35 +96,35 @@ export default function JobsFilters({ categories, locale, messages }: Props) {
         <button
           type="button"
           onClick={clearAll}
-          className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
+          className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
         >
           {messages.filterClear}
         </button>
       ) : null}
 
-      <div className="ms-auto flex items-center gap-1 rounded-lg bg-gray-100 p-1">
-        <button
-          type="button"
-          onClick={() => updateParam("lang", null)}
+      <div className="ms-auto flex items-center gap-1 rounded-md bg-slate-100 p-1">
+        <Link
+          href="/en"
+          hrefLang="en"
           className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
             locale === "en"
-              ? "bg-white text-gray-900 shadow"
-              : "text-gray-600 hover:text-gray-900"
+              ? "bg-white text-slate-950 shadow"
+              : "text-slate-600 hover:text-slate-950"
           }`}
         >
           {messages.localeEnglish}
-        </button>
-        <button
-          type="button"
-          onClick={() => updateParam("lang", "ar")}
+        </Link>
+        <Link
+          href="/jobs"
+          hrefLang="ar"
           className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
             locale === "ar"
-              ? "bg-white text-gray-900 shadow"
-              : "text-gray-600 hover:text-gray-900"
+              ? "bg-white text-slate-950 shadow"
+              : "text-slate-600 hover:text-slate-950"
           }`}
         >
           {messages.localeArabic}
-        </button>
+        </Link>
       </div>
     </div>
   );

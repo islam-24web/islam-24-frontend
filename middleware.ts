@@ -7,6 +7,34 @@ export function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
   headers.set("x-pathname", request.nextUrl.pathname);
   headers.set("x-search", request.nextUrl.search);
+
+  const hostname = request.headers.get("host")?.split(":")[0] ?? "";
+  const pathname = request.nextUrl.pathname;
+  const isVerifiedRemoteHost =
+    hostname === "verifiedremote.islam-24.com" ||
+    hostname.startsWith("verifiedremote.");
+
+  if (isVerifiedRemoteHost && pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/jobs";
+    url.searchParams.set("lang", "ar");
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
+  if (pathname === "/en") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/jobs";
+    url.searchParams.set("lang", "en");
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
+  if (pathname === "/en/jobs" || pathname.startsWith("/en/jobs/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(/^\/en/, "");
+    url.searchParams.set("lang", "en");
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
   return NextResponse.next({ request: { headers } });
 }
 

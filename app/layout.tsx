@@ -22,12 +22,20 @@ const sans = Noto_Kufi_Arabic({
 const serif = Instrument_Serif({ subsets: ["latin"], weight: ["400"], variable: "--font-serif", display: "swap" });
 const SITE_URL = getSiteUrl();
 
-// /jobs is the only bilingual subtree. Default locale = en (matches
-// lib/jobs/i18n parseLocale fallback); ?lang=ar opts into Arabic.
 function resolveHtmlLocale(pathname: string, search: string): "ar" | "en" {
-  if (!pathname.startsWith("/jobs")) return "ar";
+  if (!isVerifiedRemoteRoute(pathname)) return "ar";
   const lang = new URLSearchParams(search).get("lang");
-  return lang === "ar" ? "ar" : "en";
+  return lang === "en" || pathname.startsWith("/en") ? "en" : "ar";
+}
+
+function isVerifiedRemoteRoute(pathname: string): boolean {
+  return (
+    pathname === "/jobs" ||
+    pathname.startsWith("/jobs/") ||
+    pathname === "/en" ||
+    pathname === "/en/jobs" ||
+    pathname.startsWith("/en/jobs/")
+  );
 }
 
 export function generateMetadata(): Metadata {
@@ -54,7 +62,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const pathname = h.get("x-pathname") ?? "/";
   const locale = resolveHtmlLocale(pathname, h.get("x-search") ?? "");
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const [navigation, footer] = await Promise.all([getNavigation(), getFooter()]);
+  const isVerifiedRemote = isVerifiedRemoteRoute(pathname);
+  const [navigation, footer] = isVerifiedRemote
+    ? [null, null]
+    : await Promise.all([getNavigation(), getFooter()]);
   return (
     <html lang={locale} dir={dir} className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
@@ -62,10 +73,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="min-h-screen flex flex-col bg-[color:var(--site-bg)] font-sans text-[color:var(--site-text)] antialiased transition-colors">
         <GoogleTagManager gtmId="GTM-PHJ2X8ZN" />
-        <JsonLd graph={[buildOrganization(), buildWebsite()]} />
-        <SiteHeader navigation={navigation} />
+        {isVerifiedRemote ? null : (
+          <JsonLd graph={[buildOrganization(), buildWebsite()]} />
+        )}
+        {isVerifiedRemote ? null : <SiteHeader navigation={navigation} />}
         <main className="flex-1">{children}</main>
-        <SiteFooter footer={footer} />
+        {isVerifiedRemote ? null : <SiteFooter footer={footer} />}
         <GoogleAnalytics gaId="G-148QLR48P0" />
       </body>
     </html>

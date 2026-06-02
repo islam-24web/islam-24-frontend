@@ -21,7 +21,10 @@ export type JobStatus =
   | "expired"
   | "rejected_halal"
   | "rejected_quality"
-  | "draft";
+  | "draft"
+  | "under_review"
+  | "published"
+  | "closed";
 
 /**
  * Mapped form of an external job before halal/translation/upsert.

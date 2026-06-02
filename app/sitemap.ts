@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/api";
-import { getAllJobSlugs } from "@/lib/jobs/api";
+import { buildVerifiedRemoteUrl, getAllJobSlugs } from "@/lib/jobs/api";
 import { getAllDivineNameSlugs } from "@/lib/divine-names/api";
 import { getSiteUrl } from "@/lib/seo/site";
 
@@ -34,12 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/jobs`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.85,
     },
     {
       url: `${SITE_URL}/asma-allah`,
@@ -85,15 +79,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const jobRoutes: MetadataRoute.Sitemap = jobSlugs.map(({ slug, updatedAt }) => ({
-    url: `${SITE_URL}/jobs/${slug}`,
-    lastModified: updatedAt ? new Date(updatedAt) : new Date(),
-    changeFrequency: "daily" as const,
-    priority: 0.65,
-  }));
+  const jobRoutes: MetadataRoute.Sitemap = jobSlugs.flatMap(({ slug, updatedAt }) => {
+    const lastModified = updatedAt ? new Date(updatedAt) : new Date();
+    return [
+      {
+        url: `${buildVerifiedRemoteUrl("ar")}/jobs/${slug}`,
+        lastModified,
+        changeFrequency: "daily" as const,
+        priority: 0.65,
+      },
+      {
+        url: `${buildVerifiedRemoteUrl("en")}/jobs/${slug}`,
+        lastModified,
+        changeFrequency: "daily" as const,
+        priority: 0.6,
+      },
+    ];
+  });
+
+  const verifiedRemoteRoutes: MetadataRoute.Sitemap = [
+    {
+      url: buildVerifiedRemoteUrl("ar"),
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    },
+    {
+      url: buildVerifiedRemoteUrl("en"),
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
+  ];
 
   return [
     ...staticRoutes,
+    ...verifiedRemoteRoutes,
     ...pageRoutes,
     ...articleRoutes,
     ...divineNameRoutes,

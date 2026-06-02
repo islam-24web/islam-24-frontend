@@ -4,10 +4,11 @@ import type {
   JobStatus,
   SalaryUnit,
 } from "./types";
+import { unstable_cache } from "next/cache";
 
 export type Locale = "en" | "ar";
-export const DEFAULT_LOCALE: Locale = "en";
-export const SUPPORTED_LOCALES: readonly Locale[] = ["en", "ar"] as const;
+export const DEFAULT_LOCALE: Locale = "ar";
+export const SUPPORTED_LOCALES: readonly Locale[] = ["ar", "en"] as const;
 
 export interface Company {
   documentId: string;
@@ -38,14 +39,22 @@ export interface Job {
   externalId: string;
 
   title: string;
+  titleArabic: string | null;
+  originalTitle: string | null;
   description: string;
   descriptionShort: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 
   applyUrl: string;
+  applicationUrl: string | null;
   sourceUrl: string;
   referralTag: string | null;
+  isReferral: boolean;
+  sourceReviewedAt: string | null;
+  expiresAt: string | null;
 
   datePosted: string;
   validThrough: string;
@@ -56,6 +65,17 @@ export interface Job {
   physicalLocation: PhysicalLocation | null;
   tags: string[];
   status: JobStatus;
+  isPublished: boolean;
+
+  remoteType: string | null;
+  contractType: string | null;
+  payText: string | null;
+  category: string | null;
+  summary: string | null;
+  responsibilities: string | null;
+  requirements: string | null;
+  contractDetails: string | null;
+  locationEligibility: string | null;
 
   salaryMin: number;
   salaryMax: number;
@@ -90,9 +110,12 @@ export interface FetchJobsResult {
   pagination: PaginationMeta;
 }
 
-const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://islam-24.com"
+const VERIFIED_REMOTE_URL = (
+  process.env.NEXT_PUBLIC_VERIFIED_REMOTE_URL ??
+  "https://verifiedremote.islam-24.com"
 ).replace(/\/$/, "");
+const JOB_DETAIL_REVALIDATE = 3600;
+const PUBLIC_STATUS: JobStatus = "published";
 
 function getStrapiBaseUrl(): string {
   const u = (process.env.NEXT_PUBLIC_STRAPI_URL ?? "").replace(/\/$/, "");
@@ -146,7 +169,7 @@ export async function fetchJobs(
 
   const entries: Array<[string, string | number | boolean | undefined]> = [
     ["locale", locale],
-    ["filters[status][$eq]", "active"],
+    ["filters[status][$eq]", PUBLIC_STATUS],
     ["populate[company][populate]", "*"],
     ["populate[jobCategory]", "*"],
     ["sort", sortField],
@@ -161,8 +184,9 @@ export async function fetchJobs(
     entries.push(["filters[jobLocationType][$eq]", "TELECOMMUTE"]);
   }
   if (search) {
-    entries.push(["filters[$or][0][title][$containsi]", search]);
-    entries.push(["filters[$or][1][descriptionShort][$containsi]", search]);
+    entries.push(["filters[$and][1][$or][0][title][$containsi]", search]);
+    entries.push(["filters[$and][1][$or][1][summary][$containsi]", search]);
+    entries.push(["filters[$and][1][$or][2][descriptionShort][$containsi]", search]);
   }
 
   const json = await strapi<{
@@ -180,7 +204,7 @@ export async function fetchJobs(
   }
 
   return {
-    jobs: json.data ?? [],
+    jobs: (json.data ?? []).filter(isPublicVerifiedJob),
     pagination: json.meta?.pagination ?? {
       page: 1,
       pageSize,
@@ -190,23 +214,31 @@ export async function fetchJobs(
   };
 }
 
+const fetchJobBySlugCached = unstable_cache(
+  async (slug: string, locale: Locale = DEFAULT_LOCALE): Promise<Job | null> => {
+    const qs = buildQuery([
+      ["locale", locale],
+      ["filters[slug][$eq]", slug],
+      ["filters[status][$eq]", PUBLIC_STATUS],
+      ["populate[company][populate]", "*"],
+      ["populate[jobCategory]", "*"],
+      ["pagination[limit]", 1],
+    ]);
+    const json = await strapi<{ data: Job[] }>(`/api/jobs?${qs}`, {
+      next: { revalidate: JOB_DETAIL_REVALIDATE, tags: ["jobs"] },
+    });
+    if (!json?.data?.length) return null;
+    return json.data[0];
+  },
+  ["job-by-slug"],
+  { revalidate: JOB_DETAIL_REVALIDATE, tags: ["jobs"] },
+);
+
 export async function fetchJobBySlug(
   slug: string,
   locale: Locale = DEFAULT_LOCALE,
 ): Promise<Job | null> {
-  const qs = buildQuery([
-    ["locale", locale],
-    ["filters[slug][$eq]", slug],
-    ["filters[status][$eq]", "active"],
-    ["populate[company][populate]", "*"],
-    ["populate[jobCategory]", "*"],
-    ["pagination[limit]", 1],
-  ]);
-  const json = await strapi<{ data: Job[] }>(`/api/jobs?${qs}`, {
-    next: { revalidate: 300, tags: ["jobs"] },
-  });
-  if (!json?.data?.length) return null;
-  return json.data[0];
+  return fetchJobBySlugCached(slug, locale);
 }
 
 export async function fetchJobCategories(
@@ -227,13 +259,11 @@ export async function fetchJobCategories(
 export async function getAllJobSlugs(): Promise<
   Array<{ slug: string; updatedAt: string }>
 > {
-  const today = new Date().toISOString().slice(0, 10);
   const qs = buildQuery([
     ["locale", "en"],
     ["fields[0]", "slug"],
     ["fields[1]", "updatedAt"],
-    ["filters[status][$eq]", "active"],
-    ["filters[validThrough][$gte]", today],
+    ["filters[status][$eq]", PUBLIC_STATUS],
     ["pagination[pageSize]", 1000],
   ]);
   try {
@@ -250,8 +280,33 @@ export function buildJobUrl(
   job: Pick<Job, "slug">,
   locale: Locale = DEFAULT_LOCALE,
 ): string {
-  const path = `/jobs/${job.slug}`;
-  return locale === DEFAULT_LOCALE
-    ? `${SITE_URL}${path}`
-    : `${SITE_URL}${path}?lang=${locale}`;
+  const path = locale === "en" ? `/en/jobs/${job.slug}` : `/jobs/${job.slug}`;
+  return `${VERIFIED_REMOTE_URL}${path}`;
+}
+
+export function buildVerifiedRemoteUrl(locale: Locale = DEFAULT_LOCALE): string {
+  return locale === "en" ? `${VERIFIED_REMOTE_URL}/en` : VERIFIED_REMOTE_URL;
+}
+
+export function buildLocalJobHref(
+  job: Pick<Job, "slug">,
+  locale: Locale = DEFAULT_LOCALE,
+): string {
+  return locale === "en" ? `/en/jobs/${job.slug}` : `/jobs/${job.slug}`;
+}
+
+export function getJobApplicationUrl(job: Pick<Job, "applicationUrl" | "applyUrl">): string {
+  return job.applicationUrl || job.applyUrl;
+}
+
+export function isPublicVerifiedJob(job: Job): boolean {
+  return Boolean(
+    job.status === PUBLIC_STATUS &&
+      job.isPublished &&
+      job.title?.trim() &&
+      job.company?.name?.trim() &&
+      job.sourceUrl?.trim() &&
+      getJobApplicationUrl(job)?.trim() &&
+      job.sourceReviewedAt,
+  );
 }

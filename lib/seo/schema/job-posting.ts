@@ -11,27 +11,30 @@ export interface JobPostingInput {
  * JobPosting node. hiringOrganization is intentionally NOT the site
  * Organization — it's the company offering the job. Google requires it.
  *
- * applicantLocationRequirements quirk: Google's Rich Results validator
- * errors when a TELECOMMUTE job omits it (despite the schema.org spec
- * marking it optional). We always emit at least ["Worldwide"] for remote
- * jobs; for ONSITE/HYBRID we strip "Worldwide" because jobLocation carries
- * the real geographic info.
+ * Optional properties are only emitted when the source job carries a real
+ * value. We do not synthesize fallback organizations, currencies, or locations
+ * because fake required values create schema errors that are harder to trust.
  */
 export function buildJobPosting({
   job,
   canonicalUrl,
   locale,
 }: JobPostingInput): SchemaNode {
+  const description = [
+    job.summary,
+    job.responsibilities,
+    job.requirements,
+    job.contractDetails,
+  ]
+    .filter((part) => part?.trim())
+    .join("\n\n") || job.description?.trim();
+
   const node: SchemaNode = {
     "@type": "JobPosting",
-    title: job.title,
-    description: job.description,
+    title: job.title?.trim(),
+    description,
     datePosted: job.datePosted,
-    hiringOrganization: {
-      "@type": "Organization",
-      name: job.company?.name ?? "Unknown",
-    },
-    validThrough: job.validThrough,
+    validThrough: job.expiresAt || job.validThrough,
     employmentType: job.employmentType,
     jobLocationType: job.jobLocationType,
     directApply: false,
@@ -39,25 +42,32 @@ export function buildJobPosting({
     inLanguage: locale,
     identifier: {
       "@type": "PropertyValue",
-      name: "islam-24.com Job ID",
-      value: job.documentId,
+      name: "Verified Remote Job ID",
+      value: job.documentId?.trim(),
     },
     isPartOf: { "@id": SCHEMA_IDS.website },
   };
 
+  const companyName = job.company?.name?.trim();
+  if (companyName) {
+    node.hiringOrganization = {
+      "@type": "Organization",
+      name: companyName,
+    };
+  }
+
   if (job.jobLocationType === "TELECOMMUTE") {
-    const reqs =
-      job.applicantLocationRequirements.length > 0
-        ? job.applicantLocationRequirements
-        : ["Worldwide"];
+    const reqs = job.applicantLocationRequirements
+      .map((r) => r.trim())
+      .filter(Boolean);
     node.applicantLocationRequirements = reqs.map((r) => ({
       "@type": "Country",
       name: r,
     }));
   } else {
-    const reqs = job.applicantLocationRequirements.filter(
-      (r) => r && r.toLowerCase() !== "worldwide",
-    );
+    const reqs = job.applicantLocationRequirements
+      .map((r) => r.trim())
+      .filter((r) => r && r.toLowerCase() !== "worldwide");
     if (reqs.length > 0) {
       node.applicantLocationRequirements = reqs.map((r) => ({
         "@type": "Country",
@@ -69,23 +79,29 @@ export function buildJobPosting({
   if (job.physicalLocation) {
     const address: SchemaNode = {
       "@type": "PostalAddress",
-      addressCountry: job.physicalLocation.country,
     };
-    if (job.physicalLocation.region) address.addressRegion = job.physicalLocation.region;
-    if (job.physicalLocation.city) address.addressLocality = job.physicalLocation.city;
-    node.jobLocation = { "@type": "Place", address };
+    if (job.physicalLocation.country?.trim()) {
+      address.addressCountry = job.physicalLocation.country.trim();
+    }
+    if (job.physicalLocation.region?.trim()) {
+      address.addressRegion = job.physicalLocation.region.trim();
+    }
+    if (job.physicalLocation.city?.trim()) {
+      address.addressLocality = job.physicalLocation.city.trim();
+    }
+    if (address.addressCountry) node.jobLocation = { "@type": "Place", address };
   }
 
-  if (job.salaryMin > 0 || job.salaryMax > 0) {
+  if ((job.salaryMin > 0 || job.salaryMax > 0) && job.salaryCurrency?.trim()) {
     const value: SchemaNode = {
       "@type": "QuantitativeValue",
-      unitText: job.salaryUnit ?? "YEAR",
     };
+    if (job.salaryUnit) value.unitText = job.salaryUnit;
     if (job.salaryMin > 0) value.minValue = job.salaryMin;
     if (job.salaryMax > 0) value.maxValue = job.salaryMax;
     node.baseSalary = {
       "@type": "MonetaryAmount",
-      currency: job.salaryCurrency || "USD",
+      currency: job.salaryCurrency.trim(),
       value,
     };
   }

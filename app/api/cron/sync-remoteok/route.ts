@@ -36,6 +36,17 @@ function authorized(req: NextRequest): boolean {
 }
 
 export async function GET(req: NextRequest) {
+  if (process.env.ENABLE_REMOTEOK_SYNC !== "true") {
+    return NextResponse.json(
+      {
+        status: "disabled",
+        message:
+          "RemoteOK automatic imports are disabled. Verified Remote uses manually reviewed jobs only.",
+      },
+      { status: 410 },
+    );
+  }
+
   if (!authorized(req)) {
     return NextResponse.json(
       { error: "unauthorized", hint: "set CRON_SECRET and pass Authorization: Bearer <secret>" },

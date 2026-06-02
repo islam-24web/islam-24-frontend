@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { fetchJobs, fetchJobCategories } from "@/lib/jobs/api";
+import {
+  buildJobUrl,
+  buildLocalJobHref,
+  buildVerifiedRemoteUrl,
+  fetchJobCategories,
+  fetchJobs,
+} from "@/lib/jobs/api";
 import { getDir, getMessages, parseLocale } from "@/lib/jobs/i18n";
-import { getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
 import { buildItemList } from "@/lib/seo/schema/item-list";
 import JobsFilters from "@/components/jobs/JobsFilters";
 import JobCard from "@/components/jobs/JobCard";
+import VerifiedRemoteShell from "@/components/jobs/VerifiedRemoteShell";
 import Pagination from "@/components/ui/Pagination";
 
 interface Props {
@@ -19,32 +26,49 @@ interface Props {
   };
 }
 
-const SITE_URL = getSiteUrl();
-
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const locale = parseLocale(searchParams.lang);
   const messages = getMessages(locale);
-  const canonical =
-    locale === "en" ? `${SITE_URL}/jobs` : `${SITE_URL}/jobs?lang=${locale}`;
+  const canonical = buildVerifiedRemoteUrl(locale);
+  const ogImage = `${buildVerifiedRemoteUrl("ar")}/verified-remote/verified-remote-header-1900x300.png`;
+
   return {
-    title: messages.pageTitle,
+    title: {
+      absolute:
+        locale === "ar"
+          ? "Verified Remote | فرص عمل عن بُعد مختارة"
+          : "Verified Remote | Curated Remote Opportunities",
+    },
     description: messages.pageSubtitle,
     alternates: {
       canonical,
       languages: {
-        en: `${SITE_URL}/jobs`,
-        ar: `${SITE_URL}/jobs?lang=ar`,
-        "x-default": `${SITE_URL}/jobs`,
+        ar: buildVerifiedRemoteUrl("ar"),
+        en: buildVerifiedRemoteUrl("en"),
+        "x-default": buildVerifiedRemoteUrl("ar"),
       },
     },
     openGraph: {
-      title: messages.pageTitle,
+      title: "Verified Remote",
       description: messages.pageSubtitle,
       url: canonical,
-      locale: locale === "ar" ? "ar_EG" : "en_US",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
       type: "website",
+      images: [
+        {
+          url: ogImage,
+          width: 1900,
+          height: 300,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Verified Remote",
+      description: messages.pageSubtitle,
+      images: [ogImage],
     },
   };
 }
@@ -65,98 +89,143 @@ export default async function JobsPage({ searchParams }: Props) {
   ]);
 
   const paginationExtra = new URLSearchParams();
-  if (locale !== "en") paginationExtra.set("lang", locale);
+  if (locale === "en") paginationExtra.set("lang", locale);
   if (categorySlug) paginationExtra.set("category", categorySlug);
   if (search) paginationExtra.set("q", search);
   if (remoteOnly) paginationExtra.set("remote", "1");
 
-  const isAREmpty = locale === "ar" && pagination.total === 0 && !search && !categorySlug;
-
-  // Internal-link affordances. Even when the listing is empty (the common
-  // case for ?lang=ar while translations roll in), every page must still
-  // emit anchor tags — Ahrefs flagged /jobs?lang=ar for "page has no
-  // outgoing links" because the empty-state was a bare <div>.
-  const otherLocale: typeof locale = locale === "ar" ? "en" : "ar";
-  const switcherHref = otherLocale === "en" ? "/jobs" : "/jobs?lang=ar";
-  const switcherLabel =
-    otherLocale === "en" ? messages.localeEnglish : messages.localeArabic;
-
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10" dir={dir} lang={locale}>
-      <header className="mb-8">
-        <nav className="mb-3 flex items-center gap-3 text-xs text-gray-500">
-          <Link href="/" className="hover:text-gray-700">
-            {locale === "ar" ? "الرئيسية" : "Home"}
-          </Link>
-          <span aria-hidden>·</span>
-          <Link href={switcherHref} className="hover:text-gray-700" hrefLang={otherLocale}>
-            {switcherLabel}
-          </Link>
-        </nav>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          {messages.pageTitle}
-        </h1>
-        <p className="mt-1 text-sm text-gray-600">{messages.pageSubtitle}</p>
-      </header>
-
-      <JobsFilters
-        categories={categories}
-        locale={locale}
-        messages={messages}
-      />
-
-      {jobs.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {messages.noJobsTitle}
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {isAREmpty ? messages.noJobsTranslating : messages.noJobsBody}
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-            <Link href={switcherHref} className="font-medium text-blue-700 hover:text-blue-900" hrefLang={otherLocale}>
-              {switcherLabel}
-            </Link>
-            <span aria-hidden>·</span>
-            <Link href="/" className="text-gray-600 hover:text-gray-900">
-              {locale === "ar" ? "العودة للرئيسية" : "Back to home"}
-            </Link>
+    <VerifiedRemoteShell locale={locale} messages={messages}>
+      <main dir={dir} lang={locale}>
+        <section className="border-b border-slate-200 bg-white">
+          <div className="mx-auto max-w-6xl px-4 pt-6">
+            <Image
+              src="/verified-remote/verified-remote-header-1900x300.png"
+              alt=""
+              width={1900}
+              height={300}
+              priority
+              className="h-auto max-h-[220px] w-full rounded-lg border border-slate-200 object-cover"
+            />
           </div>
-        </div>
-      ) : (
-        <>
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                locale={locale}
-                messages={messages}
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-[1.15fr_0.85fr] md:items-center">
+            <div>
+              <p className="text-sm font-semibold text-teal-700">
+                Verified Remote
+              </p>
+              <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                {messages.pageSubtitle}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
+                {messages.heroBody}
+              </p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+                {messages.referralNotice}
+              </p>
+              <div className="mt-6">
+                <Link
+                  href="#latest"
+                  className="inline-flex items-center rounded-md bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                >
+                  {messages.browseOpportunities}
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-6">
+              <div className="text-sm font-semibold text-slate-950">
+                Verified Remote
+              </div>
+              <div className="mt-4 h-1.5 w-24 rounded-full bg-teal-500" />
+              <p className="mt-5 text-sm leading-6 text-slate-700">
+                {messages.howWeReviewBody}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="review" className="border-b border-slate-200 bg-slate-50">
+          <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 md:grid-cols-2">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-950">
+                {messages.howWeReviewTitle}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-700">
+                {messages.howWeReviewBody}
+              </p>
+            </div>
+            <div id="referrals">
+              <h2 className="text-lg font-semibold text-slate-950">
+                {messages.referralDisclosureTitle}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-700">
+                {messages.referralNotice}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="latest" className="mx-auto max-w-6xl px-4 py-10">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-950">
+                {messages.latestTitle}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                {messages.pageSubtitle}
+              </p>
+            </div>
+          </div>
+
+          <JobsFilters
+            categories={categories}
+            locale={locale}
+            messages={messages}
+          />
+
+          {jobs.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+              <h3 className="text-lg font-semibold text-slate-900">
+                {messages.noJobsTitle}
+              </h3>
+              <p className="mt-2 text-sm text-slate-600">
+                {messages.noJobsBody}
+              </p>
+            </div>
+          ) : (
+            <>
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {jobs.map((job) => (
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    locale={locale}
+                    messages={messages}
+                  />
+                ))}
+              </ul>
+
+              <Pagination
+                currentPage={pagination.page}
+                pageCount={pagination.pageCount}
+                basePath="/jobs"
+                extraParams={paginationExtra}
               />
-            ))}
-          </ul>
 
-          <Pagination
-            currentPage={pagination.page}
-            pageCount={pagination.pageCount}
-            basePath="/jobs"
-            extraParams={paginationExtra}
-          />
-
-          <JsonLd
-            graph={[
-              buildItemList(
-                jobs.map((j) => ({
-                  url: `${SITE_URL}/jobs/${j.slug}${
-                    locale !== "en" ? `?lang=${locale}` : ""
-                  }`,
-                })),
-                (page - 1) * pagination.pageSize + 1,
-              ),
-            ]}
-          />
-        </>
-      )}
-    </main>
+              <JsonLd
+                graph={[
+                  buildItemList(
+                    jobs.map((j) => ({
+                      url: buildJobUrl(j, locale),
+                    })),
+                    (page - 1) * pagination.pageSize + 1,
+                  ),
+                ]}
+              />
+            </>
+          )}
+        </section>
+      </main>
+    </VerifiedRemoteShell>
   );
 }
