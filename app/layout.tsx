@@ -22,14 +22,19 @@ const sans = Noto_Kufi_Arabic({
 const serif = Instrument_Serif({ subsets: ["latin"], weight: ["400"], variable: "--font-serif", display: "swap" });
 const SITE_URL = getSiteUrl();
 
-function resolveHtmlLocale(pathname: string, search: string): "ar" | "en" {
-  if (!isVerifiedRemoteRoute(pathname)) return "ar";
+function isVerifiedRemoteHost(hostname: string): boolean {
+  return hostname === "verifiedremote.islam-24.com" || hostname.startsWith("verifiedremote.");
+}
+
+function resolveHtmlLocale(pathname: string, search: string, hostname: string): "ar" | "en" {
+  if (!isVerifiedRemoteRoute(pathname, hostname)) return "ar";
   const lang = new URLSearchParams(search).get("lang");
   return lang === "en" || pathname.startsWith("/en") ? "en" : "ar";
 }
 
-function isVerifiedRemoteRoute(pathname: string): boolean {
+function isVerifiedRemoteRoute(pathname: string, hostname = ""): boolean {
   return (
+    isVerifiedRemoteHost(hostname) ||
     pathname === "/jobs" ||
     pathname.startsWith("/jobs/") ||
     pathname === "/en" ||
@@ -60,9 +65,10 @@ export function generateMetadata(): Metadata {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const h = headers();
   const pathname = h.get("x-pathname") ?? "/";
-  const locale = resolveHtmlLocale(pathname, h.get("x-search") ?? "");
+  const hostname = h.get("host")?.split(":")[0] ?? "";
+  const locale = resolveHtmlLocale(pathname, h.get("x-search") ?? "", hostname);
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const isVerifiedRemote = isVerifiedRemoteRoute(pathname);
+  const isVerifiedRemote = isVerifiedRemoteRoute(pathname, hostname);
   const [navigation, footer] = isVerifiedRemote
     ? [null, null]
     : await Promise.all([getNavigation(), getFooter()]);

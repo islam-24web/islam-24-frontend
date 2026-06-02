@@ -5,8 +5,11 @@ import { NextResponse, type NextRequest } from "next/server";
 // root layouts don't receive params/searchParams directly.
 export function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
-  headers.set("x-pathname", request.nextUrl.pathname);
-  headers.set("x-search", request.nextUrl.search);
+  const setRouteHeaders = (pathname: string, search: string) => {
+    headers.set("x-pathname", pathname);
+    headers.set("x-search", search);
+  };
+  setRouteHeaders(request.nextUrl.pathname, request.nextUrl.search);
 
   const hostname = request.headers.get("host")?.split(":")[0] ?? "";
   const pathname = request.nextUrl.pathname;
@@ -18,6 +21,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/jobs";
     url.searchParams.set("lang", "ar");
+    setRouteHeaders(url.pathname, url.search);
     return NextResponse.rewrite(url, { request: { headers } });
   }
 
@@ -25,6 +29,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/jobs";
     url.searchParams.set("lang", "en");
+    setRouteHeaders(url.pathname, url.search);
     return NextResponse.rewrite(url, { request: { headers } });
   }
 
@@ -32,6 +37,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.replace(/^\/en/, "");
     url.searchParams.set("lang", "en");
+    setRouteHeaders(url.pathname, url.search);
     return NextResponse.rewrite(url, { request: { headers } });
   }
 
