@@ -94,9 +94,10 @@ function buildBaseSalary(job: Job): SchemaNode | null {
 
   if (!salaryCurrency) return null;
 
-  const salaryUnit =
-    job.salaryUnit ||
-    (job.payText ? getSalaryUnitFromPayText(job.payText) : null);
+  const payTextSalaryUnit = job.payText
+    ? getSalaryUnitFromPayText(job.payText)
+    : null;
+  const salaryUnit = payTextSalaryUnit || job.salaryUnit || null;
   const value: SchemaNode = {
     "@type": "QuantitativeValue",
   };
