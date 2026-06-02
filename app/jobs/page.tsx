@@ -111,16 +111,13 @@ export default async function JobsPage({ searchParams }: Props) {
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-[1.15fr_0.85fr] md:items-center">
             <div>
               <p className="text-sm font-semibold text-teal-700">
-                Verified Remote
+                {messages.heroKicker}
               </p>
               <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                {messages.pageSubtitle}
+                {messages.heroTitle}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
                 {messages.heroBody}
-              </p>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-                {messages.referralNotice}
               </p>
               <div className="mt-6">
                 <Link
@@ -134,12 +131,29 @@ export default async function JobsPage({ searchParams }: Props) {
 
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-6">
               <div className="text-sm font-semibold text-slate-950">
-                Verified Remote
+                {messages.trustPanelTitle}
               </div>
               <div className="mt-4 h-1.5 w-24 rounded-full bg-teal-500" />
-              <p className="mt-5 text-sm leading-6 text-slate-700">
-                {messages.howWeReviewBody}
-              </p>
+              <dl className="mt-5 grid gap-4 text-sm">
+                <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
+                  <dt className="text-slate-600">{messages.sourceUrl}</dt>
+                  <dd className="font-medium text-slate-950">
+                    {messages.trustSourceLabel}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
+                  <dt className="text-slate-600">{messages.sourceReviewedAt}</dt>
+                  <dd className="font-medium text-slate-950">
+                    {messages.trustManualLabel}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-slate-600">{messages.jobDetails}</dt>
+                  <dd className="font-medium text-slate-950">
+                    {messages.trustDetailsLabel}
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
         </section>
@@ -172,7 +186,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 {messages.latestTitle}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                {messages.pageSubtitle}
+                {messages.latestSubtitle}
               </p>
             </div>
           </div>

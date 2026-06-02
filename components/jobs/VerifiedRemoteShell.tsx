@@ -71,13 +71,13 @@ export default function VerifiedRemoteShell({
           <div>
             <div className="text-lg font-semibold">Verified Remote</div>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
-              {messages.pageSubtitle}
+              {messages.footerIntro}
             </p>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
               {messages.footerReviewNote}
             </p>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
-              {messages.referralNotice}
+              {messages.footerReferralNote}
             </p>
           </div>
 

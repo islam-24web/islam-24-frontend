@@ -14,13 +14,22 @@ export function parseLocale(input: string | string[] | undefined): Locale {
 export interface Messages {
   pageTitle: string;
   pageSubtitle: string;
+  heroKicker: string;
+  heroTitle: string;
   heroBody: string;
   referralNotice: string;
   latestTitle: string;
+  latestSubtitle: string;
   howWeReviewTitle: string;
   howWeReviewBody: string;
+  trustPanelTitle: string;
+  trustSourceLabel: string;
+  trustManualLabel: string;
+  trustDetailsLabel: string;
   referralDisclosureTitle: string;
+  footerIntro: string;
   footerReviewNote: string;
+  footerReferralNote: string;
   parentSiteNote: string;
   browseOpportunities: string;
   filterCategory: string;
@@ -69,17 +78,26 @@ export const messages: Record<Locale, Messages> = {
     pageTitle: "Verified Remote",
     pageSubtitle:
       "فرص عمل عن بُعد نختارها بعناية، ومن مصادر موثوقة. وننشرها بعد مراجعة مصدرها.",
+    heroKicker: "فرص عالمية عن بُعد",
+    heroTitle: "فرص مختارة بعناية للباحثين عن عمل عن بُعد",
     heroBody:
-      "نشارك فرصًا عن بُعد من مصادر نراجعها يدويًا، مع عرض التفاصيل الأساسية بوضوح قبل التقديم.",
+      "نراجع المصدر قبل النشر، ونلخص أهم التفاصيل التي تحتاجها لاتخاذ قرار واضح قبل التقديم.",
     referralNotice:
       "قد تحتوي بعض الروابط على إحالة، وقد نحصل على مكافأة إذا تم قبولك من خلالها، بدون أي تكلفة عليك.",
     latestTitle: "أحدث الفرص المختارة",
+    latestSubtitle: "فرص منشورة بعد مراجعة المصدر واكتمال بيانات التقديم.",
     howWeReviewTitle: "كيف نراجع الفرص",
     howWeReviewBody:
-      "نراجع مصدر كل فرصة قبل نشرها. لا تظهر الفرصة للعامة إلا بعد توفر المصدر، ورابط التقديم، واسم الشركة، وتاريخ مراجعة المصدر.",
+      "نتحقق من مصدر الفرصة، رابط التقديم، اسم الشركة، وتاريخ المراجعة. أي فرصة ناقصة تبقى خارج النشر حتى تكتمل بياناتها.",
+    trustPanelTitle: "معايير النشر",
+    trustSourceLabel: "مصدر موثوق",
+    trustManualLabel: "مراجعة يدوية",
+    trustDetailsLabel: "تفاصيل واضحة",
     referralDisclosureTitle: "تنبيه الإحالات",
+    footerIntro: "Verified Remote منصة مختصرة لفرص العمل عن بُعد التي تمر بمراجعة قبل النشر.",
     footerReviewNote:
-      "ننشر الفرص بعد مراجعة مصدرها، لكن يجب دائمًا قراءة تفاصيل الوظيفة الرسمية قبل التقديم.",
+      "اقرأ دائمًا تفاصيل الوظيفة الرسمية قبل إرسال بياناتك.",
+    footerReferralNote: "بعض روابط التقديم قد تكون روابط إحالة بدون تكلفة عليك.",
     parentSiteNote: "مشروع مستقل مستضاف ضمن islam-24.com",
     browseOpportunities: "تصفح الفرص",
     filterCategory: "التصنيف",
@@ -128,17 +146,26 @@ export const messages: Record<Locale, Messages> = {
     pageTitle: "Verified Remote",
     pageSubtitle:
       "Carefully selected remote opportunities from trusted sources, shared after reviewing the source.",
+    heroKicker: "Global remote opportunities",
+    heroTitle: "Curated remote roles for focused applicants",
     heroBody:
-      "We share remote opportunities from sources we manually review, with the key details presented clearly before you apply.",
+      "We review the source before publishing and present the key details clearly so you can decide before applying.",
     referralNotice:
       "Some links may be referral links. We may receive a reward if you are accepted through them, at no cost to you.",
     latestTitle: "Latest Verified Opportunities",
+    latestSubtitle: "Published only after source review and complete application details.",
     howWeReviewTitle: "How We Review",
     howWeReviewBody:
-      "Each opportunity is checked against its source before publishing. We keep roles hidden until the source, application link, company, and review date are available.",
+      "We check the source, application link, company, and review date. Incomplete opportunities stay unpublished until the required details are ready.",
+    trustPanelTitle: "Publishing standards",
+    trustSourceLabel: "Trusted source",
+    trustManualLabel: "Manual review",
+    trustDetailsLabel: "Clear details",
     referralDisclosureTitle: "Referral Disclosure",
+    footerIntro: "Verified Remote is a focused remote jobs project built around reviewed sources and clear details.",
     footerReviewNote:
-      "We review the source before publishing, but applicants should always read the official job details before applying.",
+      "Always read the official job details before submitting your information.",
+    footerReferralNote: "Some application links may be referral links at no cost to you.",
     parentSiteNote: "An independent project hosted under islam-24.com",
     browseOpportunities: "Browse Opportunities",
     filterCategory: "Category",
