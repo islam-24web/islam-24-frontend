@@ -5,6 +5,10 @@ const APPS: Record<string, { title: string; description: string }> = {
     title: 'سباق الفردوس الأعلى',
     description: 'تطبيق إسلامي لتتبع العبادات اليومية وأعمال القلوب والأذكار',
   },
+  sabab: {
+    title: 'فاتبع سبباً | Sabab: Your ADHD Action Planner',
+    description: 'تطبيق عربي عملي لتنظيم المهام والأفكار وتقليل التشتت عبر مسار واحد قابل للتنفيذ.',
+  },
 }
 
 export async function generateMetadata({
