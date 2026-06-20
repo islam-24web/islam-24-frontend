@@ -73,6 +73,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/apps/sabab",
+        destination: "/apps/sabab/index.html",
+        permanent: false,
+      },
+      {
         source: "/home",
         destination: "/",
         permanent: true,
