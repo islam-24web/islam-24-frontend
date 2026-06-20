@@ -2,5 +2,5 @@
 2:I[7783,["19","static/chunks/19-708cec782494b515.js","119","static/chunks/119-78fe298f82d5122f.js","597","static/chunks/597-80b0bd94e99b884d.js","264","static/chunks/264-4d9a579363d3d929.js","283","static/chunks/app/parking-lot/page-a07abb592e97a074.js"],"ParkingLotExperience"]
 3:I[484,[],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"rEz-7ESdEsHKMpIIXy5da"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"4qu0jcq1JhOgtDuDtaOh6"}
 5:null
