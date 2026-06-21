@@ -11,10 +11,52 @@ const TONE_CLASSES: Record<AppCard["tone"], { hover: string; cta: string }> = {
   neutral: { hover: "hover:border-[color:var(--site-border)]", cta: "text-[color:var(--site-muted)]" },
 };
 
+const STATIC_APP_CARDS: AppCard[] = [
+  {
+    id: -2401,
+    title: "سباق الفردوس الأعلى",
+    description: "تتبع عباداتك اليومية وأعمال القلوب والأذكار ومدارج السالكين",
+    icon: "🕌",
+    href: "/apps/sibaq",
+    open_in_new_tab: true,
+    tone: "emerald",
+    cta_label: "ابدأ السباق",
+  },
+  {
+    id: -2402,
+    title: "العالِم الصغير",
+    description: "أنشطة تعليمية تفاعلية للأطفال في الرياضيات والعربية والإنجليزية والعلوم",
+    icon: "🔬",
+    href: "/apps/saghir-scientist",
+    open_in_new_tab: true,
+    tone: "amber",
+    cta_label: "افتح التطبيق",
+  },
+  {
+    id: -2403,
+    title: "فاتبع سبباً | Sabab",
+    description: "مخطط عملي للمهام والأفكار يساعدك على اختيار مسار واحد وإغلاق الحلقات المفتوحة",
+    icon: "◎",
+    href: "/apps/sabab",
+    open_in_new_tab: true,
+    tone: "emerald",
+    cta_label: "ابدأ التخطيط",
+  },
+];
+
 function normalizeHref(href: string): string {
   if (href.startsWith("/articles/")) return "/article/" + href.slice("/articles/".length);
   if (href.startsWith("/categories/")) return "/category/" + href.slice("/categories/".length);
-  return href;
+  const normalized = href.replace(/\/+$/, "");
+  return normalized || "/";
+}
+
+function mergeStaticApps(items: AppCard[]) {
+  const existing = new Set(items.map((item) => normalizeHref(item.href)));
+  return [
+    ...items,
+    ...STATIC_APP_CARDS.filter((item) => !existing.has(normalizeHref(item.href))),
+  ];
 }
 
 function AppTile({ item }: { item: AppCard }) {
@@ -48,7 +90,7 @@ function AppTile({ item }: { item: AppCard }) {
 }
 
 export default function AppsFeature({ block }: Props) {
-  const items = block.items ?? [];
+  const items = mergeStaticApps(block.items ?? []);
   if (items.length === 0) return null;
   const headline = block.headline_ar || "تطبيقاتنا الإسلامية";
   return (
