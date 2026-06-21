@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Footer, SocialLink } from "@/types/strapi";
+import type { Footer, NavLink, SocialLink } from "@/types/strapi";
 import BrandLogo from "@/components/layout/BrandLogo";
 
 interface Props {
@@ -44,6 +44,17 @@ const SOCIAL_ICONS: Record<SocialLink["platform"], JSX.Element> = {
   ),
 };
 
+const APP_FOOTER_LINKS: NavLink[] = [
+  { id: -2401, name: "سباق الفردوس الأعلى", url: "/apps/sibaq", is_external: false },
+  { id: -2402, name: "العالِم الصغير", url: "/apps/saghir-scientist", is_external: false },
+  { id: -2403, name: "فاتبع سبباً | Sabab", url: "/apps/sabab", is_external: false },
+];
+
+function normalizeFooterUrl(url: string) {
+  const normalized = url.replace(/\/+$/, "");
+  return normalized || "/";
+}
+
 export default function SiteFooter({ footer }: Props) {
   const description = footer?.description;
   const sections = footer?.sections ?? [];
@@ -51,8 +62,33 @@ export default function SiteFooter({ footer }: Props) {
   const social = footer?.social_links ?? [];
   const copyright = footer?.copyright_text;
   const year = new Date().getFullYear();
+  const existingUrls = new Set([
+    ...sections.flatMap((section) => section.links.map((link) => normalizeFooterUrl(link.url))),
+    ...flatLinks.map((link) => normalizeFooterUrl(link.url)),
+  ]);
+  const missingAppLinks = APP_FOOTER_LINKS.filter(
+    (link) => !existingUrls.has(normalizeFooterUrl(link.url))
+  );
+  const appsSectionIndex = sections.findIndex((section) =>
+    section.links.some((link) => normalizeFooterUrl(link.url).startsWith("/apps/"))
+  );
+  const footerSections = missingAppLinks.length === 0
+    ? sections
+    : appsSectionIndex >= 0
+      ? sections.map((section, index) =>
+          index === appsSectionIndex
+            ? { ...section, links: [...section.links, ...missingAppLinks] }
+            : section
+        )
+      : [
+          ...sections,
+          { id: -2400, title: "تطبيقاتنا", links: missingAppLinks },
+        ];
+  const footerFlatLinks = missingAppLinks.length > 0
+    ? [...flatLinks, ...missingAppLinks]
+    : flatLinks;
 
-  const useGrid = sections.length > 0;
+  const useGrid = footerSections.length > 0;
 
   return (
     <footer className="footer-shell mt-16">
@@ -82,7 +118,7 @@ export default function SiteFooter({ footer }: Props) {
               )}
             </div>
 
-            {sections.map((section) => (
+            {footerSections.map((section) => (
               <div key={section.id}>
                 <h4 className="footer-heading font-bold mb-3 text-sm">{section.title}</h4>
                 <ul className="space-y-1.5">
@@ -110,9 +146,9 @@ export default function SiteFooter({ footer }: Props) {
               <p className="footer-muted text-sm max-w-xl leading-relaxed">{description}</p>
             )}
 
-            {flatLinks.length > 0 && (
+            {footerFlatLinks.length > 0 && (
               <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 max-w-3xl">
-                {flatLinks.map((link) => (
+                {footerFlatLinks.map((link) => (
                   <Link
                     key={link.id}
                     href={link.url}
