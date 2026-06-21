@@ -1,9 +1,22 @@
 import { notFound } from 'next/navigation'
 
-const APPS: Record<string, { title: string; description: string }> = {
+const APPS: Record<
+  string,
+  { title: string; description: string; sourceSlug?: string; assetPath?: string }
+> = {
   sibaq: {
     title: 'سباق الفردوس الأعلى',
     description: 'تطبيق إسلامي لتتبع العبادات اليومية وأعمال القلوب والأذكار',
+  },
+  'sibaq-al-firdaws': {
+    title: 'سباق الفردوس الأعلى',
+    description: 'تطبيق إسلامي لتتبع العبادات اليومية وأعمال القلوب والأذكار',
+    sourceSlug: 'sibaq',
+  },
+  'saghir-scientist': {
+    title: 'العالِم الصغير - تطبيق تعليمي تفاعلي للأطفال',
+    description:
+      'تطبيق ويب عربي تفاعلي للأطفال يجمع الرياضيات واللغة العربية والإنجليزية والعلوم في أنشطة قصيرة ممتعة.',
   },
   sabab: {
     title: 'فاتبع سبباً | Sabab: Your ADHD Action Planner',
@@ -26,11 +39,14 @@ export default function AppPage({
 }: {
   params: { slug: string }
 }) {
-  if (!APPS[params.slug]) notFound()
+  const app = APPS[params.slug]
+  if (!app) notFound()
+
+  const appSrc = app.assetPath ?? `/apps/${app.sourceSlug ?? params.slug}/index.html`
 
   return (
     <iframe
-      src={`/apps/${params.slug}/index.html`}
+      src={appSrc}
       style={{
         position: 'fixed',
         top: 0,
@@ -39,7 +55,7 @@ export default function AppPage({
         height: '100vh',
         border: 'none',
       }}
-      title={APPS[params.slug].title}
+      title={app.title}
     />
   )
 }
