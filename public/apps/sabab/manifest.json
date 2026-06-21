@@ -6,16 +6,16 @@
   "lang": "ar",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/apps/sabab/",
+  "scope": "/apps/sabab/",
   "theme_color": "#0f766e",
   "background_color": "#eef8f7",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "/apps/sabab/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
