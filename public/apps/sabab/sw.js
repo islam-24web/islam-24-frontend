@@ -1,7 +1,7 @@
-const CACHE_NAME = "sabab-adhd-action-planner-v1";
+const CACHE_NAME = "sabab-adhd-action-planner-v2";
 const SCOPE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, "");
 const scopedPath = (path) => `${SCOPE_PATH}${path}`;
-const CORE_ASSETS = [scopedPath("/"), scopedPath("/manifest.webmanifest"), scopedPath("/icon.svg")];
+const CORE_ASSETS = [scopedPath("/"), scopedPath("/manifest.webmanifest"), scopedPath("/icon.svg"), scopedPath("/auto-sync.js")];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
