@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>العالِم الصغير</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#fff4e6; --bg2:#ffe8d6; --bg3:#e0f7ff;
+    --ink:#1f2d3d; --soft:#5b6b7b;
+    --primary:#ff6b35; --primary-d:#e6551f;
+    --grape:#6c5ce7; --grape-d:#5a4ad1;
+    --green:#2ecc71; --green-d:#27ae60;
+    --red:#ff4757; --red-d:#e8404e;
+    --gold:#ffd43b; --sky:#48cae4; --sky-d:#2bb3d4;
+    --blue:#4b7bec; --blue-d:#3867d6;
+    --card:#ffffff;
+    --shadow:0 14px 0 rgba(0,0,0,.08), 0 24px 40px rgba(31,45,61,.18);
+    --shadow-sm:0 6px 0 rgba(0,0,0,.08), 0 12px 20px rgba(31,45,61,.14);
+    --r:28px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;direction:ltr;}
+  body{
+    font-family:'Cairo',sans-serif;color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 90% -10%, #ffe3a3 0%, transparent 55%),
+      radial-gradient(1000px 600px at -10% 110%, #bdeaff 0%, transparent 55%),
+      linear-gradient(160deg,var(--bg1),var(--bg2) 55%,var(--bg3));
+    min-height:100vh;overflow-x:hidden;position:relative;
+  }
+  .decor{position:fixed;font-size:42px;opacity:.4;pointer-events:none;animation:float 7s ease-in-out infinite;z-index:0;}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-18px) rotate(8deg);}}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;position:relative;z-index:2;direction:rtl;}
+
+  /* HEADER */
+  header.top{
+    display:flex;align-items:center;gap:14px;
+    background:linear-gradient(135deg,var(--primary),#ff9248);
+    color:#fff;border-radius:var(--r);padding:16px 18px;
+    box-shadow:var(--shadow-sm);position:relative;overflow:hidden;margin-bottom:18px;
+  }
+  header.top::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(120px 120px at 85% 20%,rgba(255,255,255,.35),transparent),
+    radial-gradient(90px 90px at 20% 120%,rgba(255,255,255,.25),transparent);}
+  .logo-badge{
+    width:62px;height:62px;border-radius:50%;background:#fff;flex-shrink:0;
+    display:grid;place-items:center;overflow:hidden;box-shadow:0 8px 16px rgba(0,0,0,.25);
+    border:3px solid #fff;transform:rotate(-4deg);position:relative;z-index:1;
+  }
+  .logo-badge img{width:100%;height:100%;object-fit:cover;}
+  .title-zone{position:relative;z-index:1;}
+  .title-zone h1{font-family:'Baloo Bhaijaan 2';font-size:1.5rem;line-height:1.1;font-weight:800;}
+  .title-zone p{font-size:.85rem;opacity:.95;margin-top:2px;font-weight:600;}
+  .star-row{margin-inline-start:auto;text-align:center;background:rgba(255,255,255,.2);border-radius:18px;padding:8px 12px;backdrop-filter:blur(4px);position:relative;z-index:1;}
+  .star-row .n{font-size:1.5rem;font-weight:900;font-family:'Baloo Bhaijaan 2';line-height:1;}
+  .star-row .l{font-size:.7rem;font-weight:700;opacity:.95;}
+
+  /* subject hero */
+  .subjects-hero{
+    background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:18px;
+    box-shadow:var(--shadow-sm);text-align:center;border:3px dashed #ffd9b3;
+  }
+  .subjects-hero img{
+    width:90px;height:90px;border-radius:50%;object-fit:cover;
+    border:5px solid #fff;box-shadow:0 10px 22px rgba(255,107,53,.35), 0 0 0 4px #ffd9b3;
+    margin-bottom:8px;animation:heroPop .6s ease;
+  }
+  @keyframes heroPop{from{transform:scale(.4) rotate(-20deg);opacity:0;}to{transform:none;opacity:1;}}
+  .subjects-hero h2{font-family:'Baloo Bhaijaan 2';color:var(--primary-d);font-size:1.4rem;}
+  .subjects-hero p{color:var(--soft);font-size:.92rem;margin-top:4px;font-weight:600;}
+
+  /* SUBJECT cards (home) */
+  .subject-grid{display:grid;gap:16px;}
+  .subject-card{
+    border:none;cursor:pointer;border-radius:var(--r);padding:26px 22px;color:#fff;
+    box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+    transition:transform .12s ease, box-shadow .12s ease;font-family:'Cairo';
+    display:flex;align-items:center;gap:20px;text-align:right;
+  }
+  .subject-card:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.08),0 6px 12px rgba(31,45,61,.14);}
+  .subject-card .sc-emoji{font-size:60px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));flex-shrink:0;}
+  .subject-card .sc-text{flex:1;}
+  .subject-card .sc-title{font-size:1.6rem;font-weight:800;font-family:'Baloo Bhaijaan 2';}
+  .subject-card .sc-sub{font-size:.88rem;opacity:.95;font-weight:600;margin-top:3px;}
+  .subject-card .sc-arrow{font-size:1.8rem;opacity:.8;}
+  .sub-math{background:linear-gradient(135deg,#ff6b35,#ff9248);}
+  .sub-arabic{background:linear-gradient(135deg,#20bf6b,#0fb9b1);}
+  .sub-english{background:linear-gradient(135deg,#4b7bec,#6c5ce7);}
+  .sub-science{background:linear-gradient(135deg,#00b894,#00cec9);}
+
+  /* SECTION (sub-menu) cards */
+  .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .menu-card{
+    border:none;cursor:pointer;border-radius:var(--r);padding:20px 14px;color:#fff;
+    box-shadow:var(--shadow-sm);text-align:center;position:relative;overflow:hidden;
+    transition:transform .12s ease, box-shadow .12s ease;font-family:'Cairo';
+  }
+  .menu-card:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.08),0 6px 12px rgba(31,45,61,.14);}
+  .menu-card .emoji{font-size:44px;display:block;margin-bottom:6px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));}
+  .menu-card .mt{font-size:1.05rem;font-weight:800;font-family:'Baloo Bhaijaan 2';}
+  .menu-card .ms{font-size:.74rem;opacity:.95;font-weight:600;margin-top:3px;}
+  .full{grid-column:1 / -1;}
+
+  /* bar */
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .back-btn{background:#fff;border:none;border-radius:18px;width:52px;height:52px;font-size:24px;cursor:pointer;box-shadow:var(--shadow-sm);color:var(--primary-d);font-weight:900;flex-shrink:0;transition:transform .1s;}
+  .back-btn:active{transform:scale(.92);}
+  .bar-title{flex:1;background:#fff;border-radius:18px;padding:14px;box-shadow:var(--shadow-sm);font-family:'Baloo Bhaijaan 2';color:var(--primary-d);font-size:1.1rem;text-align:center;}
+  .progress-wrap{flex:1;background:#fff;border-radius:18px;padding:6px;box-shadow:var(--shadow-sm);}
+  .progress-track{height:18px;background:#ffe8d6;border-radius:12px;overflow:hidden;position:relative;}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--primary));border-radius:12px;transition:width .4s ease;}
+  .score-chip{background:#fff;border-radius:18px;padding:8px 14px;box-shadow:var(--shadow-sm);font-weight:900;color:var(--green-d);display:flex;align-items:center;gap:5px;font-size:1.05rem;}
+
+  /* screens */
+  .screen{display:none;}
+  .screen.active{display:block;animation:pop .3s ease;}
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
+
+  /* QUIZ card */
+  .q-card{background:var(--card);border-radius:var(--r);padding:28px 20px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden;}
+  .q-card::before{content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff0db,transparent 70%);pointer-events:none;}
+  .q-tag{display:inline-block;background:#fff0db;color:var(--primary-d);font-weight:800;font-size:.82rem;padding:5px 14px;border-radius:20px;margin-bottom:14px;position:relative;z-index:1;}
+  .q-text{font-family:'Cairo';font-weight:700;font-size:1.1rem;color:var(--soft);margin-bottom:6px;line-height:1.5;position:relative;z-index:1;}
+  .q-eq{font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:clamp(2.6rem,12vw,4rem);color:var(--ink);letter-spacing:2px;direction:ltr;margin:6px 0 22px;line-height:1.1;}
+  .q-eq .blank{color:var(--primary);}
+  .seq-row{direction:ltr;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:6px 0 22px;}
+  .seq-box{font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:clamp(1.8rem,8vw,2.8rem);background:#f4f7fb;border-radius:16px;min-width:62px;padding:8px 14px;color:var(--ink);}
+  .seq-box.q{background:var(--primary);color:#fff;box-shadow:0 6px 0 var(--primary-d);}
+  .seq-arrow{font-size:1.6rem;color:#c9d4df;}
+
+  /* story box — FIXED icon position (icon now above, not overlapping) */
+  .story-box{background:linear-gradient(135deg,#fff9ef,#fff3e0);border:3px dashed #ffc48c;border-radius:24px;padding:34px 18px 20px;margin:24px 0 20px;text-align:right;font-family:'Cairo';font-weight:700;font-size:1.12rem;line-height:1.95;color:var(--ink);position:relative;z-index:1;}
+  .story-box .story-icon{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:34px;background:#fff;border-radius:50%;width:56px;height:56px;display:grid;place-items:center;box-shadow:0 6px 14px rgba(0,0,0,.15);border:3px solid #ffe4c4;}
+  .story-box b{color:var(--primary-d);}
+  .story-q{margin-top:12px;display:block;color:var(--grape-d);font-weight:800;font-size:1.08rem;background:#f3effe;border-radius:14px;padding:8px 14px;}
+
+  /* arabic prompt visuals */
+  .ar-big{font-family:'Baloo Bhaijaan 2';font-size:clamp(2.4rem,11vw,3.6rem);color:var(--ink);margin:10px 0 22px;direction:rtl;position:relative;z-index:1;}
+  .ar-big .blank{color:var(--primary);border-bottom:4px dashed var(--primary);padding:0 18px;}
+  .ar-pic{font-size:70px;margin:6px 0 4px;position:relative;z-index:1;}
+  .ar-hint{font-size:.9rem;color:var(--soft);font-weight:700;margin-bottom:18px;position:relative;z-index:1;}
+
+  /* options */
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;position:relative;z-index:1;}
+  .options.one-col{grid-template-columns:1fr;}
+  .opt{border:none;cursor:pointer;background:#f4f7fb;border-radius:22px;padding:18px 10px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.9rem;color:var(--ink);box-shadow:0 6px 0 #d9e2ec;transition:transform .1s, box-shadow .1s;position:relative;}
+  .opt.txt{font-size:1.5rem;}
+  .opt.ar{font-size:2rem;direction:rtl;}
+  .opt:active{transform:translateY(4px);box-shadow:0 2px 0 #d9e2ec;}
+  .opt.correct{background:linear-gradient(140deg,#2ecc71,#27ae60);color:#fff;box-shadow:0 6px 0 #1e9e54;animation:rightShake .4s;}
+  .opt.wrong{background:linear-gradient(140deg,#ff6b6b,#ee5253);color:#fff;box-shadow:0 6px 0 #c0392b;animation:wrongShake .4s;}
+  .opt.dimmed{opacity:.45;}
+  @keyframes rightShake{0%,100%{transform:scale(1);}40%{transform:scale(1.08);}}
+  @keyframes wrongShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+
+  /* feedback */
+  .feedback{margin-top:18px;border-radius:22px;padding:16px;font-weight:800;display:none;align-items:center;gap:12px;text-align:right;animation:pop .3s ease;position:relative;z-index:1;}
+  .feedback.show{display:flex;}
+  .feedback.good{background:#e9fbef;color:var(--green-d);border:2px solid #a8eec3;}
+  .feedback.bad{background:#fff0f0;color:var(--red-d);border:2px solid #ffc9c9;}
+  .feedback .fc-emoji{font-size:38px;flex-shrink:0;}
+  .feedback .ft strong{display:block;font-size:1.15rem;font-family:'Baloo Bhaijaan 2';}
+  .feedback .ft span{font-size:.92rem;font-weight:700;}
+
+  .next-btn{width:100%;margin-top:16px;border:none;cursor:pointer;border-radius:22px;padding:18px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.2rem;color:#fff;background:linear-gradient(135deg,var(--primary),#ff9248);box-shadow:0 7px 0 var(--primary-d);display:none;transition:transform .1s, box-shadow .1s;position:relative;z-index:1;}
+  .next-btn.show{display:block;animation:pop .3s ease;}
+  .next-btn:active{transform:translateY(5px);box-shadow:0 2px 0 var(--primary-d);}
+
+  /* RESULT */
+  .result-card{background:var(--card);border-radius:var(--r);padding:34px 24px;box-shadow:var(--shadow);text-align:center;}
+  .trophy{font-size:90px;animation:bounce 1.2s ease infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
+  .result-card h2{font-family:'Baloo Bhaijaan 2';font-size:2rem;color:var(--primary-d);margin:8px 0;}
+  .result-score{font-family:'Baloo Bhaijaan 2';font-size:3.4rem;color:var(--green-d);font-weight:800;}
+  .result-score small{font-size:1.4rem;color:var(--soft);}
+  .result-msg{color:var(--soft);font-weight:700;font-size:1.05rem;margin:10px 0 22px;}
+  .result-stars{font-size:2.4rem;letter-spacing:6px;margin-bottom:20px;}
+  .res-btns{display:grid;gap:12px;}
+  .btn-big{border:none;cursor:pointer;border-radius:22px;padding:18px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.15rem;color:#fff;transition:transform .1s,box-shadow .1s;}
+  .btn-big:active{transform:translateY(5px);}
+  .btn-again{background:linear-gradient(135deg,var(--green),var(--green-d));box-shadow:0 7px 0 #1e9e54;}
+  .btn-again:active{box-shadow:0 2px 0 #1e9e54;}
+  .btn-home{background:linear-gradient(135deg,var(--grape),var(--grape-d));box-shadow:0 7px 0 #4226c4;}
+  .btn-home:active{box-shadow:0 2px 0 #4226c4;}
+
+  /* multiplication tables */
+  .table-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+  .tbtn{border:none;cursor:pointer;border-radius:20px;padding:18px 6px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.6rem;color:#fff;box-shadow:var(--shadow-sm);transition:transform .1s;}
+  .tbtn:active{transform:scale(.94);}
+  .tbtn small{display:block;font-size:.7rem;font-weight:700;opacity:.9;font-family:'Cairo';}
+  .study-card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);}
+  .study-head{text-align:center;font-family:'Baloo Bhaijaan 2';font-size:1.5rem;color:var(--primary-d);margin-bottom:14px;}
+  .study-list{display:grid;gap:8px;}
+  .study-row{display:flex;align-items:center;justify-content:space-between;background:#f4f7fb;border-radius:16px;padding:12px 18px;font-family:'Baloo Bhaijaan 2';font-size:1.4rem;direction:ltr;}
+  .study-row .res{background:var(--primary);color:#fff;border-radius:12px;padding:2px 14px;font-weight:800;}
+  .practice-cta{width:100%;margin-top:14px;border:none;cursor:pointer;border-radius:20px;padding:16px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.1rem;color:#fff;background:linear-gradient(135deg,#ff6b35,#ff9248);box-shadow:0 6px 0 #e6551f;}
+  .practice-cta:active{transform:translateY(4px);box-shadow:0 2px 0 #e6551f;}
+
+  /* ENGLISH flashcards */
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .cat-card{border:none;cursor:pointer;border-radius:var(--r);padding:20px 12px;color:#fff;box-shadow:var(--shadow-sm);text-align:center;transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden;}
+  .cat-card:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.08);}
+  .cat-card .ce{font-size:46px;display:block;margin-bottom:6px;}
+  .cat-card .ct{font-family:'Baloo Bhaijaan 2';font-size:1.05rem;font-weight:800;}
+  .cat-card .cs{font-size:.72rem;opacity:.95;font-weight:600;margin-top:2px;direction:ltr;}
+  .cat-card .ccount{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.3);border-radius:12px;font-size:.7rem;padding:2px 8px;font-weight:800;backdrop-filter:blur(3px);}
+
+  /* flashcard view */
+  .flash-card{background:var(--card);border-radius:var(--r);padding:30px 22px;box-shadow:var(--shadow);text-align:center;position:relative;}
+  .flash-emoji{font-size:120px;line-height:1;margin:10px 0;animation:flashIn .4s ease;}
+  @keyframes flashIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .flash-en{font-family:'Fredoka';font-size:2.8rem;font-weight:700;color:var(--blue-d);direction:ltr;margin-bottom:4px;}
+  .flash-ar{font-family:'Baloo Bhaijaan 2';font-size:1.6rem;color:var(--soft);margin-bottom:18px;}
+  .speak-btn{border:none;cursor:pointer;border-radius:50%;width:74px;height:74px;font-size:34px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--grape));box-shadow:0 7px 0 var(--blue-d);transition:transform .1s,box-shadow .1s;margin:0 auto 6px;display:grid;place-items:center;}
+  .speak-btn:active{transform:translateY(5px);box-shadow:0 2px 0 var(--blue-d);}
+  .speak-hint{font-size:.82rem;color:var(--soft);font-weight:700;margin-bottom:20px;}
+  .flash-nav{display:flex;gap:12px;align-items:center;justify-content:space-between;}
+  .flash-nav button{border:none;cursor:pointer;border-radius:18px;padding:14px 18px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.05rem;color:#fff;transition:transform .1s,box-shadow .1s;}
+  .fn-prev{background:linear-gradient(135deg,#a55eea,#8854d0);box-shadow:0 6px 0 #6c3fb0;}
+  .fn-next{background:linear-gradient(135deg,var(--green),var(--green-d));box-shadow:0 6px 0 #1e9e54;}
+  .fn-prev:active,.fn-next:active{transform:translateY(4px);}
+  .flash-count{font-family:'Baloo Bhaijaan 2';color:var(--soft);font-size:1.05rem;}
+  .flash-test-cta{width:100%;margin-top:14px;border:none;cursor:pointer;border-radius:20px;padding:16px;font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:1.1rem;color:#fff;background:linear-gradient(135deg,var(--blue),var(--grape));box-shadow:0 6px 0 var(--blue-d);}
+  .flash-test-cta:active{transform:translateY(4px);box-shadow:0 2px 0 var(--blue-d);}
+
+  /* english quiz image */
+  .eq-emoji{font-size:110px;margin:6px 0 18px;animation:flashIn .4s ease;position:relative;z-index:1;}
+  .eq-word{font-family:'Fredoka';font-size:2.6rem;font-weight:700;color:var(--blue-d);direction:ltr;margin:6px 0 18px;position:relative;z-index:1;}
+  .mini-speak{display:inline-grid;place-items:center;border:none;cursor:pointer;border-radius:50%;width:50px;height:50px;font-size:24px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--grape));box-shadow:0 5px 0 var(--blue-d);margin-bottom:14px;position:relative;z-index:1;}
+  .mini-speak:active{transform:translateY(3px);box-shadow:0 2px 0 var(--blue-d);}
+  /* emoji + word side-by-side card for English quiz */
+  .eq-card{display:flex;align-items:center;justify-content:center;gap:18px;background:linear-gradient(135deg,#eef3ff,#f3effe);border:3px solid #cdd9ff;border-radius:24px;padding:18px 20px;margin:10px 0 16px;position:relative;z-index:1;flex-wrap:wrap;}
+  .eq-card .eqc-emoji{font-size:84px;line-height:1;animation:flashIn .4s ease;}
+  .eq-card .eqc-word{font-family:'Fredoka';font-size:2.4rem;font-weight:700;color:var(--blue-d);direction:ltr;}
+  .eq-card .eqc-ar{font-family:'Baloo Bhaijaan 2';font-size:1.8rem;font-weight:700;color:var(--soft);direction:rtl;}
+
+  /* confetti */
+  .confetti{position:fixed;width:12px;height:12px;top:-20px;z-index:50;pointer-events:none;border-radius:2px;}
+  .footer-note{text-align:center;color:var(--soft);font-size:.78rem;margin-top:24px;font-weight:600;opacity:.7;}
+  @media (max-width:900px){
+    html,body{width:100%;max-width:100%;overflow-x:hidden;}
+    .wrap{width:100%;max-width:100%;padding:12px 10px 48px;overflow-x:hidden;}
+    header.top{gap:8px;padding:12px;flex-wrap:wrap;border-radius:22px;}
+    .logo-badge{width:50px;height:50px;}
+    .title-zone{min-width:0;flex:1;}
+    .title-zone h1{font-size:1.22rem;}
+    .title-zone p{font-size:.76rem;}
+    .star-row{margin-inline-start:0;padding:7px 10px;}
+    .subject-card{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:20px 14px;border-radius:22px;overflow:hidden;}
+    .subject-card .sc-emoji{font-size:46px;}
+    .subject-card .sc-text{min-width:0;}
+    .subject-card .sc-title{font-size:1.3rem;line-height:1.2;white-space:normal;overflow-wrap:anywhere;}
+    .subject-card .sc-sub{font-size:.78rem;line-height:1.5;white-space:normal;overflow-wrap:anywhere;}
+    .subject-card .sc-arrow{display:none;}
+    .menu-grid{grid-template-columns:1fr;}
+    .menu-card{border-radius:22px;}
+  }
+</style>
+</head>
+<body>
+<span class="decor" style="top:8%;left:4%;">➕</span>
+<span class="decor" style="top:20%;right:5%;animation-delay:1s;">🔤</span>
+<span class="decor" style="bottom:14%;left:6%;animation-delay:2s;">📖</span>
+<span class="decor" style="bottom:26%;right:7%;animation-delay:1.5s;">⭐</span>
+<span class="decor" style="top:48%;left:2%;animation-delay:.6s;">🎈</span>
+
+<div class="wrap">
+
+  <!-- ============ HOME (subjects) ============ -->
+  <section id="home" class="screen active">
+    <header class="top">
+      <div class="logo-badge"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4KPGRlZnM+CjxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjcwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmU5YzciLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmZjZjhmIi8+CjwvcmFkaWFsR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0iY2FwIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM1YTRhZDEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNmM1Y2U3Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMDAiIGZpbGw9InVybCgjYmcpIi8+CjwhLS0gZmFjZSAtLT4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTE4IiByPSI0NiIgZmlsbD0iI2ZmZDlhOCIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMTgiIHI9IjQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMGI4N2UiIHN0cm9rZS13aWR0aD0iMiIvPgo8IS0tIGVhcnMgLS0+CjxjaXJjbGUgY3g9IjU2IiBjeT0iMTIwIiByPSI5IiBmaWxsPSIjZmZkOWE4Ii8+CjxjaXJjbGUgY3g9IjE0NCIgY3k9IjEyMCIgcj0iOSIgZmlsbD0iI2ZmZDlhOCIvPgo8IS0tIGV5ZXMgLS0+CjxjaXJjbGUgY3g9Ijg0IiBjeT0iMTE2IiByPSI2LjUiIGZpbGw9IiMzYTJlMmUiLz4KPGNpcmNsZSBjeD0iMTE2IiBjeT0iMTE2IiByPSI2LjUiIGZpbGw9IiMzYTJlMmUiLz4KPGNpcmNsZSBjeD0iODYiIGN5PSIxMTQiIHI9IjIiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMTE4IiBjeT0iMTE0IiByPSIyIiBmaWxsPSIjZmZmIi8+CjwhLS0gY2hlZWtzIC0tPgo8Y2lyY2xlIGN4PSI3NCIgY3k9IjEzMiIgcj0iNiIgZmlsbD0iI2ZmYjNiYSIgb3BhY2l0eT0iMC42Ii8+CjxjaXJjbGUgY3g9IjEyNiIgY3k9IjEzMiIgcj0iNiIgZmlsbD0iI2ZmYjNiYSIgb3BhY2l0eT0iMC42Ii8+CjwhLS0gc21pbGUgLS0+CjxwYXRoIGQ9Ik04MiAxMzQgUTEwMCAxNTAgMTE4IDEzNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE1YTJiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8IS0tIGdyYWR1YXRpb24gY2FwIC0tPgo8cGF0aCBkPSJNMTAwIDU4IEwxNTYgODAgTDEwMCAxMDIgTDQ0IDgwIFoiIGZpbGw9InVybCgjY2FwKSIvPgo8cGF0aCBkPSJNMTMyIDkwIEwxMzIgMTA4IFExMzIgMTE4IDEwMCAxMTggUTY4IDExOCA2OCAxMDggTDY4IDkwIiBmaWxsPSIjNWE0YWQxIi8+CjxyZWN0IHg9Ijk2IiB5PSI3OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2ZmZDQzYiIvPgo8bGluZSB4MT0iMTAwIiB5MT0iODAiIHgyPSIxMDAiIHkyPSI2MCIgc3Ryb2tlPSIjZmZkNDNiIiBzdHJva2Utd2lkdGg9IjIiLz4KPCEtLSB0YXNzZWwgLS0+CjxsaW5lIHgxPSIxNTYiIHkxPSI4MCIgeDI9IjE2MCIgeTI9IjEwNCIgc3Ryb2tlPSIjZmZkNDNiIiBzdHJva2Utd2lkdGg9IjIiLz4KPGNpcmNsZSBjeD0iMTYwIiBjeT0iMTA4IiByPSI1IiBmaWxsPSIjZmZkNDNiIi8+Cjwvc3ZnPg==" alt="العالِم الصغير"></div>
+      <div class="title-zone">
+        <h1>العالِم الصغير</h1>
+        <p>تعلّم • العب • تفوّق 🚀</p>
+      </div>
+      <div class="star-row"><div class="n" id="homeStars">0</div><div class="l">⭐ نجمة</div></div>
+    </header>
+
+    <div class="subjects-hero">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4KPGRlZnM+CjxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjcwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmU5YzciLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmZjZjhmIi8+CjwvcmFkaWFsR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0iY2FwIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM1YTRhZDEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNmM1Y2U3Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxMDAiIGZpbGw9InVybCgjYmcpIi8+CjwhLS0gZmFjZSAtLT4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTE4IiByPSI0NiIgZmlsbD0iI2ZmZDlhOCIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMTgiIHI9IjQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMGI4N2UiIHN0cm9rZS13aWR0aD0iMiIvPgo8IS0tIGVhcnMgLS0+CjxjaXJjbGUgY3g9IjU2IiBjeT0iMTIwIiByPSI5IiBmaWxsPSIjZmZkOWE4Ii8+CjxjaXJjbGUgY3g9IjE0NCIgY3k9IjEyMCIgcj0iOSIgZmlsbD0iI2ZmZDlhOCIvPgo8IS0tIGV5ZXMgLS0+CjxjaXJjbGUgY3g9Ijg0IiBjeT0iMTE2IiByPSI2LjUiIGZpbGw9IiMzYTJlMmUiLz4KPGNpcmNsZSBjeD0iMTE2IiBjeT0iMTE2IiByPSI2LjUiIGZpbGw9IiMzYTJlMmUiLz4KPGNpcmNsZSBjeD0iODYiIGN5PSIxMTQiIHI9IjIiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMTE4IiBjeT0iMTE0IiByPSIyIiBmaWxsPSIjZmZmIi8+CjwhLS0gY2hlZWtzIC0tPgo8Y2lyY2xlIGN4PSI3NCIgY3k9IjEzMiIgcj0iNiIgZmlsbD0iI2ZmYjNiYSIgb3BhY2l0eT0iMC42Ii8+CjxjaXJjbGUgY3g9IjEyNiIgY3k9IjEzMiIgcj0iNiIgZmlsbD0iI2ZmYjNiYSIgb3BhY2l0eT0iMC42Ii8+CjwhLS0gc21pbGUgLS0+CjxwYXRoIGQ9Ik04MiAxMzQgUTEwMCAxNTAgMTE4IDEzNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE1YTJiIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8IS0tIGdyYWR1YXRpb24gY2FwIC0tPgo8cGF0aCBkPSJNMTAwIDU4IEwxNTYgODAgTDEwMCAxMDIgTDQ0IDgwIFoiIGZpbGw9InVybCgjY2FwKSIvPgo8cGF0aCBkPSJNMTMyIDkwIEwxMzIgMTA4IFExMzIgMTE4IDEwMCAxMTggUTY4IDExOCA2OCAxMDggTDY4IDkwIiBmaWxsPSIjNWE0YWQxIi8+CjxyZWN0IHg9Ijk2IiB5PSI3OCIgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iI2ZmZDQzYiIvPgo8bGluZSB4MT0iMTAwIiB5MT0iODAiIHgyPSIxMDAiIHkyPSI2MCIgc3Ryb2tlPSIjZmZkNDNiIiBzdHJva2Utd2lkdGg9IjIiLz4KPCEtLSB0YXNzZWwgLS0+CjxsaW5lIHgxPSIxNTYiIHkxPSI4MCIgeDI9IjE2MCIgeTI9IjEwNCIgc3Ryb2tlPSIjZmZkNDNiIiBzdHJva2Utd2lkdGg9IjIiLz4KPGNpcmNsZSBjeD0iMTYwIiBjeT0iMTA4IiByPSI1IiBmaWxsPSIjZmZkNDNiIi8+Cjwvc3ZnPg==" alt="العالِم الصغير">
+      <h2>أهلاً بك! 👋</h2>
+      <p>اختر المادة التي تريد أن تتعلّمها اليوم</p>
+    </div>
+
+    <div class="subject-grid">
+      <button class="subject-card sub-math" onclick="showScreen('mathHome')">
+        <span class="sc-emoji">🧮</span>
+        <span class="sc-text"><span class="sc-title">الرياضيات</span><span class="sc-sub">جمع • طرح • ضرب • مسائل القصة</span></span>
+        <span class="sc-arrow">⮜</span>
+      </button>
+      <button class="subject-card sub-arabic" onclick="showScreen('arabicHome')">
+        <span class="sc-emoji">📖</span>
+        <span class="sc-text"><span class="sc-title">اللغة العربية</span><span class="sc-sub">حروف • كلمات • جمل • مفرد وجمع</span></span>
+        <span class="sc-arrow">⮜</span>
+      </button>
+      <button class="subject-card sub-english" onclick="showScreen('englishHome')">
+        <span class="sc-emoji">🔤</span>
+        <span class="sc-text"><span class="sc-title">English</span><span class="sc-sub">+190 كلمة بالصور والنطق 🔊</span></span>
+        <span class="sc-arrow">⮜</span>
+      </button>
+      <button class="subject-card sub-science" onclick="showScreen('scienceHome')">
+        <span class="sc-emoji">🔬</span>
+        <span class="sc-text"><span class="sc-title">العلوم</span><span class="sc-sub">المخلوقات • الحواس • النبات • الطقس</span></span>
+        <span class="sc-arrow">⮜</span>
+      </button>
+    </div>
+    <p class="footer-note">صُنع بحب لكل طالب 💙</p>
+  </section>
+
+  <!-- ============ MATH HOME ============ -->
+  <section id="mathHome" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="goHome()">⮜</button>
+      <div class="bar-title">🧮 الرياضيات</div>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-card" style="background:linear-gradient(140deg,#2ecc71,#27ae60)" onclick="startQuiz('add')"><span class="emoji">➕</span><span class="mt">الجمع</span><span class="ms">اجمع الأعداد</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#ff6b6b,#ee5253)" onclick="startQuiz('sub')"><span class="emoji">➖</span><span class="mt">الطرح</span><span class="ms">اطرح الأعداد</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#48cae4,#0096c7)" onclick="startQuiz('seq')"><span class="emoji">🔢</span><span class="mt">التالي/السابق</span><span class="ms">قبل وبعد</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#6c5ce7,#4834d4)" onclick="startQuiz('between')"><span class="emoji">🎯</span><span class="mt">بين عددين</span><span class="ms">في المنتصف</span></button>
+      <button class="menu-card full" style="background:linear-gradient(140deg,#20bf6b,#0fb9b1)" onclick="startQuiz('story')"><span class="emoji">📖</span><span class="mt">مسائل القصة</span><span class="ms">مسائل بأسماء وقصص واقعية</span></button>
+      <button class="menu-card full" style="background:linear-gradient(140deg,#ffa502,#ff6348)" onclick="showScreen('multHome')"><span class="emoji">✖️</span><span class="mt">جدول الضرب</span><span class="ms">تعلّم + تمرّن (مئات المسائل)</span></button>
+      <button class="menu-card full" style="background:linear-gradient(140deg,#ff7eb6,#d6336c)" onclick="startQuiz('mix')"><span class="emoji">🎲</span><span class="mt">تحدّي شامل</span><span class="ms">كل أنواع الرياضيات معاً</span></button>
+    </div>
+  </section>
+
+  <!-- ============ ARABIC HOME ============ -->
+  <section id="arabicHome" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="goHome()">⮜</button>
+      <div class="bar-title">📖 اللغة العربية</div>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-card" style="background:linear-gradient(140deg,#20bf6b,#16a085)" onclick="startQuiz('ar_missing')"><span class="emoji">🔡</span><span class="mt">الحرف الناقص</span><span class="ms">أكمل الكلمة</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#ff9f43,#ee5a24)" onclick="startQuiz('ar_first')"><span class="emoji">🅰️</span><span class="mt">الحرف الأول</span><span class="ms">بأي حرف تبدأ؟</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#54a0ff,#2e86de)" onclick="startQuiz('ar_plural')"><span class="emoji">👥</span><span class="mt">المفرد والجمع</span><span class="ms">واحد أم كثير؟</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#a55eea,#8854d0)" onclick="startQuiz('ar_pic')"><span class="emoji">🖼️</span><span class="mt">الصورة والكلمة</span><span class="ms">صِل الصورة بكلمتها</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#ee5253,#c0392b)" onclick="startQuiz('ar_alher')"><span class="emoji">ال</span><span class="mt">شمسية وقمرية</span><span class="ms">ال الشمسية والقمرية</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#feca57,#ff9f43)" onclick="startQuiz('ar_sound')"><span class="emoji">🔊</span><span class="mt">صوت الحرف</span><span class="ms">قصير أم طويل؟</span></button>
+      <button class="menu-card full" style="background:linear-gradient(140deg,#ff7eb6,#d6336c)" onclick="startQuiz('ar_mix')"><span class="emoji">🎲</span><span class="mt">تحدّي شامل</span><span class="ms">كل أنواع العربي معاً</span></button>
+    </div>
+  </section>
+
+  <!-- ============ SCIENCE HOME ============ -->
+  <section id="scienceHome" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="goHome()">⮜</button>
+      <div class="bar-title">🔬 العلوم</div>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-card" style="background:linear-gradient(140deg,#26de81,#20bf6b)" onclick="startQuiz('sci_living')"><span class="emoji">🌱</span><span class="mt">المخلوقات الحية</span><span class="ms">حي أم غير حي؟</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#fd79a8,#e84393)" onclick="startQuiz('sci_senses')"><span class="emoji">👀</span><span class="mt">الحواس الخمس</span><span class="ms">العين • الأذن • الأنف...</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#55efc4,#00b894)" onclick="startQuiz('sci_plant')"><span class="emoji">🌿</span><span class="mt">النباتات</span><span class="ms">الأجزاء والحاجات</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#ffeaa7,#fdcb6e)" onclick="startQuiz('sci_animals')"><span class="emoji">🦁</span><span class="mt">الحيوانات</span><span class="ms">المساكن والغذاء</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#74b9ff,#0984e3)" onclick="startQuiz('sci_weather')"><span class="emoji">☁️</span><span class="mt">الطقس والفصول</span><span class="ms">الأربعة فصول والطقس</span></button>
+      <button class="menu-card" style="background:linear-gradient(140deg,#a29bfe,#6c5ce7)" onclick="startQuiz('sci_earth')"><span class="emoji">🌍</span><span class="mt">أرضنا والسماء</span><span class="ms">ماء • صخور • شمس • قمر</span></button>
+      <button class="menu-card full" style="background:linear-gradient(140deg,#ff7eb6,#d6336c)" onclick="startQuiz('sci_mix')"><span class="emoji">🎲</span><span class="mt">تحدّي شامل</span><span class="ms">كل أنواع العلوم معاً</span></button>
+    </div>
+  </section>
+
+  <!-- ============ ENGLISH HOME ============ -->
+  <section id="englishHome" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="goHome()">⮜</button>
+      <div class="bar-title">🔤 English</div>
+    </div>
+    <div class="subjects-hero" style="border-color:#bcd0ff;margin-bottom:16px;">
+      <h2 style="color:var(--blue-d)">تعلّم الكلمات 🌟</h2>
+      <p>اختر مجموعة لتتعلّم كلماتها بالصور والنطق، ثم اختبر نفسك!</p>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+    <button class="practice-cta full" style="margin-top:16px;background:linear-gradient(135deg,#4b7bec,#6c5ce7);box-shadow:0 6px 0 #3867d6;" onclick="startEnglishQuiz('ALL')">🎲 اختبار شامل على كل الكلمات</button>
+  </section>
+
+  <!-- ============ ENGLISH FLASHCARDS ============ -->
+  <section id="flashcards" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="showScreen('englishHome')">⮜</button>
+      <div class="bar-title" id="flashBarTitle">Flashcards</div>
+    </div>
+    <div class="flash-card">
+      <div class="flash-count" id="flashCount">1 / 10</div>
+      <div class="flash-emoji" id="flashEmoji">🍎</div>
+      <div class="flash-en" id="flashEn">apple</div>
+      <div class="flash-ar" id="flashAr">تفاحة</div>
+      <button class="speak-btn" id="flashSpeak" onclick="speakCurrentFlash()">🔊</button>
+      <div class="speak-hint">اضغط لسماع النطق</div>
+      <div class="flash-nav">
+        <button class="fn-prev" onclick="flashPrev()">⮞ السابق</button>
+        <span class="flash-count" id="flashCount2">1 / 10</span>
+        <button class="fn-next" onclick="flashNext()">التالي ⮜</button>
+      </div>
+      <button class="flash-test-cta" id="flashTestBtn">✏️ اختبر نفسك على هذه المجموعة</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ (shared math+arabic+english) ============ -->
+  <section id="quiz" class="screen">
+    <div class="bar">
+      <button class="back-btn" onclick="quizBack()">⮜</button>
+      <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progFill"></div></div></div>
+      <div class="score-chip">⭐ <span id="liveScore">0</span></div>
+    </div>
+    <div class="q-card">
+      <span class="q-tag" id="qTag">سؤال</span>
+      <p class="q-text" id="qText"></p>
+      <div id="qVisual"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback">
+        <span class="fc-emoji" id="fcEmoji">🎉</span>
+        <div class="ft"><strong id="ftTitle"></strong><span id="ftSub"></span></div>
+      </div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">التالي ⮜</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="result" class="screen">
+    <div class="result-card">
+      <div class="trophy" id="trophyEmoji">🏆</div>
+      <h2 id="resultTitle">أحسنت!</h2>
+      <div class="result-score"><span id="resScore">0</span><small>/10</small></div>
+      <div class="result-stars" id="resStars">⭐⭐⭐</div>
+      <p class="result-msg" id="resultMsg"></p>
+      <div class="res-btns">
+        <button class="btn-big btn-again" onclick="replayQuiz()">🔁 العب مرة أخرى</button>
+        <button class="btn-big btn-home" onclick="goHome()">🏠 الصفحة الرئيسية</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MULT HOME ============ -->
+  <section id="multHome" class="screen">
+    <div class="bar"><button class="back-btn" onclick="showScreen('mathHome')">⮜</button><div class="bar-title">جدول الضرب ✖️</div></div>
+    <div class="subjects-hero"><h2>اختر الجدول 🌟</h2><p>اضغط على رقم لتتعلّم جدوله، ثم تمرّن عليه!</p></div>
+    <div class="table-grid" id="tableGrid"></div>
+    <button class="practice-cta" onclick="startMultMixed()">🎲 تمرين على كل الجداول (1–10)</button>
+  </section>
+
+  <!-- ============ MULT STUDY ============ -->
+  <section id="multStudy" class="screen">
+    <div class="bar"><button class="back-btn" onclick="showScreen('multHome')">⮜</button><div class="bar-title" id="studyBarTitle">جدول الضرب</div></div>
+    <div class="study-card">
+      <div class="study-head" id="studyHead"></div>
+      <div class="study-list" id="studyList"></div>
+      <button class="practice-cta" id="studyPractice">✏️ تمرّن على هذا الجدول</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   English Vocabulary — Egyptian Grade 1 (Connect) + core themes
+   Each word: { en, ar, emoji }
+   Used by العالِم الصغير → English section
+   ============================================================ */
+const VOCAB = {
+  family: {
+    title:'العائلة', titleEn:'Family', icon:'👨‍👩‍👧‍👦', color:'#ff6b6b',
+    words:[
+      {en:'father', ar:'أب', emoji:'👨'},
+      {en:'mother', ar:'أم', emoji:'👩'},
+      {en:'brother', ar:'أخ', emoji:'👦'},
+      {en:'sister', ar:'أخت', emoji:'👧'},
+      {en:'baby', ar:'طفل', emoji:'👶'},
+      {en:'grandfather', ar:'جد', emoji:'👴'},
+      {en:'grandmother', ar:'جدة', emoji:'👵'},
+      {en:'family', ar:'عائلة', emoji:'👨‍👩‍👧‍👦'},
+      {en:'son', ar:'ابن', emoji:'🧒'},
+      {en:'daughter', ar:'ابنة', emoji:'👧'},
+      {en:'uncle', ar:'عم/خال', emoji:'🧔'},
+      {en:'aunt', ar:'عمة/خالة', emoji:'👩‍🦰'},
+      {en:'cousin', ar:'ابن العم', emoji:'🧑'},
+      {en:'friend', ar:'صديق', emoji:'🧑‍🤝‍🧑'},
+    ]
+  },
+  food: {
+    title:'الطعام', titleEn:'Food', icon:'🍎', color:'#20bf6b',
+    words:[
+      {en:'apple', ar:'تفاحة', emoji:'🍎'},
+      {en:'banana', ar:'موزة', emoji:'🍌'},
+      {en:'orange', ar:'برتقالة', emoji:'🍊'},
+      {en:'grapes', ar:'عنب', emoji:'🍇'},
+      {en:'strawberry', ar:'فراولة', emoji:'🍓'},
+      {en:'watermelon', ar:'بطيخ', emoji:'🍉'},
+      {en:'mango', ar:'مانجو', emoji:'🥭'},
+      {en:'bread', ar:'خبز', emoji:'🍞'},
+      {en:'cheese', ar:'جبن', emoji:'🧀'},
+      {en:'egg', ar:'بيضة', emoji:'🥚'},
+      {en:'milk', ar:'حليب', emoji:'🥛'},
+      {en:'water', ar:'ماء', emoji:'💧'},
+      {en:'juice', ar:'عصير', emoji:'🧃'},
+      {en:'rice', ar:'أرز', emoji:'🍚'},
+      {en:'chicken', ar:'دجاج', emoji:'🍗'},
+      {en:'fish', ar:'سمك', emoji:'🐟'},
+      {en:'cake', ar:'كعكة', emoji:'🍰'},
+      {en:'cookie', ar:'بسكويت', emoji:'🍪'},
+      {en:'ice cream', ar:'آيس كريم', emoji:'🍦'},
+      {en:'chocolate', ar:'شوكولاتة', emoji:'🍫'},
+      {en:'candy', ar:'حلوى', emoji:'🍬'},
+      {en:'pizza', ar:'بيتزا', emoji:'🍕'},
+      {en:'sandwich', ar:'ساندويتش', emoji:'🥪'},
+      {en:'carrot', ar:'جزرة', emoji:'🥕'},
+      {en:'tomato', ar:'طماطم', emoji:'🍅'},
+      {en:'potato', ar:'بطاطس', emoji:'🥔'},
+      {en:'corn', ar:'ذرة', emoji:'🌽'},
+      {en:'honey', ar:'عسل', emoji:'🍯'},
+    ]
+  },
+  home: {
+    title:'أغراض المنزل', titleEn:'Home', icon:'🏠', color:'#fa8231',
+    words:[
+      {en:'house', ar:'منزل', emoji:'🏠'},
+      {en:'door', ar:'باب', emoji:'🚪'},
+      {en:'window', ar:'نافذة', emoji:'🪟'},
+      {en:'bed', ar:'سرير', emoji:'🛏️'},
+      {en:'chair', ar:'كرسي', emoji:'🪑'},
+      {en:'table', ar:'طاولة', emoji:'🪑'},
+      {en:'sofa', ar:'أريكة', emoji:'🛋️'},
+      {en:'lamp', ar:'مصباح', emoji:'💡'},
+      {en:'clock', ar:'ساعة', emoji:'🕐'},
+      {en:'television', ar:'تلفاز', emoji:'📺'},
+      {en:'phone', ar:'هاتف', emoji:'📱'},
+      {en:'cup', ar:'كوب', emoji:'☕'},
+      {en:'plate', ar:'طبق', emoji:'🍽️'},
+      {en:'spoon', ar:'ملعقة', emoji:'🥄'},
+      {en:'fork', ar:'شوكة', emoji:'🍴'},
+      {en:'key', ar:'مفتاح', emoji:'🔑'},
+      {en:'mirror', ar:'مرآة', emoji:'🪞'},
+      {en:'toilet', ar:'مرحاض', emoji:'🚽'},
+      {en:'bath', ar:'حوض استحمام', emoji:'🛁'},
+      {en:'soap', ar:'صابون', emoji:'🧼'},
+      {en:'towel', ar:'منشفة', emoji:'🧺'},
+      {en:'broom', ar:'مكنسة', emoji:'🧹'},
+      {en:'box', ar:'صندوق', emoji:'📦'},
+      {en:'fan', ar:'مروحة', emoji:'🪭'},
+      {en:'fridge', ar:'ثلاجة', emoji:'🧊'},
+    ]
+  },
+  jobs: {
+    title:'الوظائف', titleEn:'Jobs', icon:'👷', color:'#4b7bec',
+    words:[
+      {en:'doctor', ar:'طبيب', emoji:'👨‍⚕️'},
+      {en:'teacher', ar:'معلم', emoji:'👨‍🏫'},
+      {en:'nurse', ar:'ممرضة', emoji:'👩‍⚕️'},
+      {en:'police officer', ar:'شرطي', emoji:'👮'},
+      {en:'firefighter', ar:'رجل إطفاء', emoji:'👨‍🚒'},
+      {en:'farmer', ar:'مزارع', emoji:'👨‍🌾'},
+      {en:'cook', ar:'طباخ', emoji:'👨‍🍳'},
+      {en:'pilot', ar:'طيار', emoji:'👨‍✈️'},
+      {en:'driver', ar:'سائق', emoji:'🚗'},
+      {en:'engineer', ar:'مهندس', emoji:'👷'},
+      {en:'dentist', ar:'طبيب أسنان', emoji:'🦷'},
+      {en:'singer', ar:'مغني', emoji:'🎤'},
+      {en:'painter', ar:'رسام', emoji:'🎨'},
+      {en:'astronaut', ar:'رائد فضاء', emoji:'👨‍🚀'},
+      {en:'scientist', ar:'عالم', emoji:'🔬'},
+      {en:'baker', ar:'خباز', emoji:'🥖'},
+      {en:'vet', ar:'طبيب بيطري', emoji:'🐶'},
+      {en:'soldier', ar:'جندي', emoji:'🪖'},
+    ]
+  },
+  animals: {
+    title:'الحيوانات', titleEn:'Animals', icon:'🦁', color:'#f7b731',
+    words:[
+      {en:'cat', ar:'قطة', emoji:'🐱'},
+      {en:'dog', ar:'كلب', emoji:'🐶'},
+      {en:'lion', ar:'أسد', emoji:'🦁'},
+      {en:'tiger', ar:'نمر', emoji:'🐯'},
+      {en:'elephant', ar:'فيل', emoji:'🐘'},
+      {en:'monkey', ar:'قرد', emoji:'🐵'},
+      {en:'horse', ar:'حصان', emoji:'🐴'},
+      {en:'cow', ar:'بقرة', emoji:'🐮'},
+      {en:'sheep', ar:'خروف', emoji:'🐑'},
+      {en:'goat', ar:'ماعز', emoji:'🐐'},
+      {en:'rabbit', ar:'أرنب', emoji:'🐰'},
+      {en:'bird', ar:'طائر', emoji:'🐦'},
+      {en:'duck', ar:'بطة', emoji:'🦆'},
+      {en:'chicken', ar:'دجاجة', emoji:'🐔'},
+      {en:'fish', ar:'سمكة', emoji:'🐠'},
+      {en:'bee', ar:'نحلة', emoji:'🐝'},
+      {en:'butterfly', ar:'فراشة', emoji:'🦋'},
+      {en:'frog', ar:'ضفدع', emoji:'🐸'},
+      {en:'snake', ar:'ثعبان', emoji:'🐍'},
+      {en:'bear', ar:'دب', emoji:'🐻'},
+      {en:'giraffe', ar:'زرافة', emoji:'🦒'},
+      {en:'zebra', ar:'حمار وحشي', emoji:'🦓'},
+      {en:'penguin', ar:'بطريق', emoji:'🐧'},
+      {en:'owl', ar:'بومة', emoji:'🦉'},
+    ]
+  },
+  colors: {
+    title:'الألوان', titleEn:'Colors', icon:'🌈', color:'#a55eea',
+    words:[
+      {en:'red', ar:'أحمر', emoji:'🔴'},
+      {en:'blue', ar:'أزرق', emoji:'🔵'},
+      {en:'green', ar:'أخضر', emoji:'🟢'},
+      {en:'yellow', ar:'أصفر', emoji:'🟡'},
+      {en:'orange', ar:'برتقالي', emoji:'🟠'},
+      {en:'purple', ar:'بنفسجي', emoji:'🟣'},
+      {en:'pink', ar:'وردي', emoji:'🩷'},
+      {en:'brown', ar:'بني', emoji:'🟤'},
+      {en:'black', ar:'أسود', emoji:'⚫'},
+      {en:'white', ar:'أبيض', emoji:'⚪'},
+    ]
+  },
+  numbers: {
+    title:'الأرقام', titleEn:'Numbers', icon:'🔢', color:'#26de81',
+    words:[
+      {en:'one', ar:'واحد', emoji:'1️⃣'},
+      {en:'two', ar:'اثنان', emoji:'2️⃣'},
+      {en:'three', ar:'ثلاثة', emoji:'3️⃣'},
+      {en:'four', ar:'أربعة', emoji:'4️⃣'},
+      {en:'five', ar:'خمسة', emoji:'5️⃣'},
+      {en:'six', ar:'ستة', emoji:'6️⃣'},
+      {en:'seven', ar:'سبعة', emoji:'7️⃣'},
+      {en:'eight', ar:'ثمانية', emoji:'8️⃣'},
+      {en:'nine', ar:'تسعة', emoji:'9️⃣'},
+      {en:'ten', ar:'عشرة', emoji:'🔟'},
+    ]
+  },
+  body: {
+    title:'جسم الإنسان', titleEn:'Body', icon:'👦', color:'#fd79a8',
+    words:[
+      {en:'head', ar:'رأس', emoji:'🗣️'},
+      {en:'eye', ar:'عين', emoji:'👁️'},
+      {en:'ear', ar:'أذن', emoji:'👂'},
+      {en:'nose', ar:'أنف', emoji:'👃'},
+      {en:'mouth', ar:'فم', emoji:'👄'},
+      {en:'hand', ar:'يد', emoji:'✋'},
+      {en:'foot', ar:'قدم', emoji:'🦶'},
+      {en:'leg', ar:'ساق', emoji:'🦵'},
+      {en:'hair', ar:'شعر', emoji:'💇'},
+      {en:'tooth', ar:'سن', emoji:'🦷'},
+      {en:'finger', ar:'إصبع', emoji:'👆'},
+      {en:'arm', ar:'ذراع', emoji:'💪'},
+    ]
+  },
+  school: {
+    title:'المدرسة', titleEn:'School', icon:'🏫', color:'#0fb9b1',
+    words:[
+      {en:'school', ar:'مدرسة', emoji:'🏫'},
+      {en:'book', ar:'كتاب', emoji:'📖'},
+      {en:'pen', ar:'قلم', emoji:'🖊️'},
+      {en:'pencil', ar:'قلم رصاص', emoji:'✏️'},
+      {en:'bag', ar:'حقيبة', emoji:'🎒'},
+      {en:'ruler', ar:'مسطرة', emoji:'📏'},
+      {en:'eraser', ar:'ممحاة', emoji:'🧽'},
+      {en:'scissors', ar:'مقص', emoji:'✂️'},
+      {en:'crayon', ar:'قلم تلوين', emoji:'🖍️'},
+      {en:'notebook', ar:'دفتر', emoji:'📓'},
+      {en:'desk', ar:'مكتب', emoji:'🪑'},
+      {en:'board', ar:'سبورة', emoji:'🪧'},
+      {en:'bell', ar:'جرس', emoji:'🔔'},
+      {en:'glue', ar:'صمغ', emoji:'🧴'},
+    ]
+  },
+  clothes: {
+    title:'الملابس', titleEn:'Clothes', icon:'👕', color:'#e17055',
+    words:[
+      {en:'shirt', ar:'قميص', emoji:'👕'},
+      {en:'t-shirt', ar:'تي شيرت', emoji:'👕'},
+      {en:'dress', ar:'فستان', emoji:'👗'},
+      {en:'trousers', ar:'بنطلون', emoji:'👖'},
+      {en:'shoes', ar:'حذاء', emoji:'👟'},
+      {en:'socks', ar:'جوارب', emoji:'🧦'},
+      {en:'hat', ar:'قبعة', emoji:'🧢'},
+      {en:'coat', ar:'معطف', emoji:'🧥'},
+      {en:'gloves', ar:'قفازات', emoji:'🧤'},
+      {en:'scarf', ar:'وشاح', emoji:'🧣'},
+      {en:'glasses', ar:'نظارة', emoji:'👓'},
+      {en:'skirt', ar:'تنورة', emoji:'👗'},
+    ]
+  },
+  nature: {
+    title:'الطبيعة', titleEn:'Nature', icon:'🌳', color:'#27ae60',
+    words:[
+      {en:'sun', ar:'شمس', emoji:'☀️'},
+      {en:'moon', ar:'قمر', emoji:'🌙'},
+      {en:'star', ar:'نجمة', emoji:'⭐'},
+      {en:'cloud', ar:'سحابة', emoji:'☁️'},
+      {en:'rain', ar:'مطر', emoji:'🌧️'},
+      {en:'tree', ar:'شجرة', emoji:'🌳'},
+      {en:'flower', ar:'زهرة', emoji:'🌸'},
+      {en:'leaf', ar:'ورقة شجر', emoji:'🍃'},
+      {en:'sea', ar:'بحر', emoji:'🌊'},
+      {en:'mountain', ar:'جبل', emoji:'⛰️'},
+      {en:'fire', ar:'نار', emoji:'🔥'},
+      {en:'snow', ar:'ثلج', emoji:'❄️'},
+      {en:'rainbow', ar:'قوس قزح', emoji:'🌈'},
+      {en:'sky', ar:'سماء', emoji:'🌤️'},
+    ]
+  },
+  transport: {
+    title:'المواصلات', titleEn:'Transport', icon:'🚗', color:'#3867d6',
+    words:[
+      {en:'car', ar:'سيارة', emoji:'🚗'},
+      {en:'bus', ar:'حافلة', emoji:'🚌'},
+      {en:'train', ar:'قطار', emoji:'🚂'},
+      {en:'plane', ar:'طائرة', emoji:'✈️'},
+      {en:'boat', ar:'قارب', emoji:'⛵'},
+      {en:'bike', ar:'دراجة', emoji:'🚲'},
+      {en:'truck', ar:'شاحنة', emoji:'🚚'},
+      {en:'taxi', ar:'سيارة أجرة', emoji:'🚕'},
+      {en:'ship', ar:'سفينة', emoji:'🚢'},
+      {en:'rocket', ar:'صاروخ', emoji:'🚀'},
+      {en:'helicopter', ar:'مروحية', emoji:'🚁'},
+      {en:'ambulance', ar:'إسعاف', emoji:'🚑'},
+    ]
+  },
+};
+
+</script>
+<script>
+/* =========================================================
+   العالِم الصغير — App logic
+   Subjects: Math, Arabic, English
+   ========================================================= */
+
+let totalStars = 0;
+try { totalStars = parseInt(localStorage.getItem('yahyaStars')||'0',10) || 0; } catch(e){}
+
+const QPERROUND = 10;
+let queue = [];
+let idx = 0;
+let roundScore = 0;
+let currentMode = 'add';
+let currentTable = null;
+let answered = false;
+let backTarget = 'mathHome';   // where the quiz back button & home button context returns
+
+const rnd = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function makeOptions(correct, spread, min=0){
+  const opts=new Set([correct]);let g=0;
+  while(opts.size<4 && g<60){g++;let d=rnd(-spread,spread);if(d===0)continue;let c=correct+d;if(c<min)continue;opts.add(c);}
+  let f=Math.max(min,correct+1);while(opts.size<4){opts.add(f++);}
+  return shuffle([...opts]);
+}
+/* pick n distinct wrong text options from a pool, plus the correct one */
+function makeTextOptions(correct, pool){
+  const opts=new Set([correct]);
+  const shuffled=shuffle([...pool]);
+  for(const p of shuffled){ if(opts.size>=4)break; if(p!==correct) opts.add(p); }
+  return shuffle([...opts]);
+}
+
+/* ================= MATH GENERATORS ================= */
+function genAdd(){const a=rnd(1,9),b=rnd(1,9),ans=a+b;return{subj:'math',tag:'الجمع ➕',text:'كم يساوي ناتج الجمع؟',eq:`${a} + ${b} = <span class="blank">؟</span>`,options:makeOptions(ans,4,0),answer:ans,explain:`${a} + ${b} = ${ans}`};}
+function genSub(){const a=rnd(2,18),b=rnd(1,Math.min(a,9)),ans=a-b;return{subj:'math',tag:'الطرح ➖',text:'كم يساوي ناتج الطرح؟',eq:`${a} − ${b} = <span class="blank">؟</span>`,options:makeOptions(ans,4,0),answer:ans,explain:`${a} − ${b} = ${ans}`};}
+function genSeq(){
+  const next=Math.random()<0.5;
+  if(next){const n=rnd(0,98),ans=n+1;return{subj:'math',tag:'العدد التالي ⏭️',text:'اكتب العدد الذي يلي العدد التالي مباشرةً:',seq:[{v:n},{v:'؟',q:true}],options:makeOptions(ans,3,0),answer:ans,explain:`العدد الذي يلي ${n} هو ${ans}`};}
+  const s=rnd(1,99),ans=s-1;return{subj:'math',tag:'العدد السابق ⏮️',text:'اكتب العدد الذي يسبق العدد التالي مباشرةً:',seq:[{v:'؟',q:true},{v:s}],options:makeOptions(ans,3,0),answer:ans,explain:`العدد الذي يسبق ${s} هو ${ans}`};
+}
+function genBetween(){const mid=rnd(1,98),a=mid-1,b=mid+1;return{subj:'math',tag:'العدد بين عددين 🎯',text:'اكتب العدد الواقع بين العددين التاليين:',seq:[{v:a},{v:'؟',q:true},{v:b}],options:makeOptions(mid,3,0),answer:mid,explain:`العدد الواقع بين ${a} و ${b} هو ${mid}`};}
+function genMult(fixed){const a=fixed!=null?fixed:rnd(1,10),b=rnd(1,10),ans=a*b;return{subj:'math',tag:`جدول الـ ${a} ✖️`,text:'كم يساوي ناتج الضرب؟',eq:`${a} × ${b} = <span class="blank">؟</span>`,options:makeOptions(ans,Math.max(4,Math.round(ans*0.25)),0),answer:ans,explain:`${a} × ${b} = ${ans}`};}
+
+/* story problems */
+const NAMES=['أحمد','خالد','سالم','يحيى','محمد','عبدالله','يوسف','فيصل','عمر','سعد','نورة','سارة','مريم','لمى','جنى'];
+function gName(){return pick(NAMES);}
+function storyObj(icon,lines,q,answer,spread,unit){return{subj:'math',tag:'مسألة قصة 📖',text:'اقرأ المسألة بتأنٍّ ثم اختر الإجابة:',story:{icon,lines,q},options:makeOptions(answer,spread,0),answer,explain:`الإجابة: ${answer}${unit?(' '+unit):''}`,storyOpt:true};}
+function genStory(){
+  const type=pick(['divide','divide','collect','spend','give','combine','remain']);const A=gName();
+  if(type==='divide'){const groups=pick([2,3,4,5,6]),each=rnd(2,8),total=groups*each;const item=pick(['نقطة','جائزة','حبة حلوى','بطاقة','نجمة']);const itemP=item==='نقطة'?'نقاط':item==='جائزة'?'جوائز':item==='بطاقة'?'بطاقات':item==='نجمة'?'نجوم':item;const container=pick(['مجموعات','علب','صناديق','أكياس','أطباق']);return storyObj('🎁',[`حصل <b>${A}</b> على <b>${total}</b> ${itemP}.`,`أراد توزيعها بالتساوي على <b>${groups}</b> ${container}.`],`كم ${item} في كل واحدة؟`,each,3,item);}
+  if(type==='collect'){const perDay=pick([1,2,5,10]),days=rnd(3,9),total=perDay*days;const v=pick([{v:`ادّخر <b>${A}</b> <b>${perDay}</b> ريال كل يوم لمدة <b>${days}</b> أيام.`,q:'كم ريالاً أصبح لديه؟',u:'ريال'},{v:`قرأ <b>${A}</b> <b>${perDay}</b> صفحات كل يوم لمدة <b>${days}</b> أيام.`,q:'كم صفحة قرأ في المجموع؟',u:'صفحة'},{v:`حفظ <b>${A}</b> <b>${perDay}</b> آيات كل يوم لمدة <b>${days}</b> أيام.`,q:'كم آية حفظ في المجموع؟',u:'آية'}]);return storyObj('💰',[v.v],v.q,total,4,v.u);}
+  if(type==='spend'){const start=rnd(10,20),spent=rnd(2,start-1),left=start-spent;const t=pick(['قلماً','دفتراً','لعبة','عصيراً','كتاباً']);return storyObj('🛒',[`كان مع <b>${A}</b> <b>${start}</b> ريالات.`,`اشترى ${t} بمبلغ <b>${spent}</b> ريالات.`],`كم ريالاً بقي معه؟`,left,4,'ريال');}
+  if(type==='give'){const start=rnd(8,18),gave=rnd(2,start-1),left=start-gave;const it=pick(['حلوى','بالونات','ملصقات','أقلام','كرات']);const B=gName();return storyObj('🤝',[`كان مع <b>${A}</b> <b>${start}</b> قطع ${it}.`,`أهدى <b>${gave}</b> منها لصديقه <b>${B}</b>.`],`كم قطعة بقيت مع ${A}؟`,left,4,'قطعة');}
+  if(type==='combine'){const a=rnd(3,12),b=rnd(2,9),total=a+b;const B=gName();const it=pick(['كرة','تفاحة','قلم','بطاقة']);const itP=it==='كرة'?'كرات':it==='تفاحة'?'تفاحات':it==='قلم'?'أقلام':'بطاقات';return storyObj('➕',[`مع <b>${A}</b> <b>${a}</b> ${itP}.`,`ومع صديقه <b>${B}</b> <b>${b}</b> ${itP}.`],`كم ${it} لديهما معاً؟`,total,4,it);}
+  const have=rnd(5,15),got=rnd(2,9),total=have+got;const it=pick(['نقطة','نجمة','ملصق','حبة حلوى']);const itP=it==='نقطة'?'نقاط':it==='نجمة'?'نجوم':it==='ملصق'?'ملصقات':'حبات حلوى';return storyObj('⭐',[`كان لدى <b>${A}</b> <b>${have}</b> ${itP}.`,`ثم ربح <b>${got}</b> ${itP} إضافية.`],`كم ${it} أصبح لديه الآن؟`,total,4,it);
+}
+
+/* ================= ARABIC GENERATORS ================= */
+/* word bank: word, first letter, plural, isSun (ال شمسية), pic emoji, hasLongVowel */
+const AR_WORDS = [
+  {w:'قَلَم', f:'ق', pl:'أقلام', pic:'✏️', sun:false},
+  {w:'بَيت', f:'ب', pl:'بيوت', pic:'🏠', sun:false},
+  {w:'كِتاب', f:'ك', pl:'كُتُب', pic:'📖', sun:false},
+  {w:'وَردة', f:'و', pl:'وُرود', pic:'🌹', sun:false},
+  {w:'شَمس', f:'ش', pl:'شُموس', pic:'☀️', sun:true},
+  {w:'قَمَر', f:'ق', pl:'أقمار', pic:'🌙', sun:false},
+  {w:'سَمَكة', f:'س', pl:'أسماك', pic:'🐟', sun:true},
+  {w:'فيل', f:'ف', pl:'أفيال', pic:'🐘', sun:false},
+  {w:'أسَد', f:'أ', pl:'أُسود', pic:'🦁', sun:false},
+  {w:'دَجاجة', f:'د', pl:'دَجاج', pic:'🐔', sun:true},
+  {w:'تُفّاحة', f:'ت', pl:'تُفّاح', pic:'🍎', sun:true},
+  {w:'مَوزة', f:'م', pl:'موز', pic:'🍌', sun:false},
+  {w:'نَجمة', f:'ن', pl:'نجوم', pic:'⭐', sun:true},
+  {w:'بَطّة', f:'ب', pl:'بَط', pic:'🦆', sun:false},
+  {w:'قِطّة', f:'ق', pl:'قِطَط', pic:'🐱', sun:false},
+  {w:'سَيّارة', f:'س', pl:'سَيّارات', pic:'🚗', sun:true},
+  {w:'طائرة', f:'ط', pl:'طائرات', pic:'✈️', sun:false},
+  {w:'مِفتاح', f:'م', pl:'مفاتيح', pic:'🔑', sun:false},
+  {w:'بابٌ', f:'ب', pl:'أبواب', pic:'🚪', sun:false},
+  {w:'كَلب', f:'ك', pl:'كِلاب', pic:'🐶', sun:false},
+  {w:'حِصان', f:'ح', pl:'خُيول', pic:'🐴', sun:false},
+  {w:'عَين', f:'ع', pl:'عُيون', pic:'👁️', sun:false},
+  {w:'يَد', f:'ي', pl:'أيادٍ', pic:'✋', sun:false},
+  {w:'زَهرة', f:'ز', pl:'زُهور', pic:'🌸', sun:true},
+  {w:'نَملة', f:'ن', pl:'نَمل', pic:'🐜', sun:true},
+  {w:'ثَعلب', f:'ث', pl:'ثعالب', pic:'🦊', sun:true},
+  {w:'جَمَل', f:'ج', pl:'جِمال', pic:'🐫', sun:false},
+  {w:'رَجُل', f:'ر', pl:'رِجال', pic:'👨', sun:true},
+  {w:'لَيمونة', f:'ل', pl:'ليمون', pic:'🍋', sun:true},
+  {w:'دَلو', f:'د', pl:'دِلاء', pic:'🪣', sun:true},
+];
+const AR_LETTERS = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','هـ','و','ي','أ'];
+
+/* remove first displayed letter (rough) for "missing letter" */
+function arMissing(){
+  const item=pick(AR_WORDS);
+  const word=item.w;
+  // find first arabic letter position (skip diacritics)
+  let i=0; while(i<word.length && !/[ء-ي]/.test(word[i])) i++;
+  const correct=item.f;
+  const masked = '__' + word.slice(i+1);
+  const opts=makeTextOptions(correct, AR_LETTERS);
+  return {subj:'arabic',tag:'الحرف الناقص 🔡',text:'أكمل الحرف الناقص في الكلمة:',
+    arPic:item.pic, arBig:`<span class="blank">…</span>${word.slice(i+1)}`,
+    arHint:`(${item.pic} = ${word})`,
+    options:opts, answer:correct, optClass:'ar', explain:`الكلمة الصحيحة: ${word}`};
+}
+function arFirst(){
+  const item=pick(AR_WORDS);
+  const opts=makeTextOptions(item.f, AR_LETTERS);
+  return {subj:'arabic',tag:'الحرف الأول 🅰️',text:'بأي حرف تبدأ هذه الكلمة؟',
+    arPic:item.pic, arBig:item.w, options:opts, answer:item.f, optClass:'ar',
+    explain:`«${item.w}» تبدأ بحرف ${item.f}`};
+}
+function arPlural(){
+  // show a word, ask: singular or plural? OR give singular ask its plural
+  const item=pick(AR_WORDS);
+  const askPlural=Math.random()<0.6;
+  if(askPlural){
+    const pool=AR_WORDS.map(x=>x.pl);
+    const opts=makeTextOptions(item.pl, pool);
+    return {subj:'arabic',tag:'الجمع 👥',text:`ما جمع كلمة «${item.w}» ؟`,
+      arPic:item.pic, options:opts, answer:item.pl, optClass:'ar txt',
+      explain:`جمع «${item.w}» هو «${item.pl}»`};
+  } else {
+    // is this word singular or plural? show a plural sometimes
+    const showPlural=Math.random()<0.5;
+    const shown = showPlural ? item.pl : item.w;
+    const answer = showPlural ? 'جمع' : 'مفرد';
+    return {subj:'arabic',tag:'مفرد وجمع 👥',text:`هل كلمة «${shown}» مفرد أم جمع؟`,
+      arPic:item.pic, options:shuffle(['مفرد','جمع']), answer, optClass:'ar txt one', forceOne:false,
+      explain: showPlural?`«${shown}» جمع، ومفردها «${item.w}»`:`«${shown}» مفرد، وجمعها «${item.pl}»`};
+  }
+}
+function arPic(){
+  const item=pick(AR_WORDS);
+  const pool=AR_WORDS.map(x=>x.w);
+  const opts=makeTextOptions(item.w, pool);
+  return {subj:'arabic',tag:'الصورة والكلمة 🖼️',text:'ما اسم ما تراه في الصورة؟',
+    arPic:item.pic, bigPic:true, options:opts, answer:item.w, optClass:'ar txt',
+    explain:`الصورة هي: ${item.w}`};
+}
+function arAlher(){
+  // ال شمسية vs قمرية
+  const item=pick(AR_WORDS);
+  const answer = item.sun ? 'شمسية' : 'قمرية';
+  return {subj:'arabic',tag:'ال الشمسية/القمرية',text:`كلمة «ال${item.w}» — هل «ال» فيها شمسية أم قمرية؟`,
+    arPic:item.pic, options:shuffle(['شمسية','قمرية']), answer, optClass:'ar txt',
+    explain: item.sun?`«ال» شمسية (تُكتب ولا تُنطق، والحرف بعدها مُشدّد)`:`«ال» قمرية (تُكتب وتُنطق بوضوح)`};
+}
+/* long vs short vowel sound */
+const AR_SHORT = ['كَ','بِ','تُ','مَ','سِ','لُ','رَ','نِ','دُ','فَ'];
+const AR_LONG  = ['كا','بي','تو','ما','سي','لو','را','ني','دو','فا'];
+function arSound(){
+  const isLong=Math.random()<0.5;
+  const syl = isLong ? pick(AR_LONG) : pick(AR_SHORT);
+  const answer = isLong ? 'صوت طويل' : 'صوت قصير';
+  return {subj:'arabic',tag:'صوت الحرف 🔊',text:'هذا المقطع — صوته قصير أم طويل؟',
+    arBig:syl, options:shuffle(['صوت قصير','صوت طويل']), answer, optClass:'ar txt',
+    explain: isLong?`«${syl}» صوت طويل (فيه حرف مدّ)`:`«${syl}» صوت قصير (حركة قصيرة)`};
+}
+
+/* ================= ENGLISH GENERATORS ================= */
+function flatVocab(catKey){
+  if(catKey==='ALL'){let all=[];for(const k in VOCAB){VOCAB[k].words.forEach(w=>all.push(w));}return all;}
+  return VOCAB[catKey].words.slice();
+}
+function genEnglish(catKey){
+  const pool = flatVocab(catKey);
+  const item = pick(pool);
+  // 2 directions: show emoji -> pick English word, OR show English -> pick Arabic
+  const dir = Math.random()<0.55 ? 'pickEn' : 'pickAr';
+  if(dir==='pickEn'){
+    const wrongPool = pool.filter(x=>x.en!==item.en).map(x=>x.en);
+    const opts = makeTextOptions(item.en, wrongPool.length>=3?wrongPool:flatVocab('ALL').map(x=>x.en));
+    return {subj:'english',tag:'English 🔤',text:'ما اسم هذه الصورة بالإنجليزية؟',
+      enEmoji:item.emoji, enArLabel:item.ar, speakWord:item.en, options:opts, answer:item.en, optClass:'txt', isEnglishWord:true,
+      explain:`${item.emoji} = ${item.en} (${item.ar})`, speakOnCorrect:item.en};
+  } else {
+    const wrongPool = pool.filter(x=>x.ar!==item.ar).map(x=>x.ar);
+    const opts = makeTextOptions(item.ar, wrongPool.length>=3?wrongPool:flatVocab('ALL').map(x=>x.ar));
+    return {subj:'english',tag:'English 🔤',text:'ما معنى هذه الكلمة بالعربية؟',
+      enWord:item.en, enEmoji:item.emoji, speakWord:item.en, options:opts, answer:item.ar, optClass:'ar txt',
+      explain:`${item.en} = ${item.ar}`, speakOnCorrect:item.en};
+  }
+}
+
+/* ================= SCIENCE DATA (المنهج السعودي - أول ابتدائي) ================= */
+const SCI_LIVING=[{n:'قطة',e:'🐱',living:true},{n:'شجرة',e:'🌳',living:true},{n:'طائر',e:'🐦',living:true},{n:'وردة',e:'🌹',living:true},{n:'سمكة',e:'🐟',living:true},{n:'طفل',e:'🧒',living:true},{n:'فراشة',e:'🦋',living:true},{n:'نخلة',e:'🌴',living:true},{n:'صخرة',e:'🪨',living:false},{n:'سيارة',e:'🚗',living:false},{n:'كرسي',e:'🪑',living:false},{n:'كتاب',e:'📖',living:false},{n:'حجر',e:'🥌',living:false},{n:'مفتاح',e:'🔑',living:false},{n:'كرة',e:'⚽',living:false},{n:'ساعة',e:'🕐',living:false}];
+const SCI_SENSES=[{organ:'العين',e:'👁️',sense:'البصر',use:'نرى بها الألوان والأشياء'},{organ:'الأذن',e:'👂',sense:'السمع',use:'نسمع بها الأصوات'},{organ:'الأنف',e:'👃',sense:'الشم',use:'نشم بها الروائح'},{organ:'اللسان',e:'👅',sense:'التذوق',use:'نتذوق بها الطعام'},{organ:'اليد',e:'✋',sense:'اللمس',use:'نلمس بها الأشياء'}];
+const SCI_PLANT=[{part:'الجذور',e:'🌱',job:'تثبّت النبات وتمتص الماء من التربة'},{part:'الساق',e:'🌿',job:'تحمل النبات وتنقل الماء للأوراق'},{part:'الأوراق',e:'🍃',job:'تصنع الغذاء بمساعدة ضوء الشمس'},{part:'الزهرة',e:'🌸',job:'تنتج البذور لنبات جديد'},{part:'الثمرة',e:'🍎',job:'تحمي البذور'}];
+const SCI_NEEDS=[{n:'الماء',e:'💧'},{n:'الهواء',e:'🌬️'},{n:'ضوء الشمس',e:'☀️'},{n:'الغذاء',e:'🍎'}];
+const SCI_HABITAT=[{a:'السمكة',e:'🐟',home:'الماء'},{a:'الأسد',e:'🦁',home:'اليابسة'},{a:'الطائر',e:'🐦',home:'العش'},{a:'النحلة',e:'🐝',home:'الخلية'},{a:'الجمل',e:'🐫',home:'الصحراء'},{a:'الضفدع',e:'🐸',home:'البركة'},{a:'الدب',e:'🐻',home:'الكهف'},{a:'النملة',e:'🐜',home:'بيت النمل'}];
+const SCI_FOOD=[{a:'الأرنب',e:'🐰',food:'الجزر والنباتات',kind:'عاشب'},{a:'الأسد',e:'🦁',food:'اللحوم',kind:'لاحم'},{a:'البقرة',e:'🐮',food:'العشب',kind:'عاشب'},{a:'القطة',e:'🐱',food:'اللحوم والسمك',kind:'لاحم'},{a:'الحصان',e:'🐴',food:'العشب والتبن',kind:'عاشب'}];
+const SCI_WEATHER=[{n:'مشمس',e:'☀️',d:'السماء صافية والشمس ساطعة'},{n:'ممطر',e:'🌧️',d:'تتساقط الأمطار من السحب'},{n:'غائم',e:'☁️',d:'السماء مغطاة بالغيوم'},{n:'عاصف',e:'🌬️',d:'تهب الرياح بقوة'},{n:'مثلج',e:'❄️',d:'يتساقط الثلج الأبيض البارد'}];
+const SCI_SEASONS=[{n:'الصيف',e:'☀️',d:'الجو حار جداً'},{n:'الشتاء',e:'❄️',d:'الجو بارد وتسقط الأمطار'},{n:'الربيع',e:'🌸',d:'الجو معتدل وتتفتح الأزهار'},{n:'الخريف',e:'🍂',d:'الجو معتدل وتتساقط أوراق الشجر'}];
+const SCI_EARTH=[{n:'الماء',e:'💧',f:'نشربه ونستخدمه، ويغطي معظم الأرض'},{n:'الصخور',e:'🪨',f:'صلبة وقاسية، نجدها في الأرض والجبال'},{n:'التربة',e:'🟫',f:'تنمو فيها النباتات'},{n:'الشمس',e:'☀️',f:'تعطينا الضوء والدفء في النهار'},{n:'القمر',e:'🌙',f:'نراه في السماء ليلاً'},{n:'النجوم',e:'⭐',f:'نراها تلمع في سماء الليل'}];
+
+/* ================= SCIENCE GENERATORS ================= */
+function sciLiving(){
+  const item=pick(SCI_LIVING);
+  const answer=item.living?'مخلوق حي':'غير حي';
+  return {subj:'science',tag:'المخلوقات الحية 🌱',text:`هل «${item.n}» مخلوق حي أم غير حي؟`,
+    arPic:item.e, bigPic:true, options:shuffle(['مخلوق حي','غير حي']), answer, optClass:'ar txt',
+    explain: item.living?`«${item.n}» مخلوق حي: ينمو ويحتاج للماء والغذاء`:`«${item.n}» غير حي: لا ينمو ولا يأكل`};
+}
+function sciSenseOrgan(){
+  const item=pick(SCI_SENSES);
+  const pool=SCI_SENSES.map(x=>x.organ);
+  const opts=makeTextOptions(item.organ, pool);
+  return {subj:'science',tag:'الحواس الخمس 👀',text:`بأي عضو ${item.use}؟`,
+    options:opts, answer:item.organ, optClass:'ar txt',
+    explain:`${item.use} بـ${item.organ} (حاسة ${item.sense})`};
+}
+function sciSenseUse(){
+  const item=pick(SCI_SENSES);
+  const pool=SCI_SENSES.map(x=>x.sense);
+  const opts=makeTextOptions(item.sense, pool);
+  return {subj:'science',tag:'الحواس الخمس 👀',text:`ما الحاسة التي نستخدمها مع هذا العضو؟`,
+    arPic:item.e, bigPic:true, options:opts, answer:item.sense, optClass:'ar txt',
+    explain:`${item.organ} → حاسة ${item.sense}`};
+}
+function sciPlantPart(){
+  const item=pick(SCI_PLANT);
+  const pool=SCI_PLANT.map(x=>x.part);
+  const opts=makeTextOptions(item.part, pool);
+  return {subj:'science',tag:'أجزاء النبات 🌿',text:`أي جزء من النبات ${item.job}؟`,
+    options:opts, answer:item.part, optClass:'ar txt',
+    explain:`${item.part}: ${item.job}`};
+}
+function sciNeeds(){
+  // ماذا يحتاج المخلوق الحي لينمو؟ (إجابة صحيحة من NEEDS، خاطئة من أشياء غير حية)
+  const need=pick(SCI_NEEDS);
+  const distract=['الصخور','البلاستيك','الحجارة','السيارة','التلفاز','الحديد'];
+  const opts=makeTextOptions(need.n, distract);
+  return {subj:'science',tag:'حاجات المخلوقات 🌱',text:'أيٌّ مما يلي يحتاجه النبات والحيوان لكي ينمو ويعيش؟',
+    options:opts, answer:need.n, optClass:'ar txt',
+    explain:`المخلوقات الحية تحتاج إلى: الماء، الهواء، الغذاء، وضوء الشمس`};
+}
+function sciHabitat(){
+  const item=pick(SCI_HABITAT);
+  const pool=SCI_HABITAT.map(x=>x.home);
+  const opts=makeTextOptions(item.home, pool);
+  return {subj:'science',tag:'مساكن الحيوانات 🏞️',text:`أين يعيش هذا الحيوان؟`,
+    arPic:item.e, bigPic:true, options:opts, answer:item.home, optClass:'ar txt',
+    explain:`${item.a} يعيش في ${item.home}`};
+}
+function sciFood(){
+  const item=pick(SCI_FOOD);
+  const ask=Math.random()<0.5;
+  if(ask){
+    const pool=['اللحوم','العشب','الجزر والنباتات','العشب والتبن','اللحوم والسمك'];
+    const opts=makeTextOptions(item.food, pool);
+    return {subj:'science',tag:'غذاء الحيوانات 🍽️',text:`ماذا يأكل هذا الحيوان؟`,
+      arPic:item.e, bigPic:true, options:opts, answer:item.food, optClass:'ar txt',
+      explain:`${item.a} يأكل ${item.food}`};
+  } else {
+    return {subj:'science',tag:'غذاء الحيوانات 🍽️',text:`${item.a} يأكل ${item.food}. فهو حيوان...`,
+      arPic:item.e, bigPic:true, options:shuffle(['عاشب','لاحم']), answer:item.kind, optClass:'ar txt',
+      explain: item.kind==='عاشب'?`${item.a} عاشب: يأكل النباتات`:`${item.a} لاحم: يأكل اللحوم`};
+  }
+}
+function sciWeather(){
+  const item=pick(SCI_WEATHER);
+  const pool=SCI_WEATHER.map(x=>x.n);
+  const opts=makeTextOptions(item.n, pool);
+  return {subj:'science',tag:'الطقس ☁️',text:'ما حالة الطقس في الصورة؟',
+    arPic:item.e, bigPic:true, options:opts, answer:item.n, optClass:'ar txt',
+    explain:`الطقس ${item.n}: ${item.d}`};
+}
+function sciSeason(){
+  const item=pick(SCI_SEASONS);
+  const pool=SCI_SEASONS.map(x=>x.n);
+  const opts=makeTextOptions(item.n, pool);
+  return {subj:'science',tag:'الفصول الأربعة 🍂',text:`في أي فصل ${item.d}؟`,
+    arPic:item.e, bigPic:true, options:opts, answer:item.n, optClass:'ar txt',
+    explain:`${item.n}: ${item.d}`};
+}
+function sciEarth(){
+  const item=pick(SCI_EARTH);
+  const pool=SCI_EARTH.map(x=>x.n);
+  const opts=makeTextOptions(item.n, pool);
+  return {subj:'science',tag:'أرضنا والسماء 🌍',text:`ما هذا؟ (${item.f})`,
+    arPic:item.e, bigPic:true, options:opts, answer:item.n, optClass:'ar txt',
+    explain:`${item.n}: ${item.f}`};
+}
+
+/* ================= ROUND BUILDER ================= */
+function buildRound(mode){
+  const q=[];
+  for(let i=0;i<QPERROUND;i++){
+    switch(mode){
+      case 'add': q.push(genAdd());break;
+      case 'sub': q.push(genSub());break;
+      case 'seq': q.push(genSeq());break;
+      case 'between': q.push(genBetween());break;
+      case 'story': q.push(genStory());break;
+      case 'multTable': q.push(genMult(currentTable));break;
+      case 'multMixed': q.push(genMult());break;
+      case 'mix': q.push(pick([genAdd,genSub,genSeq,genBetween,genStory,()=>genMult()])());break;
+      // arabic
+      case 'ar_missing': q.push(arMissing());break;
+      case 'ar_first': q.push(arFirst());break;
+      case 'ar_plural': q.push(arPlural());break;
+      case 'ar_pic': q.push(arPic());break;
+      case 'ar_alher': q.push(arAlher());break;
+      case 'ar_sound': q.push(arSound());break;
+      case 'ar_mix': q.push(pick([arMissing,arFirst,arPlural,arPic,arAlher,arSound])());break;
+      // science
+      case 'sci_living': q.push(sciLiving());break;
+      case 'sci_senses': q.push(pick([sciSenseOrgan,sciSenseUse])());break;
+      case 'sci_plant': q.push(pick([sciPlantPart,sciNeeds])());break;
+      case 'sci_animals': q.push(pick([sciHabitat,sciFood])());break;
+      case 'sci_weather': q.push(pick([sciWeather,sciSeason])());break;
+      case 'sci_earth': q.push(sciEarth());break;
+      case 'sci_mix': q.push(pick([sciLiving,sciSenseOrgan,sciSenseUse,sciPlantPart,sciNeeds,sciHabitat,sciFood,sciWeather,sciSeason,sciEarth])());break;
+      default: q.push(genAdd());
+    }
+  }
+  return q;
+}
+
+/* ================= SCREEN CONTROL ================= */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='home'||id==='mathHome'||id==='arabicHome'||id==='englishHome'||id==='scienceHome') document.getElementById('homeStars').textContent=totalStars;
+}
+function goHome(){ showScreen('home'); }
+function quizBack(){ showScreen(backTarget); }
+
+function startQuiz(mode){
+  currentMode=mode;
+  if(mode.startsWith('ar_')) backTarget='arabicHome';
+  else if(mode.startsWith('sci_')) backTarget='scienceHome';
+  else backTarget='mathHome';
+  queue=buildRound(mode); idx=0; roundScore=0;
+  document.getElementById('liveScore').textContent=0;
+  showScreen('quiz'); renderQuestion();
+}
+function startMultMixed(){currentMode='multMixed';backTarget='multHome';queue=buildRound('multMixed');idx=0;roundScore=0;document.getElementById('liveScore').textContent=0;showScreen('quiz');renderQuestion();}
+function startMultTable(t){currentTable=t;currentMode='multTable';backTarget='multHome';queue=buildRound('multTable');idx=0;roundScore=0;document.getElementById('liveScore').textContent=0;showScreen('quiz');renderQuestion();}
+
+/* english quiz */
+let currentEnglishCat='ALL';
+function startEnglishQuiz(catKey){
+  currentEnglishCat=catKey; currentMode='english'; backTarget='englishHome';
+  queue=[]; for(let i=0;i<QPERROUND;i++) queue.push(genEnglish(catKey));
+  idx=0; roundScore=0; document.getElementById('liveScore').textContent=0;
+  showScreen('quiz'); renderQuestion();
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderQuestion(){
+  answered=false;
+  const q=queue[idx];
+  document.getElementById('qTag').textContent=q.tag;
+  document.getElementById('qText').textContent=q.text;
+  document.getElementById('progFill').style.width=((idx)/QPERROUND*100)+'%';
+
+  const vis=document.getElementById('qVisual');
+  let html='';
+  if(q.eq){ html=`<div class="q-eq">${q.eq}</div>`; }
+  else if(q.story){ html=`<div class="story-box"><span class="story-icon">${q.story.icon}</span>`; q.story.lines.forEach(l=>html+=`<div>${l}</div>`); html+=`<span class="story-q">❓ ${q.story.q}</span></div>`; }
+  else if(q.seq){ html='<div class="seq-row">'; q.seq.forEach((s,i)=>{html+=`<span class="seq-box ${s.q?'q':''}">${s.v}</span>`;if(i<q.seq.length-1)html+=`<span class="seq-arrow">،</span>`;}); html+='</div>'; }
+  else if(q.enEmoji && q.isEnglishWord){ html=`<div class="eq-card"><span class="eqc-emoji">${q.enEmoji}</span>${q.enArLabel?`<span class="eqc-ar">${q.enArLabel}</span>`:''}</div>`; }
+  else if(q.enWord){ html=`<div class="eq-card"><span class="eqc-emoji">${q.enEmoji||''}</span><span class="eqc-word">${q.enWord}</span></div><button class="mini-speak" onclick="speak('${q.speakWord}')">🔊</button>`; }
+  else {
+    // arabic visuals
+    if(q.arPic){ const big=q.bigPic?'font-size:130px;':''; html+=`<div class="ar-pic" style="${big}">${q.arPic}</div>`; }
+    if(q.arBig){ html+=`<div class="ar-big">${q.arBig}</div>`; }
+    if(q.arHint){ html+=`<div class="ar-hint">${q.arHint}</div>`; }
+  }
+  vis.innerHTML=html;
+
+  const ow=document.getElementById('options');
+  ow.className='options'+((q.forceOne||q.options.length===2)?' one-col':'');
+  ow.innerHTML='';
+  q.options.forEach(val=>{
+    const b=document.createElement('button');
+    b.className='opt'+(q.optClass?(' '+q.optClass):'')+(q.storyOpt?' txt':'');
+    b.textContent=val;
+    b.onclick=()=>choose(b,val,q);
+    ow.appendChild(b);
+  });
+
+  const fb=document.getElementById('feedback'); fb.className='feedback';
+  document.getElementById('nextBtn').className='next-btn';
+}
+
+function choose(btn,val,q){
+  if(answered)return; answered=true;
+  const correct=(String(val)===String(q.answer));
+  const fb=document.getElementById('feedback');
+  const allOpts=[...document.querySelectorAll('.opt')];
+  if(correct){
+    btn.classList.add('correct'); roundScore++; totalStars++; saveStars();
+    document.getElementById('liveScore').textContent=roundScore;
+    fb.className='feedback good show';
+    document.getElementById('fcEmoji').textContent=pick(['🎉','🌟','👏','🥳','💯','🎆']);
+    document.getElementById('ftTitle').textContent=pick(['أحسنت! 🌟','إجابة صحيحة!','رائع يا بطل! 👍','ممتاز!','عبقري! 💯']);
+    document.getElementById('ftSub').textContent=q.explain;
+    playCorrect(); burstConfetti(); launchFireworks(3);
+    if(q.speakOnCorrect) setTimeout(()=>speak(q.speakOnCorrect),350);
+  } else {
+    btn.classList.add('wrong'); fb.className='feedback bad show';
+    document.getElementById('fcEmoji').textContent='💪';
+    document.getElementById('ftTitle').textContent='لا بأس، حاول مرة أخرى!';
+    document.getElementById('ftSub').textContent='الإجابة الصحيحة: '+q.explain;
+    playWrong();
+    allOpts.forEach(o=>{ if(String(o.textContent)===String(q.answer)) o.classList.add('correct'); });
+  }
+  allOpts.forEach(o=>{ if(!o.classList.contains('correct')&&!o.classList.contains('wrong'))o.classList.add('dimmed'); o.style.pointerEvents='none'; });
+  document.getElementById('progFill').style.width=((idx+1)/QPERROUND*100)+'%';
+  document.getElementById('nextBtn').className='next-btn show';
+  document.getElementById('nextBtn').textContent=(idx===QPERROUND-1)?'النتيجة 🏁':'التالي ⮜';
+}
+
+function nextQuestion(){ if(idx<QPERROUND-1){idx++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});} else showResult(); }
+
+/* ================= RESULT ================= */
+function showResult(){
+  showScreen('result');
+  document.getElementById('resScore').textContent=roundScore;
+  let stars=roundScore>=9?3:roundScore>=6?2:roundScore>=3?1:0;
+  document.getElementById('resStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  let title,msg,trophy;
+  if(roundScore===10){title='بطل خارق! 🦸';msg='عشرة من عشرة! أنت عالِم حقيقي!';trophy='🏆';bigConfetti();launchFireworks(6);playWin();}
+  else if(roundScore>=8){title='ممتاز جداً! 🌟';msg='أداء رائع، أنت قريب جداً من الكمال!';trophy='🥇';bigConfetti();launchFireworks(4);playWin();}
+  else if(roundScore>=6){title='أحسنت! 👏';msg='عمل جيد! تدرّب أكثر وستصبح الأفضل.';trophy='🥈';}
+  else if(roundScore>=3){title='بداية جيدة! 💪';msg='لا تقلق، كل بطل يبدأ صغيراً. حاول مرة أخرى!';trophy='🎖️';}
+  else{title='حاول مرة أخرى! 🌱';msg='التمرين يصنع البطل. أنت تستطيع!';trophy='📚';}
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultMsg').textContent=msg;
+  document.getElementById('trophyEmoji').textContent=trophy;
+}
+function replayQuiz(){
+  if(currentMode==='multTable')startMultTable(currentTable);
+  else if(currentMode==='multMixed')startMultMixed();
+  else if(currentMode==='english')startEnglishQuiz(currentEnglishCat);
+  else startQuiz(currentMode);
+}
+
+/* ================= MULTIPLICATION HOME/STUDY ================= */
+const tableColors=['#ff6b6b','#feca57','#1dd1a1','#54a0ff','#5f27cd','#ff9ff3','#00d2d3','#ff9f43','#48dbfb','#ee5253'];
+function buildTableGrid(){const g=document.getElementById('tableGrid');g.innerHTML='';for(let i=1;i<=10;i++){const b=document.createElement('button');b.className='tbtn';b.style.background=`linear-gradient(140deg,${tableColors[i-1]},rgba(0,0,0,.12))`;b.innerHTML=`${i}<small>جدول الـ ${i}</small>`;b.onclick=()=>openStudy(i);g.appendChild(b);}}
+function openStudy(t){currentTable=t;showScreen('multStudy');document.getElementById('studyBarTitle').textContent=`جدول الـ ${t} ✖️`;document.getElementById('studyHead').textContent=`جدول ضرب الرقم ${t}`;const list=document.getElementById('studyList');list.innerHTML='';for(let i=1;i<=10;i++){const row=document.createElement('div');row.className='study-row';row.innerHTML=`<span>${t} × ${i}</span><span class="res">${t*i}</span>`;list.appendChild(row);}document.getElementById('studyPractice').onclick=()=>startMultTable(t);}
+
+/* ================= ENGLISH CATEGORIES + FLASHCARDS ================= */
+function buildCatGrid(){
+  const g=document.getElementById('catGrid'); g.innerHTML='';
+  for(const k in VOCAB){
+    const c=VOCAB[k];
+    const b=document.createElement('button');
+    b.className='cat-card';
+    b.style.background=`linear-gradient(140deg,${c.color},rgba(0,0,0,.15))`;
+    b.innerHTML=`<span class="ccount">${c.words.length}</span><span class="ce">${c.icon}</span><span class="ct">${c.title}</span><span class="cs">${c.titleEn}</span>`;
+    b.onclick=()=>openFlashcards(k);
+    g.appendChild(b);
+  }
+}
+let flashCat='food', flashIdx=0;
+function openFlashcards(catKey){
+  flashCat=catKey; flashIdx=0;
+  showScreen('flashcards');
+  document.getElementById('flashBarTitle').textContent=`${VOCAB[catKey].icon} ${VOCAB[catKey].title} / ${VOCAB[catKey].titleEn}`;
+  document.getElementById('flashTestBtn').onclick=()=>startEnglishQuiz(catKey);
+  renderFlash();
+}
+function renderFlash(){
+  const words=VOCAB[flashCat].words;
+  const w=words[flashIdx];
+  document.getElementById('flashEmoji').textContent=w.emoji;
+  document.getElementById('flashEn').textContent=w.en;
+  document.getElementById('flashAr').textContent=w.ar;
+  const label=`${flashIdx+1} / ${words.length}`;
+  document.getElementById('flashCount').textContent=label;
+  document.getElementById('flashCount2').textContent=label;
+  // re-trigger animation
+  const e=document.getElementById('flashEmoji'); e.style.animation='none'; void e.offsetWidth; e.style.animation='flashIn .4s ease';
+  speak(w.en); // auto-speak on show
+}
+function flashNext(){const n=VOCAB[flashCat].words.length;flashIdx=(flashIdx+1)%n;renderFlash();}
+function flashPrev(){const n=VOCAB[flashCat].words.length;flashIdx=(flashIdx-1+n)%n;renderFlash();}
+function speakCurrentFlash(){ speak(VOCAB[flashCat].words[flashIdx].en); }
+
+/* ================= SPEECH (text-to-speech) ================= */
+let enVoice=null;
+function loadVoices(){
+  try{
+    const vs=window.speechSynthesis.getVoices();
+    enVoice = vs.find(v=>/en[-_]?(US|GB)/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+  }catch(e){}
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=0.85; u.pitch=1.05;
+    if(enVoice)u.voice=enVoice;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ================= SOUND ENGINE ================= */
+let audioCtx=null;
+function ac(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();return audioCtx;}
+function tone(freq,start,dur,type='sine',vol=0.22){const c=ac();if(!c)return;const t0=c.currentTime+start;const osc=c.createOscillator();const g=c.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,t0);g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(vol,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);osc.connect(g);g.connect(c.destination);osc.start(t0);osc.stop(t0+dur+0.05);}
+function playCorrect(){tone(523.25,0,0.16,'triangle',0.25);tone(659.25,0.12,0.16,'triangle',0.25);tone(783.99,0.24,0.16,'triangle',0.25);tone(1046.5,0.36,0.30,'triangle',0.28);}
+function playWrong(){tone(311.13,0,0.18,'sawtooth',0.16);tone(233.08,0.16,0.30,'sawtooth',0.16);}
+function playWin(){const seq=[523.25,659.25,783.99,1046.5,783.99,1046.5];seq.forEach((f,i)=>tone(f,i*0.14,0.22,'triangle',0.26));}
+
+/* ================= FIREWORKS ================= */
+function launchFireworks(count){count=count||3;for(let i=0;i<count;i++){setTimeout(()=>{const x=15+Math.random()*70,y=20+Math.random()*35;fireworkBurst(x,y);},i*350);}}
+function fireworkBurst(xvw,yvh){const cx=window.innerWidth*xvw/100,cy=window.innerHeight*yvh/100,hue=Math.floor(Math.random()*360),N=26;for(let i=0;i<N;i++){const p=document.createElement('div');p.className='confetti';p.style.left=cx+'px';p.style.top=cy+'px';p.style.width='8px';p.style.height='8px';p.style.borderRadius='50%';p.style.background=`hsl(${hue+Math.random()*40-20},90%,60%)`;p.style.boxShadow=`0 0 8px hsl(${hue},90%,65%)`;document.body.appendChild(p);const ang=(Math.PI*2*i)/N+Math.random()*0.2,dist=80+Math.random()*90,dx=Math.cos(ang)*dist,dy=Math.sin(ang)*dist;p.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px, ${dy}px) scale(.3)`,opacity:0}],{duration:800+Math.random()*400,easing:'cubic-bezier(.15,.7,.4,1)'}).onfinish=()=>p.remove();}}
+const confColors=['#ff6b35','#ffd43b','#2ecc71','#48cae4','#6c5ce7','#ff7eb6'];
+function burstConfetti(){for(let i=0;i<14;i++)dropConfetti();}
+function bigConfetti(){for(let i=0;i<60;i++)setTimeout(dropConfetti,i*20);}
+function dropConfetti(){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=pick(confColors);c.style.transform=`rotate(${Math.random()*360}deg)`;if(Math.random()<.5)c.style.borderRadius='50%';document.body.appendChild(c);const fall=600+Math.random()*900,drift=(Math.random()-0.5)*200;c.animate([{transform:`translate(0,0) rotate(0deg)`,opacity:1},{transform:`translate(${drift}px, ${window.innerHeight+40}px) rotate(${Math.random()*720}deg)`,opacity:.9}],{duration:fall,easing:'cubic-bezier(.3,.7,.4,1)'}).onfinish=()=>c.remove();}
+
+/* ================= STARS ================= */
+function saveStars(){document.getElementById('homeStars').textContent=totalStars;try{localStorage.setItem('yahyaStars',String(totalStars));}catch(e){}}
+
+/* ================= INIT ================= */
+buildTableGrid();
+buildCatGrid();
+document.getElementById('homeStars').textContent=totalStars;
+document.addEventListener('pointerdown',function unlock(){ac();document.removeEventListener('pointerdown',unlock);},{once:true});
+
+</script>
+</body>
+</html>
