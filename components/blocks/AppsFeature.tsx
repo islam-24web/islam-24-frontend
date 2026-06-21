@@ -34,7 +34,7 @@ const STATIC_APP_CARDS: AppCard[] = [
   },
   {
     id: -2403,
-    title: "فاتبع سبباً | Sabab",
+    title: "فَأَتْبَعَ سَبَبًا || Follow The Way",
     description: "مخطط عملي للمهام والأفكار يساعدك على اختيار مسار واحد وإغلاق الحلقات المفتوحة",
     icon: "◎",
     href: "/apps/sabab",
@@ -51,10 +51,25 @@ function normalizeHref(href: string): string {
   return normalized || "/";
 }
 
+function normalizeAppCard(item: AppCard): AppCard {
+  if (normalizeHref(item.href) !== "/apps/sabab") return item;
+
+  return {
+    ...item,
+    title: "فَأَتْبَعَ سَبَبًا || Follow The Way",
+    description:
+      item.description ||
+      "مخطط عملي للمهام والأفكار يساعدك على اختيار مسار واحد وإغلاق الحلقات المفتوحة",
+    icon: item.icon || "◎",
+    cta_label: item.cta_label || "ابدأ التخطيط",
+  };
+}
+
 function mergeStaticApps(items: AppCard[]) {
-  const existing = new Set(items.map((item) => normalizeHref(item.href)));
+  const normalizedItems = items.map(normalizeAppCard);
+  const existing = new Set(normalizedItems.map((item) => normalizeHref(item.href)));
   return [
-    ...items,
+    ...normalizedItems,
     ...STATIC_APP_CARDS.filter((item) => !existing.has(normalizeHref(item.href))),
   ];
 }

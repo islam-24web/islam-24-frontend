@@ -47,7 +47,7 @@ const SOCIAL_ICONS: Record<SocialLink["platform"], JSX.Element> = {
 const APP_FOOTER_LINKS: NavLink[] = [
   { id: -2401, name: "سباق الفردوس الأعلى", url: "/apps/sibaq", is_external: false },
   { id: -2402, name: "العالِم الصغير", url: "/apps/saghir-scientist", is_external: false },
-  { id: -2403, name: "فاتبع سبباً | Sabab", url: "/apps/sabab", is_external: false },
+  { id: -2403, name: "فَأَتْبَعَ سَبَبًا || Follow The Way", url: "/apps/sabab", is_external: false },
 ];
 
 function normalizeFooterUrl(url: string) {
@@ -55,10 +55,22 @@ function normalizeFooterUrl(url: string) {
   return normalized || "/";
 }
 
+function normalizeFooterLink(link: NavLink): NavLink {
+  if (normalizeFooterUrl(link.url) !== "/apps/sabab") return link;
+
+  return {
+    ...link,
+    name: "فَأَتْبَعَ سَبَبًا || Follow The Way",
+  };
+}
+
 export default function SiteFooter({ footer }: Props) {
   const description = footer?.description;
-  const sections = footer?.sections ?? [];
-  const flatLinks = footer?.links ?? [];
+  const sections = (footer?.sections ?? []).map((section) => ({
+    ...section,
+    links: section.links.map(normalizeFooterLink),
+  }));
+  const flatLinks = (footer?.links ?? []).map(normalizeFooterLink);
   const social = footer?.social_links ?? [];
   const copyright = footer?.copyright_text;
   const year = new Date().getFullYear();
