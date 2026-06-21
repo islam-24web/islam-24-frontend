@@ -1,2 +1,2 @@
-:HL["/apps/sabab/_next/static/css/46a7cf91026467c3.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"weekly-review","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"dbpuViqUEDeDKDxFQOI4i"}
+:HL["/apps/sabab/_next/static/css/31fc60623c1e292c.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"weekly-review","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"jW5SQikBRo0EZTRza9To9"}

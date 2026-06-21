@@ -58,7 +58,7 @@ const displaySections = [
 const FEATURED_APPS = [
   { slug: "sibaq", title: "سباق الفردوس الأعلى", description: "تتبع عباداتك اليومية وأعمال القلوب والأذكار ومدارج السالكين", icon: "🕌" },
   { slug: "saghir-scientist", title: "العالِم الصغير", description: "أنشطة تعليمية تفاعلية للأطفال في الرياضيات والعربية والإنجليزية والعلوم", icon: "🔬" },
-  { slug: "sabab", title: "فاتبع سبباً | Sabab", description: "مخطط عملي للمهام والأفكار يساعدك على اختيار مسار واحد وإغلاق الحلقات المفتوحة", icon: "◎" },
+  { slug: "sabab", title: "فَأَتْبَعَ سَبَبًا || Follow The Way", description: "مخطط عملي للمهام والأفكار يساعدك على اختيار مسار واحد وإغلاق الحلقات المفتوحة", icon: "◎" },
 ];
 
 // Tiny safe fallback when the CMS path is enabled but no daily-tiles block
