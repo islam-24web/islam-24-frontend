@@ -12,6 +12,9 @@ const TONE_CLASSES: Record<AppCard["tone"], { hover: string; cta: string }> = {
 };
 
 function normalizeHref(href: string): string {
+  if (/^(?:https?:\/\/islam-24\.com)?\/apps\/sibaq-al-firdaws\/?$/i.test(href)) {
+    return "/apps/sibaq";
+  }
   if (href.startsWith("/articles/")) return "/article/" + href.slice("/articles/".length);
   if (href.startsWith("/categories/")) return "/category/" + href.slice("/categories/".length);
   return href;

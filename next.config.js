@@ -73,6 +73,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/apps/sibaq-al-firdaws",
+        destination: "/apps/sibaq",
+        permanent: true,
+      },
+      {
         source: "/home",
         destination: "/",
         permanent: true,
