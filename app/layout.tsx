@@ -2,7 +2,6 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Instrument_Serif, Noto_Kufi_Arabic } from "next/font/google";
-import * as Sentry from '@sentry/nextjs';
 import { getNavigation, getFooter } from "@/lib/api";
 import { DEFAULT_OG_IMAGE, SITE_NAME_AR, getSiteUrl } from "@/lib/seo/site";
 import { JsonLd } from "@/lib/seo/schema/core";
@@ -56,9 +55,6 @@ export function generateMetadata(): Metadata {
     },
     twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE.url] },
     robots: { index: true, follow: true },
-    other: {
-      ...Sentry.getTraceData(),
-    },
   };
 }
 
